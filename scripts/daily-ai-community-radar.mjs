@@ -1,15 +1,15 @@
+import { execFileSync } from "node:child_process";
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 
 const CONFIG = {
   timeZone: process.env.REPORT_TIME_ZONE || "Asia/Taipei",
   outputDir: process.env.REPORT_OUTPUT_DIR || "reports",
-  dataDir: process.env.REPORT_DATA_DIR || "data",
   maxStaleDays: toPositiveInt(process.env.REPORT_MAX_STALE_DAYS || process.env.GITHUB_LOOKBACK_DAYS, 2),
   registryMaxPages: toPositiveInt(process.env.MCP_REGISTRY_MAX_PAGES, 8),
   npmSearchSize: toPositiveInt(process.env.NPM_SEARCH_SIZE, 30),
   dryRun: /^(1|true|yes)$/i.test(process.env.REPORT_DRY_RUN || ""),
-  githubToken: process.env.GITHUB_TOKEN || ""
+  githubToken: resolveGitHubToken()
 };
 
 const USER_AGENT = "ai-community-radar/0.1";
@@ -65,7 +65,6 @@ async function main() {
   };
 
   const markdown = renderMarkdown(payload);
-  const json = `${JSON.stringify(payload, null, 2)}\n`;
 
   if (CONFIG.dryRun) {
     console.log(markdown);
@@ -73,12 +72,10 @@ async function main() {
   }
 
   await mkdir(CONFIG.outputDir, { recursive: true });
-  await mkdir(CONFIG.dataDir, { recursive: true });
 
   await Promise.all([
     writeFile(path.join(CONFIG.outputDir, `${reportDate}.md`), markdown, "utf8"),
-    writeFile(path.join(CONFIG.outputDir, "latest.md"), markdown, "utf8"),
-    writeFile(path.join(CONFIG.dataDir, "latest.json"), json, "utf8")
+    writeFile(path.join(CONFIG.outputDir, "latest.md"), markdown, "utf8")
   ]);
 
   console.log(`Wrote ${path.join(CONFIG.outputDir, `${reportDate}.md`)}`);
@@ -428,62 +425,105 @@ function renderMarkdown(payload) {
 
   lines.push(`# AI Community Radar - ${payload.reportDate}`);
   lines.push("");
-  lines.push(`Generated: ${payload.generatedAt}`);
-  lines.push(`Timezone: ${payload.timeZone}`);
-  lines.push(`Active cutoff: updated since ${payload.activeSinceDate}; archived GitHub repos excluded`);
-  lines.push(`Max stale age: ${payload.maxStaleDays} days`);
+  lines.push(`> Generated: ${payload.generatedAt}`);
+  lines.push(`> Timezone: ${payload.timeZone}`);
+  lines.push(`> Active cutoff: updated since ${payload.activeSinceDate}; archived GitHub repos excluded; max stale age ${payload.maxStaleDays} days.`);
   lines.push("");
-  lines.push("## 1. GitHub 熱門 AI Repo Top 3");
+  lines.push("## 今日摘要");
+  lines.push("");
+  lines.push("| 項目 | 結果 |");
+  lines.push("| --- | --- |");
+  lines.push(`| 熱門 AI repo | ${payload.topAiRepos.length} 個 |`);
+  lines.push(`| MCP Registry 取樣 | ${formatNumber(payload.opportunities.registrySampledServers)} servers |`);
+  lines.push(`| 可能未上架候選 | ${payload.opportunities.possibleUnlisted.length} 個 |`);
+  lines.push(`| 可實作工具建議 | ${payload.opportunities.buildIdeas.length} 個 |`);
+  lines.push("");
+  lines.push("## GitHub 熱門 AI Repo Top 3");
+  lines.push("");
+  lines.push("| # | Repo | Stars | Forks | Language | Updated |");
+  lines.push("| --- | --- | ---: | ---: | --- | --- |");
+  payload.topAiRepos.forEach((repo, index) => {
+    lines.push(`| ${index + 1} | ${mdLink(repo.name, repo.url)} | ${formatNumber(repo.stars)} | ${formatNumber(repo.forks)} | ${mdCell(repo.language)} | ${mdCell(repo.updatedAt)} |`);
+  });
   lines.push("");
 
   payload.topAiRepos.forEach((repo, index) => {
     lines.push(`### ${index + 1}. [${repo.name}](${repo.url})`);
     lines.push("");
-    lines.push(`- Stars: ${formatNumber(repo.stars)} | Forks: ${formatNumber(repo.forks)} | Language: ${repo.language} | Updated: ${repo.updatedAt}`);
+    lines.push("**可以做什麼**");
+    lines.push("");
+    lines.push(repo.what);
+    lines.push("");
+    lines.push("**解決什麼問題**");
+    lines.push("");
+    lines.push(repo.problem);
+    lines.push("");
+    lines.push("**可貢獻切角**");
+    lines.push("");
+    lines.push(repo.contribution);
+    lines.push("");
     if (repo.topics.length) {
-      lines.push(`- Topics: ${repo.topics.slice(0, 8).join(", ")}`);
+      lines.push(`**Topics**: ${repo.topics.slice(0, 8).map((topic) => `\`${topic}\``).join(", ")}`);
     }
-    lines.push(`- 可以做什麼: ${repo.what}`);
-    lines.push(`- 解決什麼問題: ${repo.problem}`);
-    lines.push(`- 可貢獻切角: ${repo.contribution}`);
-    lines.push(`- Glama 交叉查詢: ${repo.glamaSearchUrl}`);
+    lines.push(`**Glama 交叉查詢**: ${repo.glamaSearchUrl}`);
     lines.push("");
   });
 
-  lines.push("## 2. MCP / Tool 社群機會");
+  lines.push("## MCP / Tool 社群機會");
   lines.push("");
-  lines.push(`Registry sample: ${formatNumber(payload.opportunities.registrySampledServers)} servers`);
-  lines.push(`Active baseline since: ${payload.opportunities.activeSinceDate}`);
+  lines.push("| 指標 | 值 |");
+  lines.push("| --- | --- |");
+  lines.push(`| Registry sample | ${formatNumber(payload.opportunities.registrySampledServers)} servers |`);
+  lines.push(`| Active baseline since | ${payload.opportunities.activeSinceDate} |`);
+  lines.push(`| GitHub stale cutoff | ${payload.opportunities.maxStaleDays} days |`);
   lines.push("");
   lines.push("### 可能還沒上官方 MCP Registry 的候選");
   lines.push("");
 
   if (payload.opportunities.possibleUnlisted.length === 0) {
-    lines.push("- 今天沒有在取樣範圍內找到明顯候選。");
+    lines.push("今天沒有在取樣範圍內找到明顯候選。");
   } else {
-    payload.opportunities.possibleUnlisted.forEach((item) => {
-      lines.push(`- [${item.name}](${item.url})`);
-      lines.push(`  - 類型: ${item.type}`);
-      lines.push(`  - 說明: ${item.description}`);
-      lines.push(`  - 為什麼值得看: ${item.reason}`);
-      lines.push(`  - 下一步: ${item.nextStep}`);
+    payload.opportunities.possibleUnlisted.forEach((item, index) => {
+      lines.push(`#### ${index + 1}. ${mdLink(item.name, item.url)}`);
+      lines.push("");
+      lines.push(`| 欄位 | 內容 |`);
+      lines.push(`| --- | --- |`);
+      lines.push(`| 類型 | ${mdCell(item.type)} |`);
+      lines.push(`| 說明 | ${mdCell(item.description)} |`);
+      lines.push(`| 為什麼值得看 | ${mdCell(item.reason)} |`);
+      lines.push(`| 下一步 | ${mdCell(item.nextStep)} |`);
       if (item.repositoryUrl) {
-        lines.push(`  - Repo: ${item.repositoryUrl}`);
+        lines.push(`| Repo | ${mdLink(item.repositoryUrl, item.repositoryUrl)} |`);
       }
+      lines.push("");
     });
   }
 
-  lines.push("");
   lines.push("### 建議可以實作的工具");
   lines.push("");
 
-  payload.opportunities.buildIdeas.forEach((idea) => {
-    lines.push(`- [${idea.name}](${idea.url})`);
-    lines.push(`  - 可以做什麼: ${idea.description}`);
-    lines.push(`  - 為什麼有人會用: ${idea.reason}`);
-    lines.push(`  - MVP: ${idea.nextStep}`);
+  payload.opportunities.buildIdeas.forEach((idea, index) => {
+    lines.push(`#### ${index + 1}. ${mdLink(idea.name, idea.url)}`);
+    lines.push("");
+    lines.push("**可以做什麼**");
+    lines.push("");
+    lines.push(idea.description);
+    lines.push("");
+    lines.push("**為什麼有人會用**");
+    lines.push("");
+    lines.push(idea.reason);
+    lines.push("");
+    lines.push("**MVP**");
+    lines.push("");
+    lines.push(idea.nextStep);
+    lines.push("");
   });
 
+  lines.push("## 今日行動清單");
+  lines.push("");
+  lines.push("- [ ] 從候選清單挑 1 個項目人工確認是否真的未上官方 MCP Registry。");
+  lines.push("- [ ] 如果候選品質足夠，補 README install block、工具 schema 說明與 registry submission checklist。");
+  lines.push("- [ ] 從工具建議挑 1 個 read-only MVP，先做小範圍 prototype。");
   lines.push("");
   lines.push("## 資料限制");
   lines.push("");
@@ -501,6 +541,17 @@ function renderMarkdown(payload) {
   lines.push("");
 
   return `${lines.join("\n")}\n`;
+}
+
+function mdLink(label, url) {
+  return `[${String(label).replace(/\]/g, "\\]")}](${url})`;
+}
+
+function mdCell(value) {
+  return cleanText(value || "")
+    .replace(/\|/g, "\\|")
+    .replace(/\n/g, " ")
+    .trim();
 }
 
 function isRepoKnownInRegistry(repo, registryIndex) {
@@ -657,6 +708,21 @@ function formatNumber(value) {
 function toPositiveInt(value, fallback) {
   const parsed = Number.parseInt(value, 10);
   return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
+}
+
+function resolveGitHubToken() {
+  if (process.env.GITHUB_TOKEN) {
+    return process.env.GITHUB_TOKEN;
+  }
+
+  try {
+    return execFileSync("gh", ["auth", "token"], {
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "ignore"]
+    }).trim();
+  } catch {
+    return "";
+  }
 }
 
 function sleep(ms) {

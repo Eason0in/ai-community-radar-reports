@@ -16,11 +16,10 @@
 - 這個規則用在每天 7:00 的自動檢查，避免報告塞入超過 2 天沒更新的封存或過期項目。
 - 可用 `REPORT_MAX_STALE_DAYS` 調整天數。
 
-報告會寫到：
+報告會用 Markdown 寫到：
 
 - `reports/YYYY-MM-DD.md`
 - `reports/latest.md`
-- `data/latest.json`
 
 ## 排程
 
@@ -48,10 +47,9 @@ npm run check
 
 ## 可設定環境變數
 
-- `GITHUB_TOKEN`: GitHub API token。GitHub Actions 會自動提供 `secrets.GITHUB_TOKEN`，本機未設定也可跑但 rate limit 較低。
+- `GITHUB_TOKEN`: GitHub API token。GitHub Actions 會自動提供 `secrets.GITHUB_TOKEN`；本機未設定時，腳本會嘗試讀取 `gh auth token` 作為 fallback。
 - `REPORT_TIME_ZONE`: 預設 `Asia/Taipei`。
 - `REPORT_OUTPUT_DIR`: 預設 `reports`。
-- `REPORT_DATA_DIR`: 預設 `data`。
 - `REPORT_MAX_STALE_DAYS`: GitHub repo 超過幾天沒 pushed update 就排除，預設 `2`。
 - `GITHUB_LOOKBACK_DAYS`: 舊版相容變數；未設定 `REPORT_MAX_STALE_DAYS` 時會被拿來當 fallback。
 - `MCP_REGISTRY_MAX_PAGES`: 官方 MCP Registry 最多取樣頁數，預設 `8`。

@@ -1,0 +1,14 @@
+{
+  "name": "ai-community-radar-reports",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Dedicated report project for daily AI repository and MCP/tool contribution radar automation.",
+  "scripts": {
+    "check": "node --check scripts/daily-ai-community-radar.mjs",
+    "report": "node scripts/daily-ai-community-radar.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

@@ -1,0 +1,65 @@
+name: Daily AI Community Radar
+
+on:
+  schedule:
+    # 07:00 Asia/Taipei on Monday-Friday == 23:00 UTC on Sunday-Thursday.
+    - cron: "0 23 * * 0-4"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Generate the report without committing files"
+        required: false
+        default: "false"
+        type: choice
+        options:
+          - "false"
+          - "true"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: daily-ai-community-radar
+  cancel-in-progress: false
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      REPORT_TIME_ZONE: Asia/Taipei
+      REPORT_MAX_STALE_DAYS: "2"
+      REPORT_DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run || 'false' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Generate report
+        run: npm run report
+
+      - name: Upload report artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ai-community-radar
+          path: |
+            reports/*.md
+            data/*.json
+          if-no-files-found: ignore
+
+      - name: Commit report
+        if: ${{ env.REPORT_DRY_RUN != 'true' }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add reports data
+          if git diff --cached --quiet; then
+            echo "No report changes to commit."
+          else
+            git commit -m "chore: add daily AI community radar"
+            git push
+          fi

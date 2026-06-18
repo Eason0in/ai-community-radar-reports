@@ -1,0 +1,126 @@
+# AI Community Radar - 2026-06-18
+
+Generated: 2026-06-18T00:21:52.078Z
+Timezone: Asia/Taipei
+Active cutoff: updated since 2026-06-16; archived GitHub repos excluded
+Max stale age: 2 days
+
+## 1. GitHub 熱門 AI Repo Top 3
+
+### 1. [affaan-m/ECC](https://github.com/affaan-m/ECC)
+
+- Stars: 217,290 | Forks: 33,355 | Language: JavaScript | Updated: 2026-06-17T17:04:18Z
+- Topics: ai-agents, anthropic, claude, claude-code, developer-tools, llm, mcp, productivity
+- 可以做什麼: The agent harness performance optimization system. Skills, instincts, memory, security, and research-first development for Claude Code, Codex, Opencode, Cursor and beyond.
+- 解決什麼問題: 降低建置 AI agent、工具調用、任務規劃或多步驟自動化的成本。
+- 可貢獻切角: 可先做 read-only MCP companion 或文件搜尋工具，若 repo 沒有官方 MCP integration，這會是低風險且有社群價值的切入點。
+- Glama 交叉查詢: https://glama.ai/mcp/servers?q=ECC
+
+### 2. [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow)
+
+- Stars: 195,713 | Forks: 75,194 | Language: C++ | Updated: 2026-06-18T00:21:05Z
+- Topics: deep-learning, deep-neural-networks, distributed, machine-learning, ml, neural-network, python, tensorflow
+- 可以做什麼: An Open Source Machine Learning Framework for Everyone.
+- 解決什麼問題: 解決 AI 應用開發中重複整合、理解成本高或從 prototype 到可用工具落差大的問題。
+- 可貢獻切角: 可先做 read-only MCP companion 或文件搜尋工具，若 repo 沒有官方 MCP integration，這會是低風險且有社群價值的切入點。
+- Glama 交叉查詢: https://glama.ai/mcp/servers?q=tensorflow
+
+### 3. [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent)
+
+- Stars: 196,185 | Forks: 34,527 | Language: Python | Updated: 2026-06-18T00:14:47Z
+- Topics: ai, ai-agent, ai-agents, anthropic, chatgpt, claude, claude-code, clawdbot
+- 可以做什麼: The agent that grows with you.
+- 解決什麼問題: 降低建置 AI agent、工具調用、任務規劃或多步驟自動化的成本。
+- 可貢獻切角: 可先做 read-only MCP companion 或文件搜尋工具，若 repo 沒有官方 MCP integration，這會是低風險且有社群價值的切入點。
+- Glama 交叉查詢: https://glama.ai/mcp/servers?q=hermes-agent
+
+## 2. MCP / Tool 社群機會
+
+Registry sample: 800 servers
+Active baseline since: 2026-06-16
+
+### 可能還沒上官方 MCP Registry 的候選
+
+- [@launchdarkly/mcp-server](https://www.npmjs.com/package/@launchdarkly/mcp-server)
+  - 類型: npm-package
+  - 說明: The official Model Context Protocol (MCP) server for LaunchDarkly.
+  - 為什麼值得看: npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。
+  - 下一步: 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。
+  - Repo: https://github.com/launchdarkly/mcp-server
+- [@utcp/mcp](https://www.npmjs.com/package/@utcp/mcp)
+  - 類型: npm-package
+  - 說明: Model Context Protocol integration for UTCP
+  - 為什麼值得看: npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。
+  - 下一步: 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。
+  - Repo: https://github.com/universal-tool-calling-protocol/typescript-utcp
+- [@roychri/mcp-server-asana](https://www.npmjs.com/package/@roychri/mcp-server-asana)
+  - 類型: npm-package
+  - 說明: MCP Server for Asana
+  - 為什麼值得看: npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。
+  - 下一步: 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。
+  - Repo: https://github.com/roychri/mcp-server-asana
+- [@payloadcms/plugin-mcp](https://www.npmjs.com/package/@payloadcms/plugin-mcp)
+  - 類型: npm-package
+  - 說明: MCP (Model Context Protocol) capabilities with Payload
+  - 為什麼值得看: npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。
+  - 下一步: 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。
+  - Repo: https://github.com/payloadcms/payload
+- [firecrawl-mcp](https://www.npmjs.com/package/firecrawl-mcp)
+  - 類型: npm-package
+  - 說明: MCP server for Firecrawl — search, scrape, and interact with the web. Supports both cloud and self-hosted instances. Features include web search, scraping, page interaction, batch processing, and LLM-powered content analysis.
+  - 為什麼值得看: npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。
+  - 下一步: 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。
+  - Repo: https://github.com/firecrawl/firecrawl-mcp-server
+- [soapbucket/mcptest](https://github.com/soapbucket/mcptest)
+  - 類型: github-repo
+  - 說明: The test suite your MCP server is missing. Tool, resource, agent-loop, schema-drift, compliance, and security tests against any Model Context Protocol server, in CI on every commit. One YAML suite, deterministic cassette replay, multi-model comparison, and LLM-judge evals. Rust, Apache-2.0.
+  - 為什麼值得看: GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。
+  - 下一步: 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。
+- [gurutersesat24/ai-site-forge](https://github.com/gurutersesat24/ai-site-forge)
+  - 類型: github-repo
+  - 說明: Ultimate AI Static Site Generator 2026 – Free No-Lock-in Build Tool for Claude & Cursor
+  - 為什麼值得看: GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。
+  - 下一步: 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。
+- [GLips/Figma-Context-MCP](https://github.com/GLips/Figma-Context-MCP)
+  - 類型: github-repo
+  - 說明: MCP server to provide Figma layout information to AI coding agents like Cursor
+  - 為什麼值得看: GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。
+  - 下一步: 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。
+
+### 建議可以實作的工具
+
+- [affaan-m/ECC MCP companion](https://github.com/affaan-m/ECC)
+  - 可以做什麼: 為 affaan-m/ECC 做一個 MCP companion，讓 agent 可以查詢專案能力、範例、設定檔、常見錯誤與 release note。
+  - 為什麼有人會用: 熱門 AI repo 通常文件量大、設定組合多；MCP 化後可直接服務 Cursor、Claude Code、Codex、ChatGPT 等 agent 工作流。
+  - MVP: 先做 read-only tools：search_docs、list_examples、explain_config、troubleshoot_error；穩定後再補 scaffold 或 patch 類工具。
+- [tensorflow/tensorflow MCP companion](https://github.com/tensorflow/tensorflow)
+  - 可以做什麼: 為 tensorflow/tensorflow 做一個 MCP companion，讓 agent 可以查詢專案能力、範例、設定檔、常見錯誤與 release note。
+  - 為什麼有人會用: 熱門 AI repo 通常文件量大、設定組合多；MCP 化後可直接服務 Cursor、Claude Code、Codex、ChatGPT 等 agent 工作流。
+  - MVP: 先做 read-only tools：search_docs、list_examples、explain_config、troubleshoot_error；穩定後再補 scaffold 或 patch 類工具。
+- [NousResearch/hermes-agent MCP companion](https://github.com/NousResearch/hermes-agent)
+  - 可以做什麼: 為 NousResearch/hermes-agent 做一個 MCP companion，讓 agent 可以查詢專案能力、範例、設定檔、常見錯誤與 release note。
+  - 為什麼有人會用: 熱門 AI repo 通常文件量大、設定組合多；MCP 化後可直接服務 Cursor、Claude Code、Codex、ChatGPT 等 agent 工作流。
+  - MVP: 先做 read-only tools：search_docs、list_examples、explain_config、troubleshoot_error；穩定後再補 scaffold 或 patch 類工具。
+- [MCP Registry Gap Finder](https://registry.modelcontextprotocol.io)
+  - 可以做什麼: 每天比對 GitHub/npm 的 MCP 新專案與官方 registry / Glama 收錄狀態，產出可上架、可修文件、可合併同類工具清單。
+  - 為什麼有人會用: MCP 生態成長快，開發者需要有人把可用但沒被發現的工具整理出來。
+  - MVP: 把本報告的取樣邏輯抽成 MCP server，提供 find_unlisted_servers、score_listing_readiness、generate_submission_checklist。
+- [Tool Definition Quality Linter](https://glama.ai/mcp/methodology)
+  - 可以做什麼: 針對 MCP tools 的 description、input schema、side effects、readOnly/destructive/idempotent hints 做本機 lint。
+  - 為什麼有人會用: 工具描述品質會直接影響 agent 是否敢用、會不會誤用；這是很多 MCP 專案都需要的貢獻。
+  - MVP: 先支援 JSON schema / FastMCP introspection output，輸出 GitHub PR comment 與修正文案建議。
+
+## 資料限制
+
+- GitHub 熱門度以近期活躍且 stars 高的 AI topic repo 估算，不等同 GitHub Trending 官方頁面。
+- 每日檢查排除 GitHub archived repos，以及超過 2 天沒有 pushed update 的 GitHub 項目。
+- 官方 MCP Registry 以分頁取樣比對，未命中代表值得人工確認，不代表百分之百未上架。
+- Glama 作為人工交叉檢查入口；若後續需要更精準，可再接 Glama public API 的完整查詢結果。
+
+## Sources
+
+- GitHub Search API: https://docs.github.com/en/rest/search/search#search-repositories
+- npm Registry search API: https://registry.npmjs.org/-/v1/search
+- Official MCP Registry API: https://registry.modelcontextprotocol.io/v0.1/servers
+- Glama MCP directory: https://glama.ai/mcp/servers
+

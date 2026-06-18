@@ -18,6 +18,7 @@
 
 報告會用 Markdown 寫到：
 
+- `LATEST_REPORT.md`
 - `reports/YYYY-MM-DD.md`
 - `reports/latest.md`
 

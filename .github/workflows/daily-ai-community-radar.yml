@@ -47,6 +47,7 @@ jobs:
         with:
           name: ai-community-radar
           path: |
+            LATEST_REPORT.md
             reports/*.md
           if-no-files-found: ignore
 
@@ -55,7 +56,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add reports
+          git add LATEST_REPORT.md reports
           if git diff --cached --quiet; then
             echo "No report changes to commit."
           else

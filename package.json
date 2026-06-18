@@ -9,6 +9,6 @@
     "report": "node scripts/daily-ai-community-radar.mjs"
   },
   "engines": {
-    "node": ">=20"
+    "node": ">=16"
   }
 }

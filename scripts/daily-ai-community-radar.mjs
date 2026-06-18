@@ -1,4 +1,6 @@
 import { execFileSync } from "node:child_process";
+import { request as httpRequest } from "node:http";
+import { request as httpsRequest } from "node:https";
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 
@@ -75,7 +77,8 @@ async function main() {
 
   await Promise.all([
     writeFile(path.join(CONFIG.outputDir, `${reportDate}.md`), markdown, "utf8"),
-    writeFile(path.join(CONFIG.outputDir, "latest.md"), markdown, "utf8")
+    writeFile(path.join(CONFIG.outputDir, "latest.md"), markdown, "utf8"),
+    writeFile("LATEST_REPORT.md", markdown, "utf8")
   ]);
 
   console.log(`Wrote ${path.join(CONFIG.outputDir, `${reportDate}.md`)}`);
@@ -198,37 +201,51 @@ async function fetchJson(url, options = {}) {
 
   let lastError;
   for (let attempt = 1; attempt <= 3; attempt += 1) {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 25_000);
-
     try {
-      const response = await fetch(url, {
-        ...options,
-        headers,
-        signal: controller.signal
-      });
+      const response = await requestText(url, { headers, timeoutMs: 25_000 });
 
-      if (response.status === 403 && response.headers.get("x-ratelimit-remaining") === "0") {
+      if (response.statusCode === 403 && response.headers["x-ratelimit-remaining"] === "0") {
         throw new Error(`GitHub rate limit reached for ${url}`);
       }
 
-      if (!response.ok) {
-        const text = await response.text();
-        throw new Error(`HTTP ${response.status} for ${url}: ${text.slice(0, 300)}`);
+      if (response.statusCode < 200 || response.statusCode >= 300) {
+        throw new Error(`HTTP ${response.statusCode} for ${url}: ${response.body.slice(0, 300)}`);
       }
 
-      return await response.json();
+      return JSON.parse(response.body);
     } catch (error) {
       lastError = error;
       if (attempt < 3) {
         await sleep(500 * attempt);
       }
-    } finally {
-      clearTimeout(timeout);
     }
   }
 
   throw lastError;
+}
+
+function requestText(url, { headers, timeoutMs }) {
+  const parsedUrl = new URL(url);
+  const requestImpl = parsedUrl.protocol === "http:" ? httpRequest : httpsRequest;
+
+  return new Promise((resolve, reject) => {
+    const request = requestImpl(parsedUrl, { headers }, (response) => {
+      const chunks = [];
+
+      response.on("data", (chunk) => chunks.push(chunk));
+      response.on("end", () => {
+        resolve({
+          body: Buffer.concat(chunks).toString("utf8"),
+          headers: response.headers,
+          statusCode: response.statusCode || 0
+        });
+      });
+    });
+
+    request.on("error", reject);
+    request.setTimeout(timeoutMs, () => request.destroy(new Error(`Request timed out for ${url}`)));
+    request.end();
+  });
 }
 
 function githubHeaders() {

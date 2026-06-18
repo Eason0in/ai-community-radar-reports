@@ -1,6 +1,6 @@
 # AI Community Radar - 2026-06-18
 
-> Generated: 2026-06-18T01:10:21.796Z
+> Generated: 2026-06-18T01:17:59.539Z
 > Timezone: Asia/Taipei
 > Active cutoff: updated since 2026-06-16; archived GitHub repos excluded; max stale age 2 days.
 
@@ -17,9 +17,9 @@
 
 | # | Repo | Stars | Forks | Language | Updated |
 | --- | --- | ---: | ---: | --- | --- |
-| 1 | [affaan-m/ECC](https://github.com/affaan-m/ECC) | 217,307 | 33,355 | JavaScript | 2026-06-17T17:04:18Z |
-| 2 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 195,718 | 75,194 | C++ | 2026-06-18T01:10:17Z |
-| 3 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 196,208 | 34,533 | Python | 2026-06-18T00:49:04Z |
+| 1 | [affaan-m/ECC](https://github.com/affaan-m/ECC) | 217,311 | 33,355 | JavaScript | 2026-06-17T17:04:18Z |
+| 2 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 195,719 | 75,193 | C++ | 2026-06-18T01:13:22Z |
+| 3 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 196,210 | 34,535 | Python | 2026-06-18T01:14:02Z |
 
 ### 1. [affaan-m/ECC](https://github.com/affaan-m/ECC)
 
@@ -132,30 +132,30 @@ The agent that grows with you.
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/firecrawl/firecrawl-mcp-server](https://github.com/firecrawl/firecrawl-mcp-server) |
 
-#### 6. [oaslananka/a2a-warp](https://github.com/oaslananka/a2a-warp)
+#### 6. [daniyalazhar123/AI-Employee-Vault](https://github.com/daniyalazhar123/AI-Employee-Vault)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | TypeScript runtime, CLI, registry, transports, MCP bridge, and conformance tooling for building and testing Agent2Agent (A2A) protocol integrations. |
+| 說明 | Personal AI Employee — Gold Tier \| Odoo 19 Docker \| Gmail API \| MCP Servers \| Claude Code \| Hackathon 0 |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 7. [archestra-ai/archestra](https://github.com/archestra-ai/archestra)
+#### 7. [munvard/dockterm](https://github.com/munvard/dockterm)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Enterprise AI Platform with guardrails, MCP registry, gateway & orchestrator |
+| 說明 | The calm, terminal-first workspace for Claude Code — run claude, with files, Git, diffs & MCP on demand, and munu, a notch mascot that watches Claude for you. Local-only, no telemetry. |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 8. [tobiasGuta/recon-mcp](https://github.com/tobiasGuta/recon-mcp)
+#### 8. [Xquik-dev/hermes-tweet](https://github.com/Xquik-dev/hermes-tweet)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | recon-mcp is a local Python MCP server for safe, human-led bug bounty recon. It provides lightweight helpers for scope checks, headers, robots.txt, sitemap.xml, JavaScript URL collection, endpoint extraction, URL deduplication, evidence notes, and manual test planning. |
+| 說明 | Native Hermes Agent plugin for X/Twitter automation through Xquik |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 

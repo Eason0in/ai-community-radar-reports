@@ -1,8 +1,8 @@
-# AI Community Radar - 2026-06-18
+# AI Community Radar - 2026-06-19
 
-> Generated: 2026-06-18T01:17:59.539Z
+> Generated: 2026-06-19T01:47:11.679Z
 > Timezone: Asia/Taipei
-> Active cutoff: updated since 2026-06-16; archived GitHub repos excluded; max stale age 2 days.
+> Active cutoff: updated since 2026-06-17; archived GitHub repos excluded; max stale age 2 days.
 
 ## 今日摘要
 
@@ -17,9 +17,9 @@
 
 | # | Repo | Stars | Forks | Language | Updated |
 | --- | --- | ---: | ---: | --- | --- |
-| 1 | [affaan-m/ECC](https://github.com/affaan-m/ECC) | 217,311 | 33,355 | JavaScript | 2026-06-17T17:04:18Z |
-| 2 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 195,719 | 75,193 | C++ | 2026-06-18T01:13:22Z |
-| 3 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 196,210 | 34,535 | Python | 2026-06-18T01:14:02Z |
+| 1 | [affaan-m/ECC](https://github.com/affaan-m/ECC) | 217,796 | 33,414 | JavaScript | 2026-06-19T00:46:24Z |
+| 2 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 195,765 | 75,196 | C++ | 2026-06-19T01:47:01Z |
+| 3 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 197,023 | 34,796 | Python | 2026-06-19T01:45:34Z |
 
 ### 1. [affaan-m/ECC](https://github.com/affaan-m/ECC)
 
@@ -77,7 +77,7 @@ The agent that grows with you.
 | 指標 | 值 |
 | --- | --- |
 | Registry sample | 800 servers |
-| Active baseline since | 2026-06-16 |
+| Active baseline since | 2026-06-17 |
 | GitHub stale cutoff | 2 days |
 
 ### 可能還沒上官方 MCP Registry 的候選
@@ -132,30 +132,30 @@ The agent that grows with you.
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/firecrawl/firecrawl-mcp-server](https://github.com/firecrawl/firecrawl-mcp-server) |
 
-#### 6. [daniyalazhar123/AI-Employee-Vault](https://github.com/daniyalazhar123/AI-Employee-Vault)
+#### 6. [pshort05/bookclaw-mcp](https://github.com/pshort05/bookclaw-mcp)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Personal AI Employee — Gold Tier \| Odoo 19 Docker \| Gmail API \| MCP Servers \| Claude Code \| Hackathon 0 |
+| 說明 | MCP Server for BookClaw |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 7. [munvard/dockterm](https://github.com/munvard/dockterm)
+#### 7. [voidly-ai/voidly-pay](https://github.com/voidly-ai/voidly-pay)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | The calm, terminal-first workspace for Claude Code — run claude, with files, Git, diffs & MCP on demand, and munu, a notch mascot that watches Claude for you. Local-only, no telemetry. |
+| 說明 | Off-chain credit ledger + hire marketplace for AI agents. Ed25519-signed envelopes, atomic settlement, hire-and-release escrow. https://voidly.ai/pay |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 8. [Xquik-dev/hermes-tweet](https://github.com/Xquik-dev/hermes-tweet)
+#### 8. [ninemindai/agentback](https://github.com/ninemindai/agentback)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Native Hermes Agent plugin for X/Twitter automation through Xquik |
+| 說明 | AI native API/MCP framework for the agent era. Built with agents, for agents. |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 

@@ -1,8 +1,8 @@
-# AI Community Radar - 2026-06-19
+# AI Community Radar - 2026-06-22
 
-> Generated: 2026-06-19T01:47:11.679Z
+> Generated: 2026-06-22T00:18:16.325Z
 > Timezone: Asia/Taipei
-> Active cutoff: updated since 2026-06-17; archived GitHub repos excluded; max stale age 2 days.
+> Active cutoff: updated since 2026-06-20; archived GitHub repos excluded; max stale age 2 days.
 
 ## 今日摘要
 
@@ -17,9 +17,9 @@
 
 | # | Repo | Stars | Forks | Language | Updated |
 | --- | --- | ---: | ---: | --- | --- |
-| 1 | [affaan-m/ECC](https://github.com/affaan-m/ECC) | 217,796 | 33,414 | JavaScript | 2026-06-19T00:46:24Z |
-| 2 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 195,765 | 75,196 | C++ | 2026-06-19T01:47:01Z |
-| 3 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 197,023 | 34,796 | Python | 2026-06-19T01:45:34Z |
+| 1 | [affaan-m/ECC](https://github.com/affaan-m/ECC) | 219,317 | 33,610 | JavaScript | 2026-06-21T23:41:59Z |
+| 2 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 195,787 | 75,196 | C++ | 2026-06-21T21:43:43Z |
+| 3 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 198,985 | 35,335 | Python | 2026-06-22T00:14:57Z |
 
 ### 1. [affaan-m/ECC](https://github.com/affaan-m/ECC)
 
@@ -77,7 +77,7 @@ The agent that grows with you.
 | 指標 | 值 |
 | --- | --- |
 | Registry sample | 800 servers |
-| Active baseline since | 2026-06-17 |
+| Active baseline since | 2026-06-20 |
 | GitHub stale cutoff | 2 days |
 
 ### 可能還沒上官方 MCP Registry 的候選
@@ -112,15 +112,15 @@ The agent that grows with you.
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/roychri/mcp-server-asana](https://github.com/roychri/mcp-server-asana) |
 
-#### 4. [@payloadcms/plugin-mcp](https://www.npmjs.com/package/@payloadcms/plugin-mcp)
+#### 4. [@traceloop/instrumentation-mcp](https://www.npmjs.com/package/@traceloop/instrumentation-mcp)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | npm-package |
-| 說明 | MCP (Model Context Protocol) capabilities with Payload |
+| 說明 | MCP (Model Context Protocol) Instrumentation |
 | 為什麼值得看 | npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。 |
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
-| Repo | [https://github.com/payloadcms/payload](https://github.com/payloadcms/payload) |
+| Repo | [https://github.com/traceloop/openllmetry-js](https://github.com/traceloop/openllmetry-js) |
 
 #### 5. [firecrawl-mcp](https://www.npmjs.com/package/firecrawl-mcp)
 
@@ -132,30 +132,30 @@ The agent that grows with you.
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/firecrawl/firecrawl-mcp-server](https://github.com/firecrawl/firecrawl-mcp-server) |
 
-#### 6. [pshort05/bookclaw-mcp](https://github.com/pshort05/bookclaw-mcp)
+#### 6. [gurutersesat24/ai-site-forge](https://github.com/gurutersesat24/ai-site-forge)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | MCP Server for BookClaw |
+| 說明 | Ultimate AI Static Site Generator 2026 – Free No-Lock-in Build Tool for Claude & Cursor |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 7. [voidly-ai/voidly-pay](https://github.com/voidly-ai/voidly-pay)
+#### 7. [moadim-io/daemon](https://github.com/moadim-io/daemon)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Off-chain credit ledger + hire marketplace for AI agents. Ed25519-signed envelopes, atomic settlement, hire-and-release escrow. https://voidly.ai/pay |
+| 說明 | Rust server for managing cron jobs over UI, REST, and MCP interfaces, synced to your OS crontab |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 8. [ninemindai/agentback](https://github.com/ninemindai/agentback)
+#### 8. [WP2-Danikusuma/AgentX](https://github.com/WP2-Danikusuma/AgentX)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | AI native API/MCP framework for the agent era. Built with agents, for agents. |
+| 說明 | 🤖 Build personalized intelligent agents easily with AgentX, a platform that simplifies creation using natural language and integrated tools. |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 

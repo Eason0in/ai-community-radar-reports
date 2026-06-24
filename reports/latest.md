@@ -1,8 +1,8 @@
-# AI Community Radar - 2026-06-23
+# AI Community Radar - 2026-06-24
 
-> Generated: 2026-06-23T00:14:52.986Z
+> Generated: 2026-06-24T00:04:04.124Z
 > Timezone: Asia/Taipei
-> Active cutoff: updated since 2026-06-21; archived GitHub repos excluded; max stale age 2 days.
+> Active cutoff: updated since 2026-06-22; archived GitHub repos excluded; max stale age 2 days.
 
 ## 今日摘要
 
@@ -17,9 +17,9 @@
 
 | # | Repo | Stars | Forks | Language | Updated |
 | --- | --- | ---: | ---: | --- | --- |
-| 1 | [affaan-m/ECC](https://github.com/affaan-m/ECC) | 219,912 | 33,705 | JavaScript | 2026-06-22T04:55:54Z |
-| 2 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 195,827 | 75,184 | C++ | 2026-06-23T00:07:16Z |
-| 3 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 199,941 | 35,578 | Python | 2026-06-23T00:07:33Z |
+| 1 | [affaan-m/ECC](https://github.com/affaan-m/ECC) | 220,518 | 33,780 | JavaScript | 2026-06-22T04:55:54Z |
+| 2 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 195,914 | 75,184 | C++ | 2026-06-24T00:03:10Z |
+| 3 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 200,907 | 35,833 | Python | 2026-06-23T23:56:15Z |
 
 ### 1. [affaan-m/ECC](https://github.com/affaan-m/ECC)
 
@@ -77,7 +77,7 @@ The agent that grows with you.
 | 指標 | 值 |
 | --- | --- |
 | Registry sample | 800 servers |
-| Active baseline since | 2026-06-21 |
+| Active baseline since | 2026-06-22 |
 | GitHub stale cutoff | 2 days |
 
 ### 可能還沒上官方 MCP Registry 的候選
@@ -92,17 +92,7 @@ The agent that grows with you.
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/universal-tool-calling-protocol/typescript-utcp](https://github.com/universal-tool-calling-protocol/typescript-utcp) |
 
-#### 2. [@launchdarkly/mcp-server](https://www.npmjs.com/package/@launchdarkly/mcp-server)
-
-| 欄位 | 內容 |
-| --- | --- |
-| 類型 | npm-package |
-| 說明 | The official Model Context Protocol (MCP) server for LaunchDarkly. |
-| 為什麼值得看 | npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。 |
-| 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
-| Repo | [https://github.com/launchdarkly/mcp-server](https://github.com/launchdarkly/mcp-server) |
-
-#### 3. [@roychri/mcp-server-asana](https://www.npmjs.com/package/@roychri/mcp-server-asana)
+#### 2. [@roychri/mcp-server-asana](https://www.npmjs.com/package/@roychri/mcp-server-asana)
 
 | 欄位 | 內容 |
 | --- | --- |
@@ -112,15 +102,25 @@ The agent that grows with you.
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/roychri/mcp-server-asana](https://github.com/roychri/mcp-server-asana) |
 
-#### 4. [@traceloop/instrumentation-mcp](https://www.npmjs.com/package/@traceloop/instrumentation-mcp)
+#### 3. [@launchdarkly/mcp-server](https://www.npmjs.com/package/@launchdarkly/mcp-server)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | npm-package |
-| 說明 | MCP (Model Context Protocol) Instrumentation |
+| 說明 | The official Model Context Protocol (MCP) server for LaunchDarkly. |
 | 為什麼值得看 | npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。 |
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
-| Repo | [https://github.com/traceloop/openllmetry-js](https://github.com/traceloop/openllmetry-js) |
+| Repo | [https://github.com/launchdarkly/mcp-server](https://github.com/launchdarkly/mcp-server) |
+
+#### 4. [@ui5/mcp-server](https://www.npmjs.com/package/@ui5/mcp-server)
+
+| 欄位 | 內容 |
+| --- | --- |
+| 類型 | npm-package |
+| 說明 | MCP server for SAPUI5/OpenUI5 development |
+| 為什麼值得看 | npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。 |
+| 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
+| Repo | [https://github.com/UI5/mcp-server](https://github.com/UI5/mcp-server) |
 
 #### 5. [@stripe/mcp](https://www.npmjs.com/package/@stripe/mcp)
 
@@ -132,30 +132,30 @@ The agent that grows with you.
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/stripe/ai](https://github.com/stripe/ai) |
 
-#### 6. [elvis-velez/google-ads-mcp](https://github.com/elvis-velez/google-ads-mcp)
+#### 6. [tcsarmento/AI-Code-Super-Challenge](https://github.com/tcsarmento/AI-Code-Super-Challenge)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Manage Google Ads accounts via MCP. Execute GAQL reads and secure two-phase mutations with full v24 API coverage for reliable ad campaign control. |
+| 說明 | 🤖 Elevate your AI skills with hands-on challenges focused on enterprise AI modernization and full-stack development using Python and Azure. |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 7. [muhamedali7713/agent-audit](https://github.com/muhamedali7713/agent-audit)
+#### 7. [ruvnet/agent-harness-generator](https://github.com/ruvnet/agent-harness-generator)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Audit AI coding agents and project configurations for security flaws using static analysis, custom rules, and LLM-assisted verification. |
+| 說明 | 🛠️ The meta-harness for AI agents — scaffold your own focused, branded agent harness with its own npx CLI, MCP server, memory, learning loop, and witness-signed releases. Works with Claude Code, Codex, pi.dev, Hermes, OpenClaw, and RVM (hardware-isolated sandbox). |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 8. [prairiemimosajamestown413/weixin-articles-mcp](https://github.com/prairiemimosajamestown413/weixin-articles-mcp)
+#### 8. [msaad00/agent-bom](https://github.com/msaad00/agent-bom)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Fetch WeChat Official Account articles as MCP content blocks with direct image and video keyframe support for LLMs. |
+| 說明 | AI supply-chain & cloud security scanner and self-hosted control plane — agents, MCP, packages, cloud estate, non-human identities, and LLM cost. SBOM/SARIF, graph attack-paths, runtime enforcement, and compliance evidence. |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 

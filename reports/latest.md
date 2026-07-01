@@ -1,8 +1,8 @@
-# AI Community Radar - 2026-06-30
+# AI Community Radar - 2026-07-01
 
-> Generated: 2026-06-30T00:12:22.085Z
+> Generated: 2026-07-01T00:14:28.819Z
 > Timezone: Asia/Taipei
-> Active cutoff: updated since 2026-06-28; archived GitHub repos excluded; max stale age 2 days.
+> Active cutoff: updated since 2026-06-29; archived GitHub repos excluded; max stale age 2 days.
 
 ## 今日摘要
 
@@ -17,9 +17,9 @@
 
 | # | Repo | Stars | Forks | Language | Updated |
 | --- | --- | ---: | ---: | --- | --- |
-| 1 | [affaan-m/ECC](https://github.com/affaan-m/ECC) | 223,490 | 34,217 | JavaScript | 2026-06-29T22:58:35Z |
-| 2 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 205,711 | 37,163 | Python | 2026-06-30T00:11:20Z |
-| 3 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 196,106 | 75,188 | C++ | 2026-06-30T00:11:23Z |
+| 1 | [affaan-m/ECC](https://github.com/affaan-m/ECC) | 224,081 | 34,296 | JavaScript | 2026-07-01T00:05:10Z |
+| 2 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 206,466 | 37,341 | Python | 2026-07-01T00:08:11Z |
+| 3 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 196,009 | 75,219 | C++ | 2026-07-01T00:12:10Z |
 
 ### 1. [affaan-m/ECC](https://github.com/affaan-m/ECC)
 
@@ -77,7 +77,7 @@ An Open Source Machine Learning Framework for Everyone.
 | 指標 | 值 |
 | --- | --- |
 | Registry sample | 800 servers |
-| Active baseline since | 2026-06-28 |
+| Active baseline since | 2026-06-29 |
 | GitHub stale cutoff | 2 days |
 
 ### 可能還沒上官方 MCP Registry 的候選
@@ -92,7 +92,17 @@ An Open Source Machine Learning Framework for Everyone.
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/universal-tool-calling-protocol/typescript-utcp](https://github.com/universal-tool-calling-protocol/typescript-utcp) |
 
-#### 2. [@roychri/mcp-server-asana](https://www.npmjs.com/package/@roychri/mcp-server-asana)
+#### 2. [@ui5/mcp-server](https://www.npmjs.com/package/@ui5/mcp-server)
+
+| 欄位 | 內容 |
+| --- | --- |
+| 類型 | npm-package |
+| 說明 | MCP server for SAPUI5/OpenUI5 development |
+| 為什麼值得看 | npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。 |
+| 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
+| Repo | [https://github.com/UI5/mcp-server](https://github.com/UI5/mcp-server) |
+
+#### 3. [@roychri/mcp-server-asana](https://www.npmjs.com/package/@roychri/mcp-server-asana)
 
 | 欄位 | 內容 |
 | --- | --- |
@@ -102,7 +112,7 @@ An Open Source Machine Learning Framework for Everyone.
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/roychri/mcp-server-asana](https://github.com/roychri/mcp-server-asana) |
 
-#### 3. [@launchdarkly/mcp-server](https://www.npmjs.com/package/@launchdarkly/mcp-server)
+#### 4. [@launchdarkly/mcp-server](https://www.npmjs.com/package/@launchdarkly/mcp-server)
 
 | 欄位 | 內容 |
 | --- | --- |
@@ -112,50 +122,40 @@ An Open Source Machine Learning Framework for Everyone.
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/launchdarkly/mcp-server](https://github.com/launchdarkly/mcp-server) |
 
-#### 4. [@traceloop/instrumentation-mcp](https://www.npmjs.com/package/@traceloop/instrumentation-mcp)
+#### 5. [@stripe/mcp](https://www.npmjs.com/package/@stripe/mcp)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | npm-package |
-| 說明 | MCP (Model Context Protocol) Instrumentation |
+| 說明 | A command line tool for setting up Stripe MCP server |
 | 為什麼值得看 | npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。 |
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
-| Repo | [https://github.com/traceloop/openllmetry-js](https://github.com/traceloop/openllmetry-js) |
+| Repo | [https://github.com/stripe/ai](https://github.com/stripe/ai) |
 
-#### 5. [firecrawl-mcp](https://www.npmjs.com/package/firecrawl-mcp)
-
-| 欄位 | 內容 |
-| --- | --- |
-| 類型 | npm-package |
-| 說明 | MCP server for Firecrawl — search, scrape, and interact with the web. Supports both cloud and self-hosted instances. Features include web search, scraping, page interaction, batch processing, and LLM-powered content analysis. |
-| 為什麼值得看 | npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。 |
-| 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
-| Repo | [https://github.com/firecrawl/firecrawl-mcp-server](https://github.com/firecrawl/firecrawl-mcp-server) |
-
-#### 6. [JackREscowitz/Proof-Of-Human-Drops](https://github.com/JackREscowitz/Proof-Of-Human-Drops)
+#### 6. [docxology/codomyrmex](https://github.com/docxology/codomyrmex)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Bot-proof scarce-goods drop platform where every entry, from a person or their AI agent, is tied to one verified human via World ID. 1st place, World AgentKit track, ETH Global NYC 2026. |
+| 說明 | 🐜 AI-native modular coding workspace — 127 modules, 424 MCP tools, 21K+ zero-mock tests, multi-agent orchestration (Claude/Gemini/GPT), PAI integration |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 7. [GabrielCostaLopes16/claude-code-hooks](https://github.com/GabrielCostaLopes16/claude-code-hooks)
+#### 7. [decocms/studio](https://github.com/decocms/studio)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | 🪝 Customize and deploy ready-to-use hooks for Claude Code, enhancing safety, automation, and notifications in your projects. |
+| 說明 | Open-source control plane for your AI agents. Connect tools, hire agents, track every token and dollar |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 8. [itsofficialomkar/vibe-wave-router](https://github.com/itsofficialomkar/vibe-wave-router)
+#### 8. [Vectorion/codestack-automator](https://github.com/Vectorion/codestack-automator)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Vibe-Flow 2.0: Ship, Review & Merge via Wave Dispatch 2026 |
+| 說明 | Revolutionize Your Dev Workflow 2026: Auto-Scan & Optimize 100+ Tech Stacks Instantly |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 

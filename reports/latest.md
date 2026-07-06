@@ -1,8 +1,8 @@
-# AI Community Radar - 2026-07-03
+# AI Community Radar - 2026-07-06
 
-> Generated: 2026-07-03T00:13:07.841Z
+> Generated: 2026-07-06T00:13:37.933Z
 > Timezone: Asia/Taipei
-> Active cutoff: updated since 2026-07-01; archived GitHub repos excluded; max stale age 2 days.
+> Active cutoff: updated since 2026-07-04; archived GitHub repos excluded; max stale age 2 days.
 
 ## 今日摘要
 
@@ -17,9 +17,9 @@
 
 | # | Repo | Stars | Forks | Language | Updated |
 | --- | --- | ---: | ---: | --- | --- |
-| 1 | [affaan-m/ECC](https://github.com/affaan-m/ECC) | 225,171 | 34,457 | JavaScript | 2026-07-01T00:43:50Z |
-| 2 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 208,025 | 37,842 | Python | 2026-07-03T00:10:16Z |
-| 3 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 195,973 | 75,255 | C++ | 2026-07-03T00:09:17Z |
+| 1 | [affaan-m/ECC](https://github.com/affaan-m/ECC) | 226,324 | 34,621 | JavaScript | 2026-07-04T20:44:28Z |
+| 2 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 209,660 | 38,323 | Python | 2026-07-06T00:12:41Z |
+| 3 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 196,111 | 75,301 | C++ | 2026-07-05T21:52:54Z |
 
 ### 1. [affaan-m/ECC](https://github.com/affaan-m/ECC)
 
@@ -77,7 +77,7 @@ An Open Source Machine Learning Framework for Everyone.
 | 指標 | 值 |
 | --- | --- |
 | Registry sample | 800 servers |
-| Active baseline since | 2026-07-01 |
+| Active baseline since | 2026-07-04 |
 | GitHub stale cutoff | 2 days |
 
 ### 可能還沒上官方 MCP Registry 的候選
@@ -132,30 +132,30 @@ An Open Source Machine Learning Framework for Everyone.
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/firecrawl/firecrawl-mcp-server](https://github.com/firecrawl/firecrawl-mcp-server) |
 
-#### 6. [eggstack/eggsact](https://github.com/eggstack/eggsact)
+#### 6. [richardpapiona9/llm](https://github.com/richardpapiona9/llm)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | A natural language math calculator with an MCP (Model Context Protocol) server for AI coding agents. |
+| 說明 | 🤖 Build engaging AI chat experiences with Ultralytics LLM, a lightweight JavaScript client for web applications, delivered via jsDelivr with zero dependencies. |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 7. [rychardsonaguar-art/qiaomu-music-player-ncm](https://github.com/rychardsonaguar-art/qiaomu-music-player-ncm)
+#### 7. [voidly-ai/voidly-pay](https://github.com/voidly-ai/voidly-pay)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Manage NetEase Cloud Music with Claude Code: play controls, search, queue, recommendations, lyrics, and timed music pushes |
+| 說明 | Off-chain credit ledger + hire marketplace for AI agents. Ed25519-signed envelopes, atomic settlement, hire-and-release escrow. https://voidly.ai/pay |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 8. [Ayushje/nslookup-mcp](https://github.com/Ayushje/nslookup-mcp)
+#### 8. [luiz4986/plotnine-mcp](https://github.com/luiz4986/plotnine-mcp)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Run DNS lookups, SSL checks, security scans, GEO scores, and domain intelligence via MCP with nslookup.io |
+| 說明 | 🎨 Discover a Model Context Protocol server that enables AI-driven data visualization with plotnine, merging ggplot2’s power with natural language interaction. |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 

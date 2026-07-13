@@ -1,8 +1,8 @@
-# AI Community Radar - 2026-07-10
+# AI Community Radar - 2026-07-13
 
-> Generated: 2026-07-10T00:11:57.625Z
+> Generated: 2026-07-13T00:00:45.843Z
 > Timezone: Asia/Taipei
-> Active cutoff: updated since 2026-07-08; archived GitHub repos excluded; max stale age 2 days.
+> Active cutoff: updated since 2026-07-11; archived GitHub repos excluded; max stale age 2 days.
 
 ## 今日摘要
 
@@ -17,28 +17,11 @@
 
 | # | Repo | Stars | Forks | Language | Updated |
 | --- | --- | ---: | ---: | --- | --- |
-| 1 | [affaan-m/ECC](https://github.com/affaan-m/ECC) | 227,859 | 34,848 | JavaScript | 2026-07-09T07:53:52Z |
-| 2 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 212,195 | 39,097 | Python | 2026-07-09T23:58:39Z |
-| 3 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 196,164 | 75,351 | C++ | 2026-07-10T00:06:47Z |
+| 1 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 213,729 | 39,625 | Python | 2026-07-12T18:27:47Z |
+| 2 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 196,292 | 75,500 | C++ | 2026-07-12T23:13:21Z |
+| 3 | [Significant-Gravitas/AutoGPT](https://github.com/Significant-Gravitas/AutoGPT) | 185,496 | 46,107 | Python | 2026-07-11T20:00:23Z |
 
-### 1. [affaan-m/ECC](https://github.com/affaan-m/ECC)
-
-**可以做什麼**
-
-The agent harness performance optimization system. Skills, instincts, memory, security, and research-first development for Claude Code, Codex, Opencode, Cursor and beyond.
-
-**解決什麼問題**
-
-降低建置 AI agent、工具調用、任務規劃或多步驟自動化的成本。
-
-**可貢獻切角**
-
-可先做 read-only MCP companion 或文件搜尋工具，若 repo 沒有官方 MCP integration，這會是低風險且有社群價值的切入點。
-
-**Topics**: `ai-agents`, `anthropic`, `claude`, `claude-code`, `developer-tools`, `llm`, `mcp`, `productivity`
-**Glama 交叉查詢**: https://glama.ai/mcp/servers?q=ECC
-
-### 2. [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent)
+### 1. [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent)
 
 **可以做什麼**
 
@@ -55,7 +38,7 @@ The agent that grows with you.
 **Topics**: `ai`, `ai-agent`, `ai-agents`, `anthropic`, `chatgpt`, `claude`, `claude-code`, `clawdbot`
 **Glama 交叉查詢**: https://glama.ai/mcp/servers?q=hermes-agent
 
-### 3. [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow)
+### 2. [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow)
 
 **可以做什麼**
 
@@ -72,12 +55,29 @@ An Open Source Machine Learning Framework for Everyone.
 **Topics**: `deep-learning`, `deep-neural-networks`, `distributed`, `machine-learning`, `ml`, `neural-network`, `python`, `tensorflow`
 **Glama 交叉查詢**: https://glama.ai/mcp/servers?q=tensorflow
 
+### 3. [Significant-Gravitas/AutoGPT](https://github.com/Significant-Gravitas/AutoGPT)
+
+**可以做什麼**
+
+AutoGPT is the vision of accessible AI for everyone, to use and to build on. Our mission is to provide the tools, so that you can focus on what matters.
+
+**解決什麼問題**
+
+降低建置 AI agent、工具調用、任務規劃或多步驟自動化的成本。
+
+**可貢獻切角**
+
+可先做 read-only MCP companion 或文件搜尋工具，若 repo 沒有官方 MCP integration，這會是低風險且有社群價值的切入點。
+
+**Topics**: `agentic-ai`, `agents`, `ai`, `artificial-intelligence`, `autonomous-agents`, `claude`, `gpt`, `llama-api`
+**Glama 交叉查詢**: https://glama.ai/mcp/servers?q=AutoGPT
+
 ## MCP / Tool 社群機會
 
 | 指標 | 值 |
 | --- | --- |
 | Registry sample | 800 servers |
-| Active baseline since | 2026-07-08 |
+| Active baseline since | 2026-07-11 |
 | GitHub stale cutoff | 2 days |
 
 ### 可能還沒上官方 MCP Registry 的候選
@@ -122,60 +122,46 @@ An Open Source Machine Learning Framework for Everyone.
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/traceloop/openllmetry-js](https://github.com/traceloop/openllmetry-js) |
 
-#### 5. [firecrawl-mcp](https://www.npmjs.com/package/firecrawl-mcp)
+#### 5. [@ui5/mcp-server](https://www.npmjs.com/package/@ui5/mcp-server)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | npm-package |
-| 說明 | MCP server for Firecrawl — search, scrape, and interact with the web. Supports both cloud and self-hosted instances. Features include web search, scraping, page interaction, batch processing, and LLM-powered content analysis. |
+| 說明 | MCP server for SAPUI5/OpenUI5 development |
 | 為什麼值得看 | npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。 |
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
-| Repo | [https://github.com/firecrawl/firecrawl-mcp-server](https://github.com/firecrawl/firecrawl-mcp-server) |
+| Repo | [https://github.com/UI5/mcp-server](https://github.com/UI5/mcp-server) |
 
-#### 6. [DareDev256/fcpxml-mcp-server](https://github.com/DareDev256/fcpxml-mcp-server)
+#### 6. [linny006/mcp-servers-live](https://github.com/linny006/mcp-servers-live)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | 🎬 The first AI-powered MCP server for Final Cut Pro XML. Control your edits with natural language. |
+| 說明 | Auto-updated index of MCP servers shipping on GitHub, refreshed every 15 minutes |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 7. [edicarloslds/businessmap-mcp](https://github.com/edicarloslds/businessmap-mcp)
+#### 7. [LooseWireDev/mealforge](https://github.com/LooseWireDev/mealforge)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Model Context Protocol server for BusinessMap (Kanbanize) integration |
+| 說明 | AI-planned weekly meals, self-hosted. Plan in chat with any MCP-capable agent — get recipe cards, cook mode, and an auto-derived grocery list. |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 8. [bochen2029-pixel/keel](https://github.com/bochen2029-pixel/keel)
+#### 8. [Vectorion/codestack-automator](https://github.com/Vectorion/codestack-automator)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Sovereign, reusable AI-harness core — the genome: perceive (eyes+ears), remember, route each step to the cheapest brain that clears the trust bar, and ground every critical output in an assertion no model authored. Rented cognition, owned self. Native Rust; embedded or over protocol (OpenAI + MCP). |
+| 說明 | Revolutionize Your Dev Workflow 2026: Auto-Scan & Optimize 100+ Tech Stacks Instantly |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
 ### 建議可以實作的工具
 
-#### 1. [affaan-m/ECC MCP companion](https://github.com/affaan-m/ECC)
-
-**可以做什麼**
-
-為 affaan-m/ECC 做一個 MCP companion，讓 agent 可以查詢專案能力、範例、設定檔、常見錯誤與 release note。
-
-**為什麼有人會用**
-
-熱門 AI repo 通常文件量大、設定組合多；MCP 化後可直接服務 Cursor、Claude Code、Codex、ChatGPT 等 agent 工作流。
-
-**MVP**
-
-先做 read-only tools：search_docs、list_examples、explain_config、troubleshoot_error；穩定後再補 scaffold 或 patch 類工具。
-
-#### 2. [NousResearch/hermes-agent MCP companion](https://github.com/NousResearch/hermes-agent)
+#### 1. [NousResearch/hermes-agent MCP companion](https://github.com/NousResearch/hermes-agent)
 
 **可以做什麼**
 
@@ -189,11 +175,25 @@ An Open Source Machine Learning Framework for Everyone.
 
 先做 read-only tools：search_docs、list_examples、explain_config、troubleshoot_error；穩定後再補 scaffold 或 patch 類工具。
 
-#### 3. [tensorflow/tensorflow MCP companion](https://github.com/tensorflow/tensorflow)
+#### 2. [tensorflow/tensorflow MCP companion](https://github.com/tensorflow/tensorflow)
 
 **可以做什麼**
 
 為 tensorflow/tensorflow 做一個 MCP companion，讓 agent 可以查詢專案能力、範例、設定檔、常見錯誤與 release note。
+
+**為什麼有人會用**
+
+熱門 AI repo 通常文件量大、設定組合多；MCP 化後可直接服務 Cursor、Claude Code、Codex、ChatGPT 等 agent 工作流。
+
+**MVP**
+
+先做 read-only tools：search_docs、list_examples、explain_config、troubleshoot_error；穩定後再補 scaffold 或 patch 類工具。
+
+#### 3. [Significant-Gravitas/AutoGPT MCP companion](https://github.com/Significant-Gravitas/AutoGPT)
+
+**可以做什麼**
+
+為 Significant-Gravitas/AutoGPT 做一個 MCP companion，讓 agent 可以查詢專案能力、範例、設定檔、常見錯誤與 release note。
 
 **為什麼有人會用**
 

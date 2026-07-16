@@ -1,8 +1,8 @@
-# AI Community Radar - 2026-07-15
+# AI Community Radar - 2026-07-16
 
-> Generated: 2026-07-14T23:57:39.303Z
+> Generated: 2026-07-16T00:03:55.599Z
 > Timezone: Asia/Taipei
-> Active cutoff: updated since 2026-07-12; archived GitHub repos excluded; max stale age 2 days.
+> Active cutoff: updated since 2026-07-14; archived GitHub repos excluded; max stale age 2 days.
 
 ## 今日摘要
 
@@ -17,9 +17,9 @@
 
 | # | Repo | Stars | Forks | Language | Updated |
 | --- | --- | ---: | ---: | --- | --- |
-| 1 | [affaan-m/ECC](https://github.com/affaan-m/ECC) | 229,716 | 35,164 | JavaScript | 2026-07-14T01:31:12Z |
-| 2 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 214,873 | 39,980 | Python | 2026-07-14T23:31:36Z |
-| 3 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 196,354 | 75,552 | C++ | 2026-07-14T23:54:28Z |
+| 1 | [affaan-m/ECC](https://github.com/affaan-m/ECC) | 230,112 | 35,220 | JavaScript | 2026-07-14T01:31:12Z |
+| 2 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 215,454 | 40,178 | Python | 2026-07-16T00:01:31Z |
+| 3 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 196,361 | 75,563 | C++ | 2026-07-16T00:00:49Z |
 
 ### 1. [affaan-m/ECC](https://github.com/affaan-m/ECC)
 
@@ -77,7 +77,7 @@ An Open Source Machine Learning Framework for Everyone.
 | 指標 | 值 |
 | --- | --- |
 | Registry sample | 800 servers |
-| Active baseline since | 2026-07-12 |
+| Active baseline since | 2026-07-14 |
 | GitHub stale cutoff | 2 days |
 
 ### 可能還沒上官方 MCP Registry 的候選
@@ -92,17 +92,7 @@ An Open Source Machine Learning Framework for Everyone.
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/universal-tool-calling-protocol/typescript-utcp](https://github.com/universal-tool-calling-protocol/typescript-utcp) |
 
-#### 2. [@ui5/mcp-server](https://www.npmjs.com/package/@ui5/mcp-server)
-
-| 欄位 | 內容 |
-| --- | --- |
-| 類型 | npm-package |
-| 說明 | MCP server for SAPUI5/OpenUI5 development |
-| 為什麼值得看 | npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。 |
-| 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
-| Repo | [https://github.com/UI5/mcp-server](https://github.com/UI5/mcp-server) |
-
-#### 3. [@launchdarkly/mcp-server](https://www.npmjs.com/package/@launchdarkly/mcp-server)
+#### 2. [@launchdarkly/mcp-server](https://www.npmjs.com/package/@launchdarkly/mcp-server)
 
 | 欄位 | 內容 |
 | --- | --- |
@@ -112,7 +102,7 @@ An Open Source Machine Learning Framework for Everyone.
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/launchdarkly/mcp-server](https://github.com/launchdarkly/mcp-server) |
 
-#### 4. [@traceloop/instrumentation-mcp](https://www.npmjs.com/package/@traceloop/instrumentation-mcp)
+#### 3. [@traceloop/instrumentation-mcp](https://www.npmjs.com/package/@traceloop/instrumentation-mcp)
 
 | 欄位 | 內容 |
 | --- | --- |
@@ -122,40 +112,50 @@ An Open Source Machine Learning Framework for Everyone.
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/traceloop/openllmetry-js](https://github.com/traceloop/openllmetry-js) |
 
-#### 5. [nx-mcp](https://www.npmjs.com/package/nx-mcp)
+#### 4. [@roychri/mcp-server-asana](https://www.npmjs.com/package/@roychri/mcp-server-asana)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | npm-package |
-| 說明 | A Model Context Protocol server implementation for Nx |
+| 說明 | MCP Server for Asana |
 | 為什麼值得看 | npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。 |
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
-| Repo | [https://github.com/nrwl/nx-console](https://github.com/nrwl/nx-console) |
+| Repo | [https://github.com/roychri/mcp-server-asana](https://github.com/roychri/mcp-server-asana) |
 
-#### 6. [ohdearquant/khive](https://github.com/ohdearquant/khive)
+#### 5. [firecrawl-mcp](https://www.npmjs.com/package/firecrawl-mcp)
+
+| 欄位 | 內容 |
+| --- | --- |
+| 類型 | npm-package |
+| 說明 | MCP server for Firecrawl — search, scrape, and interact with the web. Supports both cloud and self-hosted instances. Features include web search, scraping, page interaction, batch processing, and LLM-powered content analysis. |
+| 為什麼值得看 | npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。 |
+| 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
+| Repo | [https://github.com/firecrawl/firecrawl-mcp-server](https://github.com/firecrawl/firecrawl-mcp-server) |
+
+#### 6. [myraffy/homelab-mcp](https://github.com/myraffy/homelab-mcp)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | A knowledge graph your AI agents build, query, and grow. Built for agents that need structure beyond vectors |
+| 說明 | 🔧 Manage and monitor your homelab infrastructure efficiently with Model Context Protocol (MCP) servers through Claude Desktop. |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 7. [DustinTrap/kvm-pilot](https://github.com/DustinTrap/kvm-pilot)
+#### 7. [JKHeadley/instar](https://github.com/JKHeadley/instar)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | AI-driven bare-metal control for PiKVM/GLKVM and Redfish BMCs — vision boot-phase detection, a safety layer for destructive ops, and an MCP server for agents. Alpha: seeking hardware reports. |
+| 說明 | Persistent Claude Code agents with scheduling, sessions, memory, and Telegram. |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 8. [linhtringon/jak-swarm-nexus](https://github.com/linhtringon/jak-swarm-nexus)
+#### 8. [Vectorion/codestack-automator](https://github.com/Vectorion/codestack-automator)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Autonomous AI Agent Platform 2026 🚀 - Multi-Agent SaaS with MCP & DAG |
+| 說明 | Revolutionize Your Dev Workflow 2026: Auto-Scan & Optimize 100+ Tech Stacks Instantly |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 

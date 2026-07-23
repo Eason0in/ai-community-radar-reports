@@ -1,8 +1,8 @@
-# AI Community Radar - 2026-07-22
+# AI Community Radar - 2026-07-23
 
-> Generated: 2026-07-21T23:59:01.940Z
+> Generated: 2026-07-23T00:06:17.198Z
 > Timezone: Asia/Taipei
-> Active cutoff: updated since 2026-07-19; archived GitHub repos excluded; max stale age 2 days.
+> Active cutoff: updated since 2026-07-21; archived GitHub repos excluded; max stale age 2 days.
 
 ## 今日摘要
 
@@ -17,9 +17,9 @@
 
 | # | Repo | Stars | Forks | Language | Updated |
 | --- | --- | ---: | ---: | --- | --- |
-| 1 | [affaan-m/ECC](https://github.com/affaan-m/ECC) | 231,889 | 35,379 | JavaScript | 2026-07-21T22:57:23Z |
-| 2 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 218,388 | 41,297 | Python | 2026-07-21T23:05:18Z |
-| 3 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 196,435 | 75,653 | C++ | 2026-07-21T23:52:26Z |
+| 1 | [affaan-m/ECC](https://github.com/affaan-m/ECC) | 232,220 | 35,411 | JavaScript | 2026-07-22T20:28:13Z |
+| 2 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 218,962 | 41,483 | Python | 2026-07-23T00:03:36Z |
+| 3 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 196,447 | 75,687 | C++ | 2026-07-22T23:58:50Z |
 
 ### 1. [affaan-m/ECC](https://github.com/affaan-m/ECC)
 
@@ -77,7 +77,7 @@ An Open Source Machine Learning Framework for Everyone.
 | 指標 | 值 |
 | --- | --- |
 | Registry sample | 800 servers |
-| Active baseline since | 2026-07-19 |
+| Active baseline since | 2026-07-21 |
 | GitHub stale cutoff | 2 days |
 
 ### 可能還沒上官方 MCP Registry 的候選
@@ -92,17 +92,7 @@ An Open Source Machine Learning Framework for Everyone.
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/universal-tool-calling-protocol/typescript-utcp](https://github.com/universal-tool-calling-protocol/typescript-utcp) |
 
-#### 2. [@ui5/mcp-server](https://www.npmjs.com/package/@ui5/mcp-server)
-
-| 欄位 | 內容 |
-| --- | --- |
-| 類型 | npm-package |
-| 說明 | MCP server for SAPUI5/OpenUI5 development |
-| 為什麼值得看 | npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。 |
-| 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
-| Repo | [https://github.com/UI5/mcp-server](https://github.com/UI5/mcp-server) |
-
-#### 3. [@launchdarkly/mcp-server](https://www.npmjs.com/package/@launchdarkly/mcp-server)
+#### 2. [@launchdarkly/mcp-server](https://www.npmjs.com/package/@launchdarkly/mcp-server)
 
 | 欄位 | 內容 |
 | --- | --- |
@@ -112,50 +102,60 @@ An Open Source Machine Learning Framework for Everyone.
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/launchdarkly/mcp-server](https://github.com/launchdarkly/mcp-server) |
 
-#### 4. [nx-mcp](https://www.npmjs.com/package/nx-mcp)
+#### 3. [@traceloop/instrumentation-mcp](https://www.npmjs.com/package/@traceloop/instrumentation-mcp)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | npm-package |
-| 說明 | A Model Context Protocol server implementation for Nx |
+| 說明 | MCP (Model Context Protocol) Instrumentation |
 | 為什麼值得看 | npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。 |
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
-| Repo | [https://github.com/nrwl/nx-console](https://github.com/nrwl/nx-console) |
+| Repo | [https://github.com/traceloop/openllmetry-js](https://github.com/traceloop/openllmetry-js) |
 
-#### 5. [@clerk/mcp-tools](https://www.npmjs.com/package/@clerk/mcp-tools)
+#### 4. [@roychri/mcp-server-asana](https://www.npmjs.com/package/@roychri/mcp-server-asana)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | npm-package |
-| 說明 | Tools for writing MCP clients and servers without pain |
+| 說明 | MCP Server for Asana |
 | 為什麼值得看 | npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。 |
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
-| Repo | [https://github.com/clerk/mcp-tools](https://github.com/clerk/mcp-tools) |
+| Repo | [https://github.com/roychri/mcp-server-asana](https://github.com/roychri/mcp-server-asana) |
 
-#### 6. [moadim-io/daemon](https://github.com/moadim-io/daemon)
+#### 5. [@payloadcms/plugin-mcp](https://www.npmjs.com/package/@payloadcms/plugin-mcp)
+
+| 欄位 | 內容 |
+| --- | --- |
+| 類型 | npm-package |
+| 說明 | MCP (Model Context Protocol) capabilities with Payload |
+| 為什麼值得看 | npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。 |
+| 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
+| Repo | [https://github.com/payloadcms/payload](https://github.com/payloadcms/payload) |
+
+#### 6. [BaesTheorem/exobrain-harness](https://github.com/BaesTheorem/exobrain-harness)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Rust server for managing cron jobs over UI, REST, and MCP interfaces, synced to your OS crontab |
+| 說明 | 🧠 A self-hosted AI exobrain. Claude Code wired into 50+ skills, launchd watchers, and MCP servers, fusing voice transcripts, handwritten notes, calendar, tasks, and health data into one always-on accountability partner that makes sure nothing falls through the cracks. |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 7. [dariohy/mcp-kali](https://github.com/dariohy/mcp-kali)
+#### 7. [Timwal78/SML_Portfolio](https://github.com/Timwal78/SML_Portfolio)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Rust client/server for asynchronous Kali Linux tool scheduling over MCP, with durable jobs and a browser dashboard. |
+| 說明 | No description. |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 8. [1HUNZ/AI-Codebase-Vectorizer](https://github.com/1HUNZ/AI-Codebase-Vectorizer)
+#### 8. [tsouth89/toolport](https://github.com/tsouth89/toolport)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | RepoMap AI 2026: Map Codebases for AI Assistants Beyond Window Limits |
+| 說明 | Local-first MCP gateway. One port for every tool and every AI client: lazy discovery (~90% token savings), tool integrity + quarantine, secrets in the OS keychain. |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 

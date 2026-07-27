@@ -1,8 +1,8 @@
-# AI Community Radar - 2026-07-24
+# AI Community Radar - 2026-07-27
 
-> Generated: 2026-07-24T00:05:12.945Z
+> Generated: 2026-07-27T00:05:48.454Z
 > Timezone: Asia/Taipei
-> Active cutoff: updated since 2026-07-22; archived GitHub repos excluded; max stale age 2 days.
+> Active cutoff: updated since 2026-07-25; archived GitHub repos excluded; max stale age 2 days.
 
 ## 今日摘要
 
@@ -17,9 +17,9 @@
 
 | # | Repo | Stars | Forks | Language | Updated |
 | --- | --- | ---: | ---: | --- | --- |
-| 1 | [affaan-m/ECC](https://github.com/affaan-m/ECC) | 232,574 | 35,444 | JavaScript | 2026-07-23T22:24:29Z |
-| 2 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 219,504 | 41,660 | Python | 2026-07-24T00:03:52Z |
-| 3 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 196,480 | 75,505 | C++ | 2026-07-24T00:03:31Z |
+| 1 | [affaan-m/ECC](https://github.com/affaan-m/ECC) | 233,658 | 35,610 | JavaScript | 2026-07-26T10:26:33Z |
+| 2 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 220,919 | 42,124 | Python | 2026-07-27T00:02:54Z |
+| 3 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 196,555 | 75,604 | C++ | 2026-07-26T23:59:27Z |
 
 ### 1. [affaan-m/ECC](https://github.com/affaan-m/ECC)
 
@@ -77,7 +77,7 @@ An Open Source Machine Learning Framework for Everyone.
 | 指標 | 值 |
 | --- | --- |
 | Registry sample | 800 servers |
-| Active baseline since | 2026-07-22 |
+| Active baseline since | 2026-07-25 |
 | GitHub stale cutoff | 2 days |
 
 ### 可能還沒上官方 MCP Registry 的候選
@@ -132,30 +132,30 @@ An Open Source Machine Learning Framework for Everyone.
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/payloadcms/payload](https://github.com/payloadcms/payload) |
 
-#### 6. [sheawinkler/ContextLattice](https://github.com/sheawinkler/ContextLattice)
+#### 6. [Kentucky-ai/opentakeoff](https://github.com/Kentucky-ai/opentakeoff)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | The local-first intelligence layer that gives AI agents durable continuity, explainable retrieval, portable context, and verified learning across harnesses. |
+| 說明 | Open-source (Apache-2.0) PDF takeoff for construction & flooring — the first engine an AI agent drives natively over MCP, not bolted on. One-click room detection, materials + quantities, built for preconstruction. Runs entirely in your browser. |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 7. [dcc-mcp/dcc-mcp-renderdoc](https://github.com/dcc-mcp/dcc-mcp-renderdoc)
+#### 7. [ringo380/claude-cpanel-mcp](https://github.com/ringo380/claude-cpanel-mcp)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | RenderDoc capture and replay automation for the DCC Model Context Protocol ecosystem |
+| 說明 | cPanel UAPI MCP server bundled as a Claude Code plugin - email, DNS, files, MySQL, FTP, SSL, cron, backups on shared cPanel hosting. cPHulk-safe. |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 8. [resace3/causal-dag-explorer-mcp](https://github.com/resace3/causal-dag-explorer-mcp)
+#### 8. [dayprotocol/daylight](https://github.com/dayprotocol/daylight)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Local-first MCP server and React Flow editor for manually building and saving evidence-aware DAGs. |
+| 說明 | DAY — the open routing layer for onchain yield (public mirror) |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 

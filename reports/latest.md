@@ -1,8 +1,8 @@
-# AI Community Radar - 2026-07-27
+# AI Community Radar - 2026-07-28
 
-> Generated: 2026-07-27T00:05:48.454Z
+> Generated: 2026-07-28T00:07:00.572Z
 > Timezone: Asia/Taipei
-> Active cutoff: updated since 2026-07-25; archived GitHub repos excluded; max stale age 2 days.
+> Active cutoff: updated since 2026-07-26; archived GitHub repos excluded; max stale age 2 days.
 
 ## 今日摘要
 
@@ -17,9 +17,9 @@
 
 | # | Repo | Stars | Forks | Language | Updated |
 | --- | --- | ---: | ---: | --- | --- |
-| 1 | [affaan-m/ECC](https://github.com/affaan-m/ECC) | 233,658 | 35,610 | JavaScript | 2026-07-26T10:26:33Z |
-| 2 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 220,919 | 42,124 | Python | 2026-07-27T00:02:54Z |
-| 3 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 196,555 | 75,604 | C++ | 2026-07-26T23:59:27Z |
+| 1 | [affaan-m/ECC](https://github.com/affaan-m/ECC) | 234,156 | 35,684 | JavaScript | 2026-07-27T20:45:18Z |
+| 2 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 221,409 | 42,284 | Python | 2026-07-28T00:05:12Z |
+| 3 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 196,576 | 75,625 | C++ | 2026-07-28T00:04:47Z |
 
 ### 1. [affaan-m/ECC](https://github.com/affaan-m/ECC)
 
@@ -77,7 +77,7 @@ An Open Source Machine Learning Framework for Everyone.
 | 指標 | 值 |
 | --- | --- |
 | Registry sample | 800 servers |
-| Active baseline since | 2026-07-25 |
+| Active baseline since | 2026-07-26 |
 | GitHub stale cutoff | 2 days |
 
 ### 可能還沒上官方 MCP Registry 的候選
@@ -132,30 +132,30 @@ An Open Source Machine Learning Framework for Everyone.
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/payloadcms/payload](https://github.com/payloadcms/payload) |
 
-#### 6. [Kentucky-ai/opentakeoff](https://github.com/Kentucky-ai/opentakeoff)
+#### 6. [Parameshwar2004/tauri-remote-companion](https://github.com/Parameshwar2004/tauri-remote-companion)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Open-source (Apache-2.0) PDF takeoff for construction & flooring — the first engine an AI agent drives natively over MCP, not bolted on. One-click room detection, materials + quantities, built for preconstruction. Runs entirely in your browser. |
+| 說明 | 🏡 Remote Code Rust 2026 - Tauri Desktop & MCP Control Plane Framework |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 7. [ringo380/claude-cpanel-mcp](https://github.com/ringo380/claude-cpanel-mcp)
+#### 7. [sloemo01/hermes-skills-bundle](https://github.com/sloemo01/hermes-skills-bundle)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | cPanel UAPI MCP server bundled as a Claude Code plugin - email, DNS, files, MySQL, FTP, SSL, cron, backups on shared cPanel hosting. cPHulk-safe. |
+| 說明 | Research automation skill bundle for Hermes Agent: kimi-webbridge, deep-web-research, job-search-automation, linkedin-automation, mcp-server-research, osint-person-search, interactive-prompt-analyzer, research-automation-bundle, memory-setup |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 8. [dayprotocol/daylight](https://github.com/dayprotocol/daylight)
+#### 8. [Travisun/Opptrix](https://github.com/Travisun/Opptrix)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | DAY — the open routing layer for onchain yield (public mirror) |
+| 說明 | Opptrix — 大模型驱动的投研助手 \| Open-source LLM research assistant for China A-shares. 40+ MCP tools, factor screening, backtest, watchlist & Electron desktop. TypeScript · React · Fastify monorepo. |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 

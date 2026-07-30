@@ -1,8 +1,8 @@
-# AI Community Radar - 2026-07-29
+# AI Community Radar - 2026-07-30
 
-> Generated: 2026-07-29T00:03:01.265Z
+> Generated: 2026-07-30T00:04:20.393Z
 > Timezone: Asia/Taipei
-> Active cutoff: updated since 2026-07-27; archived GitHub repos excluded; max stale age 2 days.
+> Active cutoff: updated since 2026-07-28; archived GitHub repos excluded; max stale age 2 days.
 
 ## 今日摘要
 
@@ -17,9 +17,9 @@
 
 | # | Repo | Stars | Forks | Language | Updated |
 | --- | --- | ---: | ---: | --- | --- |
-| 1 | [affaan-m/ECC](https://github.com/affaan-m/ECC) | 234,785 | 35,774 | JavaScript | 2026-07-27T20:45:18Z |
-| 2 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 221,888 | 42,459 | Python | 2026-07-29T00:02:51Z |
-| 3 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 196,573 | 75,639 | C++ | 2026-07-29T00:00:43Z |
+| 1 | [affaan-m/ECC](https://github.com/affaan-m/ECC) | 235,543 | 35,868 | JavaScript | 2026-07-29T18:11:01Z |
+| 2 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 222,332 | 42,631 | Python | 2026-07-30T00:01:24Z |
+| 3 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 196,595 | 75,690 | C++ | 2026-07-30T00:00:36Z |
 
 ### 1. [affaan-m/ECC](https://github.com/affaan-m/ECC)
 
@@ -77,7 +77,7 @@ An Open Source Machine Learning Framework for Everyone.
 | 指標 | 值 |
 | --- | --- |
 | Registry sample | 800 servers |
-| Active baseline since | 2026-07-27 |
+| Active baseline since | 2026-07-28 |
 | GitHub stale cutoff | 2 days |
 
 ### 可能還沒上官方 MCP Registry 的候選
@@ -102,25 +102,25 @@ An Open Source Machine Learning Framework for Everyone.
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/launchdarkly/mcp-server](https://github.com/launchdarkly/mcp-server) |
 
-#### 3. [@ui5/mcp-server](https://www.npmjs.com/package/@ui5/mcp-server)
+#### 3. [@payloadcms/plugin-mcp](https://www.npmjs.com/package/@payloadcms/plugin-mcp)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | npm-package |
-| 說明 | MCP server for SAPUI5/OpenUI5 development |
+| 說明 | MCP (Model Context Protocol) capabilities with Payload |
 | 為什麼值得看 | npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。 |
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
-| Repo | [https://github.com/UI5/mcp-server](https://github.com/UI5/mcp-server) |
+| Repo | [https://github.com/payloadcms/payload](https://github.com/payloadcms/payload) |
 
-#### 4. [nx-mcp](https://www.npmjs.com/package/nx-mcp)
+#### 4. [@traceloop/instrumentation-mcp](https://www.npmjs.com/package/@traceloop/instrumentation-mcp)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | npm-package |
-| 說明 | A Model Context Protocol server implementation for Nx |
+| 說明 | MCP (Model Context Protocol) Instrumentation |
 | 為什麼值得看 | npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。 |
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
-| Repo | [https://github.com/nrwl/nx-console](https://github.com/nrwl/nx-console) |
+| Repo | [https://github.com/traceloop/openllmetry-js](https://github.com/traceloop/openllmetry-js) |
 
 #### 5. [@roychri/mcp-server-asana](https://www.npmjs.com/package/@roychri/mcp-server-asana)
 
@@ -132,30 +132,30 @@ An Open Source Machine Learning Framework for Everyone.
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/roychri/mcp-server-asana](https://github.com/roychri/mcp-server-asana) |
 
-#### 6. [linkrobins/mcp-for-flarum](https://github.com/linkrobins/mcp-for-flarum)
+#### 6. [israriqbal/agent-ecologies](https://github.com/israriqbal/agent-ecologies)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Model Context Protocol server for Flarum: full forum API access for AI clients (discussions, posts, users, tags, moderation), with a read-only safety mode. Install with npx, Docker, or from source. |
+| 說明 | Ultimate Multi-Agent OS for Autonomous AI NPCs 2026 |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 7. [lapietrajp/vsync-agent](https://github.com/lapietrajp/vsync-agent)
+#### 7. [oaslananka/a2amesh](https://github.com/oaslananka/a2amesh)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | V Sync AI Hub 2026: One Config for All Powerful AI Tools |
+| 說明 | AI-native TypeScript runtime and tools for A2A agent orchestration, MCP integration, registry, protocol, and CLI. |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 8. [The-40-Thieves/obsidian-tc](https://github.com/The-40-Thieves/obsidian-tc)
+#### 8. [obot-platform/obot](https://github.com/obot-platform/obot)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Obsidian Turbocharged — governed, agent-ready Obsidian MCP server. 141 tools across 31 domains, multi-vault native, pluggable embeddings. TypeScript + Rust. AGPL-3.0-only. |
+| 說明 | Complete AI Governance Platform from Obot AI |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 

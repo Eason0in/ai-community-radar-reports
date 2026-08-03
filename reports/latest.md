@@ -1,8 +1,8 @@
-# AI Community Radar - 2026-07-31
+# AI Community Radar - 2026-08-03
 
-> Generated: 2026-07-31T00:08:59.055Z
+> Generated: 2026-08-03T00:03:07.784Z
 > Timezone: Asia/Taipei
-> Active cutoff: updated since 2026-07-29; archived GitHub repos excluded; max stale age 2 days.
+> Active cutoff: updated since 2026-08-01; archived GitHub repos excluded; max stale age 2 days.
 
 ## 今日摘要
 
@@ -17,9 +17,9 @@
 
 | # | Repo | Stars | Forks | Language | Updated |
 | --- | --- | ---: | ---: | --- | --- |
-| 1 | [affaan-m/ECC](https://github.com/affaan-m/ECC) | 236,202 | 35,926 | JavaScript | 2026-07-29T18:11:01Z |
-| 2 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 222,873 | 42,825 | Python | 2026-07-30T23:45:32Z |
-| 3 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 196,619 | 75,716 | C++ | 2026-07-31T00:06:10Z |
+| 1 | [affaan-m/ECC](https://github.com/affaan-m/ECC) | 237,058 | 36,037 | JavaScript | 2026-08-02T19:17:27Z |
+| 2 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 224,304 | 43,373 | Python | 2026-08-02T23:45:35Z |
+| 3 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 196,670 | 75,772 | C++ | 2026-08-02T22:36:02Z |
 
 ### 1. [affaan-m/ECC](https://github.com/affaan-m/ECC)
 
@@ -77,7 +77,7 @@ An Open Source Machine Learning Framework for Everyone.
 | 指標 | 值 |
 | --- | --- |
 | Registry sample | 800 servers |
-| Active baseline since | 2026-07-29 |
+| Active baseline since | 2026-08-01 |
 | GitHub stale cutoff | 2 days |
 
 ### 可能還沒上官方 MCP Registry 的候選
@@ -132,30 +132,30 @@ An Open Source Machine Learning Framework for Everyone.
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/roychri/mcp-server-asana](https://github.com/roychri/mcp-server-asana) |
 
-#### 6. [screenpipe/screenpipe](https://github.com/screenpipe/screenpipe)
+#### 6. [vinkius-labs/mcp-database](https://github.com/vinkius-labs/mcp-database)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | YC (S26) \| Record your screen 24/7 and plug into your agents. Local, private, secure. Connect to OpenClaw, Hermes agent and 100+ apps |
+| 說明 | Vinkius Open Data Initiative: The world's largest open-source database of Model Context Protocol (MCP) servers. Production-ready metadata connecting AI agents to APIs and enterprise tools. |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 7. [lfremache-max/machines-claude-bridge-plugin](https://github.com/lfremache-max/machines-claude-bridge-plugin)
+#### 7. [txn2/mcp-data-platform](https://github.com/txn2/mcp-data-platform)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Machines Plugin for Claude AI 2026 - Official GitHub Integration Guide |
+| 說明 | A semantic data platform MCP server that composes multiple data tools with bidirectional cross-injection - tool responses automatically include critical context from other services. |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 8. [DeusData/codebase-memory-mcp](https://github.com/DeusData/codebase-memory-mcp)
+#### 8. [Vectorion/codestack-automator](https://github.com/Vectorion/codestack-automator)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | High-performance code intelligence MCP server. Indexes codebases into a persistent knowledge graph — average repo in milliseconds. 158 languages, sub-ms queries, 99% fewer tokens. Single static binary, zero dependencies. |
+| 說明 | Revolutionize Your Dev Workflow 2026: Auto-Scan & Optimize 100+ Tech Stacks Instantly |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 

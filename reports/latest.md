@@ -1,8 +1,8 @@
-# AI Community Radar - 2026-08-05
+# AI Community Radar - 2026-08-06
 
-> Generated: 2026-08-05T00:09:55.394Z
+> Generated: 2026-08-06T00:04:12.903Z
 > Timezone: Asia/Taipei
-> Active cutoff: updated since 2026-08-03; archived GitHub repos excluded; max stale age 2 days.
+> Active cutoff: updated since 2026-08-04; archived GitHub repos excluded; max stale age 2 days.
 
 ## 今日摘要
 
@@ -17,9 +17,9 @@
 
 | # | Repo | Stars | Forks | Language | Updated |
 | --- | --- | ---: | ---: | --- | --- |
-| 1 | [affaan-m/ECC](https://github.com/affaan-m/ECC) | 237,693 | 36,114 | JavaScript | 2026-08-04T21:14:37Z |
-| 2 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 225,485 | 43,804 | Python | 2026-08-04T21:51:47Z |
-| 3 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 196,805 | 75,851 | C++ | 2026-08-05T00:08:37Z |
+| 1 | [affaan-m/ECC](https://github.com/affaan-m/ECC) | 238,013 | 36,148 | JavaScript | 2026-08-05T22:17:10Z |
+| 2 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 226,059 | 43,993 | Python | 2026-08-06T00:01:18Z |
+| 3 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 196,875 | 75,870 | C++ | 2026-08-06T00:03:53Z |
 
 ### 1. [affaan-m/ECC](https://github.com/affaan-m/ECC)
 
@@ -77,7 +77,7 @@ An Open Source Machine Learning Framework for Everyone.
 | 指標 | 值 |
 | --- | --- |
 | Registry sample | 800 servers |
-| Active baseline since | 2026-08-03 |
+| Active baseline since | 2026-08-04 |
 | GitHub stale cutoff | 2 days |
 
 ### 可能還沒上官方 MCP Registry 的候選
@@ -102,17 +102,7 @@ An Open Source Machine Learning Framework for Everyone.
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/launchdarkly/mcp-server](https://github.com/launchdarkly/mcp-server) |
 
-#### 3. [@traceloop/instrumentation-mcp](https://www.npmjs.com/package/@traceloop/instrumentation-mcp)
-
-| 欄位 | 內容 |
-| --- | --- |
-| 類型 | npm-package |
-| 說明 | MCP (Model Context Protocol) Instrumentation |
-| 為什麼值得看 | npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。 |
-| 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
-| Repo | [https://github.com/traceloop/openllmetry-js](https://github.com/traceloop/openllmetry-js) |
-
-#### 4. [@payloadcms/plugin-mcp](https://www.npmjs.com/package/@payloadcms/plugin-mcp)
+#### 3. [@payloadcms/plugin-mcp](https://www.npmjs.com/package/@payloadcms/plugin-mcp)
 
 | 欄位 | 內容 |
 | --- | --- |
@@ -122,40 +112,50 @@ An Open Source Machine Learning Framework for Everyone.
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/payloadcms/payload](https://github.com/payloadcms/payload) |
 
-#### 5. [@stripe/mcp](https://www.npmjs.com/package/@stripe/mcp)
+#### 4. [@traceloop/instrumentation-mcp](https://www.npmjs.com/package/@traceloop/instrumentation-mcp)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | npm-package |
-| 說明 | A command line tool for setting up Stripe MCP server |
+| 說明 | MCP (Model Context Protocol) Instrumentation |
 | 為什麼值得看 | npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。 |
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
-| Repo | [https://github.com/stripe/ai](https://github.com/stripe/ai) |
+| Repo | [https://github.com/traceloop/openllmetry-js](https://github.com/traceloop/openllmetry-js) |
 
-#### 6. [scbrown/hank](https://github.com/scbrown/hank)
+#### 5. [@roychri/mcp-server-asana](https://www.npmjs.com/package/@roychri/mcp-server-asana)
+
+| 欄位 | 內容 |
+| --- | --- |
+| 類型 | npm-package |
+| 說明 | MCP Server for Asana |
+| 為什麼值得看 | npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。 |
+| 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
+| Repo | [https://github.com/roychri/mcp-server-asana](https://github.com/roychri/mcp-server-asana) |
+
+#### 6. [Camille7585/polybridge-mcp](https://github.com/Camille7585/polybridge-mcp)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Live code-structure graph — call graphs, blast radius, and change-time edit guards for AI agents. Bobbin's structure module. |
+| 說明 | Connect Blender, n8n, and MCP with Polybridge MCP for fast 3D automation and workflow control |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 7. [llodev/skills](https://github.com/llodev/skills)
+#### 7. [epigraphcommissioner131/ai-one-click-beauty](https://github.com/epigraphcommissioner131/ai-one-click-beauty)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Collection of Agent Skills for Claude Code, Cursor, Codex, Windsurf, and any agent that speaks the open Skills spec. Ships via npm + plugin + skills add. |
+| 說明 | Beautify portraits with one-click AI retouching for skin smoothing, face shaping, makeup, and natural photo enhancement in your browser |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 8. [AgentSpore/agentspore](https://github.com/AgentSpore/agentspore)
+#### 8. [lm203688/aishield](https://github.com/lm203688/aishield)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Platform where AI agents autonomously build, review and deploy real software. Connect any LLM agent over HTTP or MCP. |
+| 說明 | 🛡️ Agent-native AI tool security scanner. Scan MCP/Skill/GPT/Prompt for security risks. 4-dimensional scoring. Certified badges. Guardrail MCP for auto-protection. |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 

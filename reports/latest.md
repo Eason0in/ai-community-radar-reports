@@ -1,8 +1,8 @@
-# AI Community Radar - 2026-08-06
+# AI Community Radar - 2026-08-07
 
-> Generated: 2026-08-06T00:04:12.903Z
+> Generated: 2026-08-07T01:42:31.106Z
 > Timezone: Asia/Taipei
-> Active cutoff: updated since 2026-08-04; archived GitHub repos excluded; max stale age 2 days.
+> Active cutoff: updated since 2026-08-05; archived GitHub repos excluded; max stale age 2 days.
 
 ## 今日摘要
 
@@ -17,9 +17,9 @@
 
 | # | Repo | Stars | Forks | Language | Updated |
 | --- | --- | ---: | ---: | --- | --- |
-| 1 | [affaan-m/ECC](https://github.com/affaan-m/ECC) | 238,013 | 36,148 | JavaScript | 2026-08-05T22:17:10Z |
-| 2 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 226,059 | 43,993 | Python | 2026-08-06T00:01:18Z |
-| 3 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 196,875 | 75,870 | C++ | 2026-08-06T00:03:53Z |
+| 1 | [affaan-m/ECC](https://github.com/affaan-m/ECC) | 238,318 | 36,197 | JavaScript | 2026-08-06T21:42:23Z |
+| 2 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 226,611 | 44,224 | Python | 2026-08-07T01:40:25Z |
+| 3 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 196,895 | 75,902 | C++ | 2026-08-07T01:39:26Z |
 
 ### 1. [affaan-m/ECC](https://github.com/affaan-m/ECC)
 
@@ -77,7 +77,7 @@ An Open Source Machine Learning Framework for Everyone.
 | 指標 | 值 |
 | --- | --- |
 | Registry sample | 800 servers |
-| Active baseline since | 2026-08-04 |
+| Active baseline since | 2026-08-05 |
 | GitHub stale cutoff | 2 days |
 
 ### 可能還沒上官方 MCP Registry 的候選
@@ -132,30 +132,30 @@ An Open Source Machine Learning Framework for Everyone.
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/roychri/mcp-server-asana](https://github.com/roychri/mcp-server-asana) |
 
-#### 6. [Camille7585/polybridge-mcp](https://github.com/Camille7585/polybridge-mcp)
+#### 6. [h1ddenpr0cess20/mcp](https://github.com/h1ddenpr0cess20/mcp)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Connect Blender, n8n, and MCP with Polybridge MCP for fast 3D automation and workflow control |
+| 說明 | A collection of FastMCP servers — web search, shell/SSH sandbox, Android & Fire TV control, finance, Last.fm, and LLM sub-agents |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 7. [epigraphcommissioner131/ai-one-click-beauty](https://github.com/epigraphcommissioner131/ai-one-click-beauty)
+#### 7. [cosyte/cli](https://github.com/cosyte/cli)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Beautify portraits with one-click AI retouching for skin smoothing, face shaping, makeup, and natural photo enhancement in your browser |
+| 說明 | The cosyte CLI + MCP server — parse/validate/convert/map-codes/redact healthcare formats from the terminal or an LLM. Pre-launch. |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 8. [lm203688/aishield](https://github.com/lm203688/aishield)
+#### 8. [Modemsmoker/Demo-MCP](https://github.com/Modemsmoker/Demo-MCP)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | 🛡️ Agent-native AI tool security scanner. Scan MCP/Skill/GPT/Prompt for security risks. 4-dimensional scoring. Certified badges. Guardrail MCP for auto-protection. |
+| 說明 | MCP Server Demo |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 

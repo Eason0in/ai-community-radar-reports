@@ -1,8 +1,8 @@
-# AI Community Radar - 2026-08-10
+# AI Community Radar - 2026-08-11
 
-> Generated: 2026-08-09T23:37:06.545Z
+> Generated: 2026-08-10T23:40:20.658Z
 > Timezone: Asia/Taipei
-> Active cutoff: updated since 2026-08-07; archived GitHub repos excluded; max stale age 2 days.
+> Active cutoff: updated since 2026-08-08; archived GitHub repos excluded; max stale age 2 days.
 
 ## 今日摘要
 
@@ -17,9 +17,9 @@
 
 | # | Repo | Stars | Forks | Language | Updated |
 | --- | --- | ---: | ---: | --- | --- |
-| 1 | [affaan-m/ECC](https://github.com/affaan-m/ECC) | 239,018 | 36,306 | JavaScript | 2026-08-09T22:39:00Z |
-| 2 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 227,920 | 44,761 | Python | 2026-08-09T23:34:18Z |
-| 3 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 196,942 | 75,976 | C++ | 2026-08-09T23:16:15Z |
+| 1 | [affaan-m/ECC](https://github.com/affaan-m/ECC) | 239,235 | 36,329 | JavaScript | 2026-08-10T23:31:55Z |
+| 2 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 228,441 | 44,930 | Python | 2026-08-10T23:40:01Z |
+| 3 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 196,930 | 75,983 | C++ | 2026-08-10T23:35:10Z |
 
 ### 1. [affaan-m/ECC](https://github.com/affaan-m/ECC)
 
@@ -77,7 +77,7 @@ An Open Source Machine Learning Framework for Everyone.
 | 指標 | 值 |
 | --- | --- |
 | Registry sample | 800 servers |
-| Active baseline since | 2026-08-07 |
+| Active baseline since | 2026-08-08 |
 | GitHub stale cutoff | 2 days |
 
 ### 可能還沒上官方 MCP Registry 的候選
@@ -132,30 +132,30 @@ An Open Source Machine Learning Framework for Everyone.
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/roychri/mcp-server-asana](https://github.com/roychri/mcp-server-asana) |
 
-#### 6. [lobu-ai/lobu](https://github.com/lobu-ai/lobu)
+#### 6. [romenkova/doska](https://github.com/romenkova/doska)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Open-source control plane and runtime for organisational agents: shared company context, isolated execution, approvals and MCP. |
+| 說明 | A local-first Kanban board with Markdown cards. Runs in the browser or as a Tauri desktop app. Works offline, and syncs to a server you control. |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 7. [nbsjunior/codehero](https://github.com/nbsjunior/codehero)
+#### 7. [hanyeol/model-compose](https://github.com/hanyeol/model-compose)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | CodeHero — análise estática open source que aprende regras sem LLM no hot path |
+| 說明 | Deploy production-ready AI services in minutes. One YAML file for agents, RAG pipelines, and MCP servers — run anywhere. Inspired by docker-compose. |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 8. [LuGuBo/Synapse-Engine](https://github.com/LuGuBo/Synapse-Engine)
+#### 8. [itsofficialomkar/vibe-wave-router](https://github.com/itsofficialomkar/vibe-wave-router)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | High-Performance AI Coding Agent Governance & Rate-Limit Harness for Claude Code, Cursor, and Gemini. AST Knowledge Graph MCP Server with sliding-window quota guard and TDD gates. |
+| 說明 | Vibe-Flow 2.0: Ship, Review & Merge via Wave Dispatch 2026 |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 

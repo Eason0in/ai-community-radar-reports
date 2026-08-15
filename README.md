@@ -22,6 +22,19 @@
 - `reports/YYYY-MM-DD.md`
 - `reports/latest.md`
 
+同一次產出也會建立給手機閱讀站與 Custom GPT 使用的結構化資料：
+
+- `data/YYYY-MM-DD.json`
+- `data/latest.json`
+
+GitHub Actions 成功驗證後只會 commit 當期日報、兩個 latest Markdown 別名與 JSON archive；沒有內容變更時不建立空 commit。網站由 GitHub Pages 的 Actions artifact 發布，不會把建置後的 `docs/` 混進內容 commit。
+
+## 手機閱讀站與 Custom GPT
+
+啟用 repository 的 **Settings → Pages → Source: GitHub Actions** 後，每次日報會部署手機優先的 PWA。它以卡片呈現重點、GitHub 專案與行動建議，避免讀者直接閱讀原始 Markdown。
+
+Custom GPT 應把公開的 `data/latest.json` 當作最新資料入口；它適合追問、依興趣篩選與比較專案，而日常閱讀入口仍是 Pages 網站。公開網站與 JSON 不得包含 token、個資或內部資訊。
+
 ## 排程
 
 GitHub Actions 使用 UTC cron。台北時間週一到週五 07:00 等於 UTC 前一天 23:00，所以 workflow 使用：

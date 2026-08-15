@@ -17,6 +17,8 @@ on:
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
 
 concurrency:
   group: daily-ai-community-radar
@@ -42,6 +44,10 @@ jobs:
       - name: Generate report
         run: npm run report
 
+      - name: Build mobile reading site
+        if: ${{ env.REPORT_DRY_RUN != 'true' }}
+        run: npm run build
+
       - name: Upload report artifact
         uses: actions/upload-artifact@v4
         with:
@@ -56,10 +62,25 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add LATEST_REPORT.md reports
+          git add LATEST_REPORT.md reports data
           if git diff --cached --quiet; then
             echo "No report changes to commit."
           else
             git commit -m "chore: add daily AI community radar"
             git push
           fi
+
+      - name: Configure GitHub Pages
+        if: ${{ env.REPORT_DRY_RUN != 'true' }}
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        if: ${{ env.REPORT_DRY_RUN != 'true' }}
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs
+
+      - name: Deploy GitHub Pages
+        if: ${{ env.REPORT_DRY_RUN != 'true' }}
+        id: deployment
+        uses: actions/deploy-pages@v4

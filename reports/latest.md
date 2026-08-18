@@ -1,8 +1,8 @@
-# AI Community Radar - 2026-08-18
+# AI Community Radar - 2026-08-19
 
-> Generated: 2026-08-17T23:28:00.990Z
+> Generated: 2026-08-18T23:27:42.162Z
 > Timezone: Asia/Taipei
-> Active cutoff: updated since 2026-08-15; archived GitHub repos excluded; max stale age 2 days.
+> Active cutoff: updated since 2026-08-16; archived GitHub repos excluded; max stale age 2 days.
 
 ## 今日摘要
 
@@ -17,9 +17,9 @@
 
 | # | Repo | Stars | Forks | Language | Updated |
 | --- | --- | ---: | ---: | --- | --- |
-| 1 | [affaan-m/ECC](https://github.com/affaan-m/ECC) | 240,697 | 36,509 | JavaScript | 2026-08-17T04:55:56Z |
-| 2 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 232,004 | 46,216 | Python | 2026-08-17T23:26:54Z |
-| 3 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 196,990 | 76,043 | C++ | 2026-08-17T23:13:52Z |
+| 1 | [affaan-m/ECC](https://github.com/affaan-m/ECC) | 240,961 | 36,544 | JavaScript | 2026-08-18T20:07:38Z |
+| 2 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 232,525 | 46,411 | Python | 2026-08-18T23:27:35Z |
+| 3 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 197,047 | 76,060 | C++ | 2026-08-18T23:27:26Z |
 
 ### 1. [affaan-m/ECC](https://github.com/affaan-m/ECC)
 
@@ -77,7 +77,7 @@ An Open Source Machine Learning Framework for Everyone.
 | 指標 | 值 |
 | --- | --- |
 | Registry sample | 800 servers |
-| Active baseline since | 2026-08-15 |
+| Active baseline since | 2026-08-16 |
 | GitHub stale cutoff | 2 days |
 
 ### 可能還沒上官方 MCP Registry 的候選
@@ -112,50 +112,50 @@ An Open Source Machine Learning Framework for Everyone.
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/launchdarkly/mcp-server](https://github.com/launchdarkly/mcp-server) |
 
-#### 4. [@payloadcms/plugin-mcp](https://www.npmjs.com/package/@payloadcms/plugin-mcp)
+#### 4. [@ui5/mcp-server](https://www.npmjs.com/package/@ui5/mcp-server)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | npm-package |
-| 說明 | MCP (Model Context Protocol) capabilities with Payload |
+| 說明 | MCP server for SAPUI5/OpenUI5 development |
 | 為什麼值得看 | npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。 |
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
-| Repo | [https://github.com/payloadcms/payload](https://github.com/payloadcms/payload) |
+| Repo | [https://github.com/UI5/mcp-server](https://github.com/UI5/mcp-server) |
 
-#### 5. [@roychri/mcp-server-asana](https://www.npmjs.com/package/@roychri/mcp-server-asana)
+#### 5. [nx-mcp](https://www.npmjs.com/package/nx-mcp)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | npm-package |
-| 說明 | MCP Server for Asana |
+| 說明 | A Model Context Protocol server implementation for Nx |
 | 為什麼值得看 | npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。 |
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
-| Repo | [https://github.com/roychri/mcp-server-asana](https://github.com/roychri/mcp-server-asana) |
+| Repo | [https://github.com/nrwl/nx-console](https://github.com/nrwl/nx-console) |
 
-#### 6. [ManSio/mscodebase-intelligence](https://github.com/ManSio/mscodebase-intelligence)
+#### 6. [lfremache-max/machines-claude-bridge-plugin](https://github.com/lfremache-max/machines-claude-bridge-plugin)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Intelligent codebase search & indexing for Zed. Async MCP server featuring LanceDB/BM25 hybrid search, multi-bucket RAG, and autonomous self-healing workflows. High-performance, memory-safe, and ready for your production code. |
+| 說明 | Machines Plugin for Claude AI 2026 - Official GitHub Integration Guide |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 7. [eduair94/cambio-uruguay](https://github.com/eduair94/cambio-uruguay)
+#### 7. [catl24/uxp-plugin-knowledge-graph](https://github.com/catl24/uxp-plugin-knowledge-graph)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Source code of https://cambio-uruguay.com |
+| 說明 | Adobe UXP Plugin AI Assistant 2026 🤖 \| Dev Tools & Spectrum WC Guide |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 8. [pencilrebel/roast-my-design-system](https://github.com/pencilrebel/roast-my-design-system)
+#### 8. [itsofficialomkar/vibe-wave-router](https://github.com/itsofficialomkar/vibe-wave-router)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | v5.0.1 · Try it: npx roast-my-design-system · Your AI can write the UI. This makes sure it writes YOUR ui. A health score, receipts, fixes ranked by payoff, rules injected via --apply, and now a local MCP server via --mcp: your agent asks before writing UI, gets checked after. Benchmarked against 34 public repos and 10 reputable systems. |
+| 說明 | Vibe-Flow 2.0: Ship, Review & Merge via Wave Dispatch 2026 |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 

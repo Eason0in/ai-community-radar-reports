@@ -31,7 +31,9 @@ GitHub Actions 成功驗證後只會 commit 當期日報、兩個 latest Markdow
 
 ## 手機閱讀站與 Custom GPT
 
-啟用 repository 的 **Settings → Pages → Source: GitHub Actions** 後，每次日報會部署手機優先的 PWA。它以卡片呈現重點、GitHub 專案與行動建議，避免讀者直接閱讀原始 Markdown。
+日常開啟入口固定是 SPA／PWA：`https://eason0in.github.io/ai-community-radar-reports/`。每次日報 push 到 `main` 後，`Deploy Daily Report SPA` 會從 `reports/latest.md` 重新建置並部署網站；Markdown 只保留為可稽核的封存來源，不作為日常閱讀入口。
+
+第一次使用前須在 repository 的 **Settings → Pages → Source: GitHub Actions** 啟用 Pages。SPA 會在瀏覽器載入時取得最新日報，且 PWA 對最新資料採網路優先策略，避免被舊快取卡住。
 
 Custom GPT 應把公開的 `data/latest.json` 當作最新資料入口；它適合追問、依興趣篩選與比較專案，而日常閱讀入口仍是 Pages 網站。公開網站與 JSON 不得包含 token、個資或內部資訊。
 

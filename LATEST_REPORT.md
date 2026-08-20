@@ -202,4 +202,4 @@
 - **官方事實：** TensorRT Model Connect 的命令、定位、授權、模型支援與安全邊界來自 NVIDIA 官方 repo／文件。Codex 事故的「server-side configuration」與已解決狀態來自 OpenAI maintainer 的 issue 回覆；未推論具體 backend 修補方式。
 - **研究證據：** context compression、Fiducia-bench 與 Quipu 都是未經同儕審查的 arXiv 預印本；63.9 retrieval calls、56%／85% attenuation、0/6 defects 等均為作者結果。報告保留其環境與模型限制，沒有外推成普遍定律。
 - **社群案例：** Claude Code scheduled Write 與 subagent quota 是開放 issue；前者主要是單一回報，後者的 token 放大方向有官方文件支持，但實際耗用與失敗細節仍未經 maintainer 確認。這些是避雷訊號，不是正式產品公告。
-- **YouTube：** 入選片在截稿時分別為 13,234 與 46,065 次觀看，均已完整閱讀 `en-orig` 字幕。Hindsight 的功能以官方 repo／docs 校正，Codex quota 認證做法不視為官方支援；Coding Sloth 的 workflow 以 Claude Code 官方文件核對，個人用量與品質曲線只當作者經驗。兩部都清楚標示會員／贊助導流。
+- **YouTube：** 入選片在截稿時分別為 13,246 與 46,543 次觀看，均已完整閱讀 `en-orig` 字幕。Hindsight 的功能以官方 repo／docs 校正，Codex quota 認證做法不視為官方支援；Coding Sloth 的 workflow 以 Claude Code 官方文件核對，個人用量與品質曲線只當作者經驗。兩部都清楚標示會員／贊助導流。

@@ -1,210 +1,171 @@
-# AI 情報日報｜2026-08-21
+# AI 情報日報｜2026-08-22
 
-> 閱讀時間：約 8–10 分鐘。優先涵蓋 2026-08-19 至 2026-08-21 的新進展；研究項目仍是預印本，產品與開放 issue 狀態以截稿時可驗證資料為準。
+> 閱讀時間：約 8–10 分鐘。優先涵蓋 2026-08-20 至 2026-08-22 的新進展；研究項目均為預印本，產品與開放 issue 狀態以截稿時可驗證資料為準。
 
 ## 1. 今日最重要的 3–5 件事
 
-### 1. Claude Academy 上線：Anthropic 把 AI 素養從「提示詞技巧」改成委派、查核與揭露
+### 1. AI4AI-Bench：目前的 Agent 能改訓練程式，卻很少真的改到「學習演算法」
 
-- **發布日期：2026-08-20｜證據層級：Anthropic 官方產品公告**
-- Claude Academy 提供課程、教學、練習、學習路徑、完成紀錄與徽章，也能安裝 Claude Academy Skill，依使用方式推薦課程。Anthropic 表示內容不只教 Claude，也涵蓋模型無關的 AI 基礎觀念。
-- 最值得注意的不是又多一個課程平台，而是教學重心改變：先決定哪些工作適合交給 AI、哪些應由人保留；理解模型常犯的錯；依風險比例查核；對同事、客戶或其他利害關係人說明 AI 如何參與產出。官方也主張，像「描述受眾」這類單一提示技巧會隨模型進步快速折舊。
-- 這仍是廠商對自家教育產品的定位，官方文章沒有提供學習成效的對照實驗。團隊導入時應把課程完成率與實際行為分開量：是否更會界定任務、保存證據、查核高風險輸出與揭露 AI 使用，才是比較有用的指標。
-- 原始來源：[Anthropic｜Anthropic’s approach to teaching and learning AI](https://claude.com/blog/anthropics-approach-to-teaching-and-learning-ai)、[Claude Academy](https://academy.claude.com/)
+- **提交日期：2026-08-20｜證據層級：arXiv 預印本，作者 benchmark 結果**
+- AI4AI-Bench 用 10 個凍結的研究 repository，涵蓋 10 種訓練演算法家族。每題讓 Agent 在一張 B300 上工作 4 小時、重寫訓練演算法，再從頭執行最多 12 小時，由 Agent 看不到的固定 evaluator 評分；尺度把無資訊模型設為 0、原 repo 演算法設為 0.1、任務最優設為 1.0。
+- 6 個系統、29 種設定的平均分數只有 0.166，最佳系統 0.250；也就是最佳者只補上原演算法與最優解差距不到五分之一。多數提交甚至沒有改變模型如何學習；真的改到學習演算法的少數提交平均 0.226，其餘只有 0.126。
+- 增加 reasoning effort 主要提高「願不願意碰核心演算法」：這類提交從 8% 升到 64%，平均分數從 0.094 升到 0.196。這證明更高推理預算會改變搜尋行為，**不等於已證明遞迴自我改進可行**；任務仍有固定 repo、單卡、時限與已知訓練框架邊界。
+- 原始來源：[arXiv｜AI4AI-Bench](https://arxiv.org/abs/2608.20318)
 
-### 2. SkillGate：長任務的 Skill 選擇不能只靠最終成敗回傳信用
+### 2. Phantom Gains：沒有「凍結控制組」，模型自我改進可能只是推論批次與單次 decode 的假象
 
-- **提交日期：2026-08-19｜證據層級：arXiv 預印本，作者實驗結果**
-- Agent 從多個 instruction／Skill 檔中選一個再執行時，傳統 sequence-level reward 會把最終成敗一起分給整條 trajectory。作者稱問題為 **selector credit starvation**：真正決定選哪個 Skill 的少數 token，拿到的學習訊號太小；而且後續執行失敗時，正確選擇也可能被錯誤懲罰。
-- SkillGate 把信用拆成兩條互斥通道：outcome credit 只更新執行 token；skill-naming token 則拿 action-local advantage。作者在 16 個候選 Skill、五個 agentic benchmarks 上，讓 9B policy 的 trial success 從 40.8% 升到 53.2%，同時少讀 Skill，接觸誤導候選的次數降低約三分之二。
-- 這是作者在特定訓練設定的結果，尚未獨立重現；但對不做 RL 的產品團隊也有直接啟示：把「選對工具／Skill」與「之後做對任務」分開記錄與評分，不要只看整體 pass／fail。
-- 原始來源：[arXiv｜SkillGate](https://arxiv.org/abs/2608.18852)
+- **提交日期：2026-08-20｜證據層級：arXiv 預印本、程式碼與作者稽核結果**
+- 研究把 Qwen3-8B 的三輪 rank-32 LoRA self-training，和一個不訓練、但走過完全相同 pipeline 的 frozen control 比較，找出七種量測失敗。只用單次 greedy decode 建立逐題 gain／loss ledger 時，凍結模型也會看起來產生能力變化，主要來源是 inference batching。
+- 作者改用 pooled baseline 的逐題 exact test，再做 false-discovery-rate control；在 held-out frozen replicates 上沒有偵測到假進展。相同 stream、資料量與評測下，external distillation 改善 base model 很少答對的題目，三種 self-training 沒有；self-training 反而以高於量測底噪的比率破壞原本答對的題目。
+- 實務訊息很直接：比較 prompt、memory、fine-tune、Agent harness 或「自我改善迴圈」時，先讓**未改動版本也完整重跑同一 pipeline 多次**，量出 null distribution；不能把兩次 noisy run 的逐題差分直接叫做能力獲得或遺失。
+- 原始來源：[arXiv｜Phantom Gains](https://arxiv.org/abs/2608.20290)
 
-### 3. ComponentBench：同一模型只換 GUI 觀察／操作介面，成功率可差超過 30 個百分點
+### 3. MemTrapBench：記憶完全正確、也與當前任務相關，仍可能讓模型推理變差
 
-- **提交日期：2026-08-18｜狀態：COLM 2026 接受｜證據層級：論文、程式碼與資料，作者結果**
-- ComponentBench 補上「完整工作流」與「單一點擊」之間的評測空白：97 類 UI components、2,910 個程式化驗證任務，搭配清理過的人類操作軌跡，同時量 task success 與 interaction efficiency。
-- 七個模型、四種 observation／action spaces 的結果顯示，harness 不是中性外殼。以 GPT-5 mini 為例，在 accessibility-tree observation 下成功率 83.1%，改成只靠座標的 Pixel control 後降到 48.9%；最快的組合仍花人類參考軌跡 3.7 倍時間。
-- 實務上不要只公布「模型 X 在 browser benchmark 幾分」。至少把 DOM／accessibility tree／截圖、座標／selector／程式化操作、重試策略與等待條件一起版本化，否則分數差異可能主要來自介面設計。
-- 原始來源：[arXiv｜ComponentBench](https://arxiv.org/abs/2608.18307)、[官方網站](https://componentbench.com/)
+- **提交日期：2026-08-20｜狀態：work in progress｜證據層級：arXiv 預印本，作者結果**
+- 既有 memory benchmark 多半問「有沒有抽取、保存、找回正確資訊」；MemTrapBench 改測找回後是否造成 **Reasoning Fixation**（被舊解法鎖住）或 **Belief Distortion**（把舊情境錯套到新題）。陷阱不要求 memory 本身錯誤，只要它在新任務中具有誤導性即可。
+- 兩個模型家族、五種代表性 memory frameworks 的實驗中，所有 memory 策略都輸給 no-memory 設定，最強方法仍下降超過 10%。作者提出 inference-time 的 AdaptiveMem 指令，在新 benchmark 降低陷阱，同時保留或改善一般 memory benchmark 表現。
+- 這仍是作者設計的 benchmark 與提示式 mitigation，尚未獨立重現；但產品設計不應再把「retrieval relevance 高」當成「應直接注入」。需要額外判斷舊記憶是否只是相似、是否與目前證據衝突、以及任務條件是否已改變。
+- 原始來源：[arXiv｜MemTrapBench](https://arxiv.org/abs/2608.20202)
 
-### 4. Code Agent 面對語意等價改寫仍有鋸齒狀弱點，模型排名也會隨 scaffold 反轉
+### 4. PolicyGuide：Agent 合規不能只在 tool call 前擋一次，要把整份政策編譯成有狀態工作流
 
-- **提交日期：2026-08-18｜證據層級：arXiv 預印本，作者實驗結果**
-- 研究把 SWE-bench Verified／Pro 的 repo 做 control-flow rewrite、dead-code injection 與 identifier rename，再用 mini-SWE-agent、OpenCode 搭配四個模型重跑，並用同一 instance 多次執行，盡量把隨機性與 perturbation effect 分開。
-- 多數設定只小幅退化，但最嚴重的平均 resolve-rate 下降 6.7 個百分點，16 組 model×scaffold×dataset 中有 6 組達統計顯著。更重要的是沒有穩定的「最耐改寫模型」：Qwen 在 mini-SWE-agent／SWE-bench Verified 名列前段，換成 OpenCode 卻成為最脆弱者；較簡單的 scaffold 反而更穩。
-- 對 AI coding 驗收的結論：同一 bug 至少生成少量語意等價 variants，要求 patch 在原版與 variants 都通過；同時保存 harness 版本。單次 benchmark 排名不足以證明真實 repo 的穩健性。
-- 原始來源：[arXiv｜A Jagged Frontier](https://arxiv.org/abs/2608.18389)
+- **提交日期：2026-08-20｜證據層級：arXiv 預印本，作者結果**
+- Action-local guard 能擋下「不該做的動作」，卻不一定發現 Agent 漏掉身分確認、再次確認或其他必要程序。PolicyGuide 把 domain policy 編譯成 workflow graph，在每個 user-turn boundary 讀取持久化 graph state、整理尚未完成的請求，再回傳下一個合規步驟與 remediation。
+- 在 τ²-bench 的航空、零售、電信任務上，GPT-5.4 agent＋verifier 的平均 Pass⁴ 從 0.42 升到 0.62；工作流最明確的電信領域從 0.19 升到 0.61。同一批 workflows 也能轉移到 Claude Sonnet 4.6 與 Gemini 2.5 Pro agents。
+- 數字來自作者設定，adversarial／workflow-level 補充評測也由作者設計；production 仍要測 graph coverage、政策版本遷移、例外授權與 stale approval。不過方向比「每個動作各自問一次是否安全」完整：合規狀態必須跨回合保存。
+- 原始來源：[arXiv｜PolicyGuide](https://arxiv.org/abs/2608.19861)
 
-### 5. 多 Agent 的隱性向量通道需要和公開 action 綁定，否則只稽核 transcript 不夠
+### 5. Adaptive Reasoning：先選 NoThink／Short／Long，可少 41% token 而幾乎維持 MATH500 正確率
 
-- **提交日期：2026-08-19｜證據層級：arXiv 預印本，受控拍賣環境的作者結果**
-- 《Beyond the Transcript》研究 Agent 以連續 hidden states 溝通時，公開文字可能看不出協同行為。作者提出 Verifiable Latent Alignments，讓每次 private latent-state record、channel status 與公開 action 共用 event ID，才有辦法做配對因果分析。
-- 三層 monitor 結合 representation anomaly、counterfactual action influence 與 sparse-autoencoder interpretation。受控拍賣中，homogeneous agents 的 pooled AUROC 為 0.993，heterogeneous pairs 為 0.854；白箱 steering 的 100% recovery 是重播 matched-neutral counterfactual 的 construction sanity check，不應解讀成一般攻擊都可完全修復。
-- 這離 production 還很遠：需要取得 activation／matched counterfactual，且只驗證特定拍賣與攻擊。現在可採用的最低限度做法，是為所有 agent message、latent／embedding channel、tool call 與外部 action 配同一 trace ID，至少能追到「哪個私有訊號導致哪個動作」。
-- 原始來源：[arXiv｜Beyond the Transcript](https://arxiv.org/abs/2608.19161)
+- **提交日期：2026-08-20｜證據層級：arXiv 預印本，作者小模型實驗結果**
+- 研究讓模型把回覆第一個 token 當作 reasoning mode：`NoThink`、`Short` 或 `Long`。選擇和答題一起在 GRPO 中學習，不另設 router；各模式有不同 reward shaping 與硬 token cap，避免全部塌縮到同一種長度。
+- 1.5B distilled model 在 MATH 訓練後，MATH500 平均正確率從 base 的 0.796 小幅降到 0.782，平均回覆長度從 4,796 降到 2,811 tokens，減少 41%。在未重新訓練的 GSM8K 上最多節省 76%，且相近長度下正確率高於比較基線。
+- 目前只證明小模型、數學題與三個離散模式；不能直接外推到 coding agent 或高風險推理。但它提供可測的產品假設：不要只讓使用者手動選固定 effort，可先用低成本 gate 判斷任務難度，再給不同 token／tool budget。
+- 原始來源：[arXiv｜Learning When to Think](https://arxiv.org/abs/2608.20256)
 
 ## 2. 新模型與產品更新
 
-### Claude Academy 的可用範圍與限制
+### 最近 24–48 小時沒有新的前沿模型／正式價格表發布
 
-- **發布日期：2026-08-20**
-- 個人使用者可從 Claude profile 的 Learn more 入口或 Academy 網站進入；官方公告列出推薦課程、完成紀錄與 badges，另提供 Claude Academy Skill 做學習路徑推薦。
-- 適合拿來建立全員共同語言，但不應把 badge 當成高風險任務授權。可把內部教材映射成四個驗收：task delegation、context／資料邊界、evidence-based verification、AI-use disclosure，再用真實案例抽查。
-- 官方文章沒有交代所有課程的免費／付費邊界、企業管理功能與完整地區供應情況；實際可見內容仍以登入後帳號狀態為準。
+- **查核日期：2026-08-22｜證據層級：官方公告與 changelog 查核後的編輯判斷**
+- 截稿前沒有找到 OpenAI、Anthropic、Google、Microsoft／GitHub、Meta、Apple 或 NVIDIA 在 2026-08-20 至 2026-08-22 公布新的可用前沿基礎模型、正式 API 價格或主要 GA endpoint。Google Gemini API changelog 最新可見項目仍是 8 月 13 日的 Gemini 3.7 Flash GA；GitHub Copilot changelog 最新可見項目仍是 8 月 14 日的 Grok 4.6。
+- 昨日已報的 Claude Academy，以及前幾日的 Grok 4.6、Gemini 3.7 Flash、Agent Plugins、MAI-Code、TensorRT Model Connect 都沒有新的獨立進展，因此不重複。
+- 查核入口：[OpenAI Developers](https://developers.openai.com/)、[Claude Blog](https://claude.com/blog)、[Gemini API release notes](https://ai.google.dev/gemini-api/docs/changelog)、[GitHub Changelog](https://github.blog/changelog/)、[Meta AI Blog](https://ai.meta.com/blog/)
 
-### 本日沒有新的前沿基礎模型正式發布
+### Claude Design 影片是新教學，不是 Anthropic 在 8 月 21 日發布「2.0」
 
-- **查核日期：2026-08-21**
-- 截稿前沒有找到 OpenAI、Google DeepMind、Anthropic、Microsoft、Meta、Apple 或 NVIDIA 在最近 24–48 小時公布新的可用前沿基礎模型、正式價格表或可獨立驗證的 benchmark。昨日的 TensorRT Model Connect、context compression、Fiducia-bench、Quipu 與 Codex prompt-cache 事故沒有新進展，因此不重複。
+- **影片發布日期：2026-08-21｜官方產品資料日期：2026-06-17、2026-06-30 與 2026-07-20 後方案規則**
+- PAPAYA 新片展示 Design 的 timeline、annotation、tweak panel、素材／資料匯入與動畫輸出；但 Anthropic 官方頁目前仍把 Claude Design 稱為 beta，沒有在 8 月 21 日發布名為「Claude Design 2.0」的公告。日報因此把「2.0／重大升級」視為影片標題的作者命名。
+- 官方確認 Design 可供 Pro、Max、Team、Enterprise 使用，Enterprise 預設關閉；Fable 5 在 Pro／Team standard seat 需 usage credits，但 Max／premium seat 可在方案每週額度內使用一部分，並非所有付費用戶都一定要額外購買點數。
+- 官方 Help Center 目前列出的 export 是 ZIP、PDF、PPTX、standalone HTML 與多個 partner handoff，尚未列 Video；影片畫面中的 Video export 可能是較新的 rollout 或文件尚未同步，使用前要以自己帳號 UI 實測，不應當成所有帳號已正式保證。
+- 原始來源：[Anthropic｜Claude Design now stays on brand](https://claude.com/blog/claude-design-stays-on-brand-for-daily-work)、[Claude Help｜Get started with Claude Design](https://support.claude.com/en/articles/14604416-get-started-with-claude-design)、[Claude Help｜Fable 5 on your plan](https://support.claude.com/en/articles/15424964-claude-fable-5-on-your-plan)
 
 ## 3. 新技術、新方法
 
-### 方法一：把 Skill／工具選擇做成獨立評測事件
+### 方法一：所有「Agent 變好了」都先量 measured null
 
-- **依據日期：2026-08-19**
-- 每次 dispatch 保存 `candidate_set`、`selected_skill`、`selection_reason`、`selection_correct`、`execution_success` 與 `cost`。先判斷選擇是否正確，再判斷執行是否成功。
-- 失敗分析至少分成 selector error、skill content error、execution error 與 environment error。若全部壓成最終 pass／fail，就會重現 SkillGate 指出的錯誤信用分配。
+- **依據日期：2026-08-20**
+- 對 baseline 做至少 3–5 次完整 replicate，固定資料順序、batching、decoding、seed policy、harness 與 evaluator；先量出沒有任何修改時的逐題 flip rate、整體分數分布與方差。
+- 新版與舊版用同一 pool 比較；逐題 acquisition／regression 要做多重比較校正。若只跑一次舊版、一次新版，最多能說觀察到差異，不能說能力真的獲得或遺失。
 
-### 方法二：Computer Use 評測要做 observation／action space 矩陣
+### 方法二：Memory admission 要和 retrieval 分開
 
-- **依據日期：2026-08-18**
-- 同一批 UI tasks 至少比較 accessibility tree＋selector、accessibility tree＋coordinate、screenshot＋coordinate；每格都保存 task success、步數、等待時間、誤點與恢復次數。
-- ComponentBench 顯示 harness 變更可造成 30 個百分點以上差距。對外比較模型前，先把自己的 browser／GUI harness 固定並公開，才不會把工具優勢誤寫成模型能力。
+- **依據日期：2026-08-20**
+- Retriever 只回答「像不像／找不找得到」；admission gate 再判斷 `scope_match`、`time_validity`、`conflict_with_current_evidence`、`task_condition_changed` 與 `confidence`。
+- 對高衝突 memory，不直接塞進 system context；改成並列「舊記憶」與「目前證據」，要求模型先解釋何者適用。每批 memory 任務都保留 no-memory control，防止 retrieval 指標進步但最終任務退步。
 
-### 方法三：為 Code Agent 加 metamorphic regression
+### 方法三：把政策做成版本化 graph，而不是散落在 prompt 裡
 
-- **依據日期：2026-08-18**
-- 對少量代表性 issue 自動產生 identifier rename、無害 dead code 與等價 control-flow variants；同一 agent／model／prompt 各跑數次，驗證 patch 是否跨 variants 保持正確。
-- 這不是要讓 production code 變亂，而是測 Agent 是否依賴表面形狀。結果應與原始測試、靜態分析與人工 review 一起看，不能取代它們。
+- **依據日期：2026-08-20**
+- 每個 case 保存 `policy_version`、`current_state`、`required_evidence`、`completed_steps`、`pending_confirmation` 與 `authorized_exception`。每個 user turn 先 reconcile state，再讓 Agent 決定下一步。
+- 只要政策版本、使用者請求或 evidence 改變，舊 approval 標成 stale；重新走 graph。Tool-call guard 仍保留，但角色是最後一層 enforcement，不是唯一流程引擎。
 
-### 方法四：多控制閘門要 remediation 後重新判定
+### 方法四：Reasoning budget 要回報「省了多少」與「錯在哪裡」
 
-- **依據日期：2026-08-18｜補充研究**
-- 權限、資源與證據 gate 並非彼此獨立：某一 gate 降級模型、替換證據或縮小 action 後，會改變其他 gate 原本審查的對象。新預印本以 finite-model counterexample 顯示 remediation order 不可交換。
-- 實作上每次 remediation 都產生新的 action version，先前 approval 全部標成 stale，再依固定順序重新跑所有相關 gates；不得沿用「修改前已通過」的判定。
-- 原始來源：[arXiv｜One Gate Is Not Enough](https://arxiv.org/abs/2608.18360)
+- **依據日期：2026-08-20**
+- 先在低風險任務試三段 budget，記錄 mode choice、input difficulty proxy、reasoning tokens、tool calls、latency、cost 與 pass rate；不可只報平均 token 下降。
+- 特別查看 router regret：簡單題被送進 Long 浪費多少，困難題被送進 NoThink 又造成多少錯誤。若錯誤集中在低估難度，就提高 escalation sensitivity，而不是把所有任務永久設成最高 effort。
 
 ## 4. 社群實戰心得
 
-### Codex 的 all-turns reasoning 可能被重複計入，約剩 20% context 就提早 compaction
+### Codex subagent fan-out 可能因每個 child 重複載入固定 context，反而更耗額度
 
-- **回報日期：2026-08-20｜狀態：open issue，有 76 次 rollout replay 與原始碼路徑分析，尚無 maintainer 修復結論**
-- #39767 在一個長期 GPT-5.6 Sol session 重播 76 次自動 compaction：把 `server_reasoning_included` 視為 false 時 76/76 超過門檻；視為 true 時 0/76 超過。具體一例把 server 回報的 209,336 tokens、33,371 歷史 reasoning 估計與 4,726 新項目相加成 247,433，實際若歷史 reasoning 已在 server usage 內，應為 214,062。
-- 後續留言再指出 current main 的順序問題：regular task 先把旗標清成 false，pre-sampling compaction 隨後就用前一 response usage 做判定，可能不必假設 header 在傳輸中遺失。
-- 這是單一長 rollout 的深入分析，不代表所有 Codex session 都會發生。實務上應保存 compaction 前後的 token usage、reasoning mode、client version 與 transport；若重要長任務頻繁提早壓縮，先做乾淨 handoff／新 session，不要把它誤判成模型突然失憶。
-- 原始來源：[openai/codex #39767](https://github.com/openai/codex/issues/39767)、[OpenAI GPT-5.6 model guidance](https://developers.openai.com/api/docs/guides/latest-model)
+- **回報日期：2026-08-20｜狀態：open issue，使用者假說與 anecdotal before／after，尚無維護者確認**
+- #39808 指出每個 subagent 都可能各自承擔 system／developer instructions、`AGENTS.md`、tool schemas、Skill catalog、repo context、委派 prompt 與 forked history。把一個小調查拆成五個 child，就可能把固定 bootstrap 成本乘五；小模型不一定能抵銷重複 context。
+- 回報者表示關閉大量 plugins／skills 與頻繁 fan-out 後，連續約 4 小時只消耗約 1% 額度，但這不是控制實驗，也無法分離 plugin surface、skill metadata、parent history、prompt cache 與 agent 數量的影響。留言對 0.148→0.149 context 設定變更的解釋仍是推測。
+- 實務 workaround：只把能獨立工作、且產出價值大於 bootstrap 成本的任務交給 child；三個很小的查核合併成一個 subagent。保存單 Agent／多 Agent 的總 tokens、cached input、wall time、tool calls 與最終品質，別把 fan-out 當成免費平行化。
+- 原始來源：[openai/codex #39808](https://github.com/openai/codex/issues/39808)
 
-### Claude Code `-p` 遇到不存在的 slash command 仍 exit 0，排程可能假成功
+### Claude Desktop 切換 session 可能一次燒掉約 569 GitHub GraphQL points
 
-- **回報日期：2026-08-20｜狀態：open issue，Claude Code 2.1.238 可重現，尚無 maintainer 結論**
-- #88387 的最小重現是 `claude -p "/definitely-not-a-plugin:nope" --max-turns 1`：stdout 顯示 `Unknown command`，shell exit code 卻是 0。回報者指出另一個 overnight pipeline 因此約 11 小時都被判成成功，只累積空結果。
-- 在修復前，headless wrapper 應同時檢查 exit code、stderr／stdout sentinel 與預期 artifact；找不到 command、沒有產生 artifact 或輸出只有 `Unknown command` 都要 fail closed。這是針對目前回報版本的 workaround，不是官方保證的永久行為。
-- 原始來源：[anthropics/claude-code #88387](https://github.com/anthropics/claude-code/issues/88387)
+- **回報日期：2026-08-20｜狀態：open issue，有控制量測，尚無維護者結論**
+- #88320 在 macOS Claude Desktop 1.32885.1／Claude Code 2.1.234 測得：fresh quota 下，app 啟動約 12 points、閒置為 0；連續三次 sidebar session switch 在 10 秒內增加 1,706 points，約每次 569。GitHub 個人 GraphQL limit 為每小時 5,000 時，只要 8–9 次切換就可能耗盡，並拖累同一身分的 `gh`、GitHub MCP 與 CI widgets。
+- 這是單一使用者環境，雖有 app-quit／idle control 與第二次重現，仍未證明所有帳號、repo 綁定數或新版本都會發生。原 issue 最初把 turn start 與 UI 動作混在一起，後續量測已修正為「成本附著在 session switch，而非背景輪詢」。
+- 若看到 `gh`／MCP 突然 rate limited，可先用 `gh api rate_limit` 檢查 GraphQL pool；GitHub-heavy 任務暫時改在純 terminal session 執行，並減少 Claude Desktop sidebar 來回切換。不要在 quota 已飽和、client backoff 後量測，否則 frozen counter 會造成假陰性。
+- 原始來源：[anthropics/claude-code #88320](https://github.com/anthropics/claude-code/issues/88320)
 
 ## 5. YouTube 深度整理
 
-本日先檢查 PAPAYA 電腦教室，再查 Gary Chen、Tech With Tim、Better Stack、IBM Technology、Matthew Berman、freeCodeCamp 與其他中英文 AI／Agent／AI Coding 頻道。PAPAYA 最近公開 AI 片為 8 月 10 日，沒有 24–48 小時新候選；Tech With Tim 最新片約 1,600 次、Better Stack 最新一部約 8,700 次，先依硬門檻排除。以下兩部均超過 10,000 次且已全文閱讀可靠字幕。觀看數為 2026-08-21 截稿快照，之後會變動。
+本日先檢查 PAPAYA 電腦教室，再查 Gary Chen、Tech With Tim、Better Stack、IBM Technology、Matthew Berman 與其他中英文 AI／Agent／AI Coding 候選。IBM 8 月 20 日新片約 8,900 次，未達門檻；Better Stack 8 月 20 日影片已於昨日收錄，8 月 19 日 DeepSeek Harness 又與 8 月 19 日報告主題重複；Matthew Berman 的 Grok Bot 片和 8 月 15 日已收錄影片重疊。以下一部通過 10,000 次硬門檻，並已全文閱讀人工繁中字幕。觀看數為 2026-08-22 截稿快照，之後會變動。
 
-### Gary Chen｜《AI 額度老是不夠用？三招省 Token 的實戰方法》
+### PAPAYA 電腦教室｜《還在用 PPT 製作廉價簡報動畫？Claude Design 2.0 迎來重大升級，今天就用這 6 個小技巧解鎖它的專業動畫功能！》
 
-- **發布日期：2026-08-19｜查核觀看次數：11,357｜片長：11:08｜字幕：人工繁中 `zh-TW`**
-- 連結：[YouTube](https://www.youtube.com/watch?v=d4329xvSDK4)
+- **發布日期：2026-08-21｜查核觀看次數：18,455｜片長：12:54｜字幕：人工繁中 `zh-TW`**
+- 連結：[YouTube](https://www.youtube.com/watch?v=jn7UXxa1Llg)
 
-**快速摘要：** 作者把每次請求拆成系統／專案規則、工具 schemas、對話歷史、外部檔案與工具輸出四層，主張真正有效的節省順序是「丟掉無關 context → 壓縮仍需保留的 context → 再利用 prompt cache」。最實用的部分是換任務開新 session、回溯錯誤分支、關閉不需要的 MCP、先搜尋再讀檔，以及用 handoff Markdown 保留決策；最需要校正的是快取 TTL 與訂閱額度不能直接用 API 價格推論。
-
-**內容重點**
-
-1. `01:05–02:58`：短 prompt 通常只佔整包 request 很小比例；工具描述、歷史、檔案與 logs 才是長 session 的主要體積。
-2. `03:56–05:42`：換任務開新 session；錯 prompt 用 edit／rewind，而不是把錯誤長回覆永久留在 history；停用當下無關 MCP／plugins。
-3. `05:42–07:52`：先用搜尋縮到相關行，再讀檔；把確定的規格、限制與未解問題整理成 handoff Markdown，而非完全依賴有損摘要。
-4. `07:23–07:52`：縮小輸入格式與輸出範圍；小修改不要讓模型重寫整份檔案。作者說「輸出通常更貴」只適用部分模型／方案，應查當前價目。
-5. `07:52–09:20`：prompt caching 可降低重複 prefix 成本，但影片把 Claude 說成「通常 1 小時」不精確；Claude API 自動快取預設 5 分鐘，1 小時需明確指定、寫入為 2 倍 input rate，cache read 才是 0.1 倍。
-6. `09:31–10:56`：送出前問兩題：現在真的需要舊 context 嗎？若需要，真的需要全部討論過程嗎？答案為否就新開 session 或交接乾淨結論。
-
-**教學／工作流程**
-
-1. 在任務開始與結束記一次 context／usage 快照；不要只靠「感覺比較省」。
-2. 新任務開新 session；同任務輸入錯誤時用可驗證的 edit／rewind，確認需要保留的變更沒有一起消失。
-3. 僅啟用當下需要的工具與 MCP，先用 `rg`／搜尋定位，再讓 Agent 讀小範圍檔案。
-4. 階段完成後寫 `HANDOFF.md`：保留已確認事實、決策、證據、限制、未解問題與下一個驗證命令；在新 session 繼續。
-5. API 使用者再檢查 `cached_tokens`／cache write fields 與 TTL；ChatGPT、Codex、Claude 訂閱使用者不要把 API 單價直接當成方案額度計算方式。
-
-**涉及工具／模型／功能：** Claude Code、Codex、Cursor、`CLAUDE.md`／`AGENTS.md`、MCP、edit／rewind、compact、handoff Markdown、Anthropic／OpenAI prompt caching。影片以 Claude Opus 5 的每百萬 input 5 美元、cached input 0.5 美元舉例，這與目前官方 API 價格的 10% cache-read 比例相符，但不等於訂閱 quota 的計價公式。
-
-**作者心得：** 作者認為省 Token 的真正收益是較乾淨的工作 context 與更集中的注意力，而不只是省錢；也把一份 handoff prompt 放在 Patreon。
-
-**優點：** 人工繁中字幕完整；三段式心法易執行；強調搜尋、工具裁剪、分支回溯與人工保存重要決策；沒有把 compact 當成無損萬靈丹。
-
-**缺點與限制：** 沒有 A/B 實測數據；「工具 schemas 每次都完整注入」「換模型／reasoning 一定讓全部快取失效」會依產品實作與快取邊界而異；Claude 預設 TTL 說法錯置；API 價格、訂閱額度與產品內部 caching 被混在一起。
-
-**適合對象：** 經常跑長時間 AI Coding／Agent 任務、碰到 context 膨脹或額度快速下降的人；API 工程師仍需回到各家 usage fields 驗證。
-
-**是否值得看完整影片：** 值得。若時間有限，先看 `03:56–07:52` 的 context 刪減／交接，再讀本報的 TTL 校正。
-
-**贊助標示：** 未見外部付費贊助；有作者 Patreon、提示詞模板與頻道自我推廣。
-
-**一個可立即嘗試的方法：** 把目前一個長 session 的「已確認事實／決策／證據／未解問題／下一個驗證命令」整理成一頁 handoff，在新 session 執行同一下一步，比較兩邊輸入 token、工具呼叫數與結果正確性。
-
-**官方交叉查證：** Anthropic 官方文件顯示 cache read 為一般 input 的 0.1 倍，但預設 automatic caching TTL 是 5 分鐘；1 小時 TTL 要明確設定且 cache write 為 2 倍。OpenAI GPT-5.6 官方 guidance 也建議精簡 prompts／tools、追蹤 cached 與 cache-write tokens，但不同產品的訂閱用量不可由 API 價格直接推回。[Anthropic prompt caching](https://platform.claude.com/docs/en/build-with-claude/prompt-caching)、[Anthropic pricing](https://platform.claude.com/docs/en/about-claude/pricing)、[OpenAI GPT-5.6 guidance](https://developers.openai.com/api/docs/guides/latest-model)
-
-### Better Stack｜《This Linter Rejects AI Slop From Your Code》
-
-- **發布日期：2026-08-20｜查核觀看次數：15,058｜片長：4:40｜字幕：`en-orig` 自動字幕**
-- 連結：[YouTube](https://www.youtube.com/watch?v=mmrSYvYKD9g)
-
-**快速摘要：** 影片示範 `anti-slop` 把 TypeScript／JavaScript 的「低證據」寫法做成 Oxlint hard gate，例如 chained type assertions、`unknown` parameters／returns 與 widen-then-assert。Agent 收到具體 lint 診斷後自行修正，比只在 `CLAUDE.md` 寫偏好更可執行；但這些多半是 opinionated maintainability rules，不是已證明的 bugs。
+**快速摘要：** 影片不是新聞朗讀，而是從建立 design system 開始，實際做出片段式動畫、局部註解修改、可自訂 tweak controls、SVG 描邊、CSV 圖表、螢幕操作模擬與講者影片 B-roll。最有價值的觀念是「先把視覺規則與資料變成可調參數，再讓 Agent 改 code」；最需要校正的是「Design 2.0」並非當日官方版號，Fable 5 計費依方案不同，Video export 也尚未出現在官方 Help Center 的完整 export 清單。
 
 **內容重點**
 
-1. `00:11–01:00`：不要一次開全部規則；挑符合團隊標準的 rules，把主觀規範轉成 deterministic check。
-2. `01:13–01:43`：診斷訊息同時寫出原因與修法，能直接成為 Agent 的 repair feedback。
-3. `01:43–03:14`：示範 chained cast 丟失型別證據，以及 API `unknown` 回傳；作者以 Zod 類 boundary parsing 作為修正方向。
-4. `02:41–03:14`：Agent 形成 produce → lint → read diagnostic → repair 的閉環，最後再把 lint 放進 CI。
-5. `03:14–03:53`：作者明說這些 violations 本身不一定是 bug，而是提早擋下可能讓型別證據消失的 patterns。
-6. `03:53–04:28`：Oxlint 50–100 倍於 ESLint 是 Oxc 官方 benchmark，會受 CPU cores、rules 與專案形狀影響，不是影片獨立測量。
+1. `01:16–02:53`：先建立 design system，固定字體、顏色、間距與元件，避免分段生成的畫面逐步漂移；可用圖片、網站、Figma 或 codebase 作參考。
+2. `03:09–04:14`：先回答觀眾、片長、比例等澄清問題，再生成；timeline 可刪片段、改播放速度與逐格檢查。
+3. `04:18–06:09`：動畫是 code-generated，可用片段名稱＋局部需求修改，也能直接在 canvas 註解；tweak panel 可新增字級、位置等滑桿，減少反覆用自然語言微調。
+4. `06:32–08:50`：長對話完成一階段後開新 chat；上傳 PNG／SVG／字型、CSV／Excel，把品牌素材、SVG path animation 與資料驅動 chart 組進同一動畫。
+5. `09:32–11:21`：參考 RVE 的 Remotion templates，加入 Ken Burns、3D rotation 與 transition；RVE 是第三方 Remotion 生態資源，不是 Anthropic 或 Remotion 官方範本商店。
+6. `10:17–12:44`：以多張 UI 截圖模擬螢幕操作；也能把講者影片與 SRT 交給 Design，產生 B-roll／子母視窗。影片示範從 Share → Video 選解析度匯出，但官方文件是否已覆蓋所有帳號仍待確認。
 
 **教學／工作流程**
 
-1. 先讀 `anti-slop` 的十條規則，只選一至兩條與現有 bug／review pain 對應者。
-2. 在小型 TypeScript fixture 加入應通過與應失敗案例，確認 rule semantics；不要直接全 repo 一次開滿。
-3. 本機執行 Oxlint，讓 Agent 根據具體 diagnostic 修正；再跑 TypeScript、tests 與既有 ESLint，避免「通過新規則卻造成行為回歸」。
-4. 記錄 false positives，必要時調規則或只在 changed files／warning mode 試行。
-5. 穩定後才升成 CI error，並固定 Oxlint、plugin source commit 與設定版本。
+1. 先定義 16:9／9:16、片長、觀眾與一頁 design tokens；素材來源要有使用權，不要直接把未授權 Pinterest 圖或機密 Figma／網站原始碼上傳。
+2. 把完整影片拆成短場景，先生成 storyboard；每個片段命名，逐格檢查文字、畫面邊界、速度與 transition。
+3. 常改參數做成 tweak controls；局部問題用 canvas annotation＋片段名稱修，不讓 Agent 重寫整支影片。
+4. 圖表先上傳乾淨 CSV／Excel，人工核對資料與座標軸；SVG 描邊要檢查 path 順序、logo clear space 與品牌規範。
+5. 完成一個穩定里程碑後保存版本、開新 chat，再處理下一組場景；最後以實際帳號測 export、解析度、字型嵌入、音訊同步與檔案大小。
 
-**涉及工具／模型／功能：** `anti-slop`、Oxlint、TypeScript／JavaScript、Zod、Claude Code、`CLAUDE.md`、lint／repair loop。影片沒有比較不同 Agent 或模型。
+**涉及工具／模型／功能：** Claude Design、Claude Fable 5、Claude Opus、Design System、timeline、annotation、tweak panel、PNG／SVG／字型、CSV／Excel、Remotion／React Video Editor templates、Gemini 影片轉錄、SRT、Ken Burns、3D transform、B-roll／picture-in-picture。
 
-**作者心得：** 作者認為 lint 比自然語言規則更快、便宜且可確定執行，並表示自己已在多個專案使用 Oxlint；這是個人經驗，不是受控 benchmark。
+**作者心得：** 作者認為分段生成前先建 design system，可顯著降低間距、字重與配色漂移；視覺需求難以文字化時，annotation 與自訂滑桿比反覆 prompt 更有效。這是影片中的實作經驗，沒有 A/B 品質或成本數據。
 
-**優點：** 短而完整；清楚區分 hard gate 與提示詞；有真實程式碼、診斷與 Agent 修正閉環；官方 repo 可直接查規則實作。
+**優點：** 人工繁中字幕完整；六個技巧都有 UI 與結果展示；不只展示「一句話生成」，也涵蓋修改、參數化、資料輸入、版本切換與輸出；時間點可靠。
 
-**缺點與限制：** `anti-slop` 目前採 source-distributed，README 說 npm release 尚在規劃；repo 很新、規則高度主觀，缺少大型 repo 的 false-positive／bug-prevention 數據；影片沒有展示完整 tests、CI 時間或修正前後行為差異。
+**缺點與限制：** 沒有揭露每段生成時間、token／credit 消耗、失敗重試率或不同模型比較；只展示成功案例；「Claude 可直接讀取網站原始碼」的可達範圍受登入、robots、CSP、動態內容與權限影響；第三方素材、網站設計與字型授權也未深入討論。
 
-**適合對象：** TypeScript／JavaScript 團隊、想把 AI coding 規範轉成可執行驗收者；不適合把所有 style 偏好一次升成阻擋規則的團隊。
+**適合對象：** 需要做課程動畫、產品導覽、社群短片、data storytelling 的設計師、講師與前端工程師；若需要逐幀 motion-graphics 控制、複雜音訊後製或已建立 After Effects pipeline，仍應把 Design 當原型／初稿工具。
 
-**是否值得看完整影片：** 值得，只有 4 分 40 秒；重點看 `01:43–03:53` 的診斷、Agent 修正與限制說明。
+**是否值得看完整影片：** 值得。若只看實務核心，先看 `01:16–06:09` 的 design system、timeline、annotation 與 tweak panel，再看 `10:17–12:44` 的操作動畫與 B-roll。
 
-**贊助標示：** 未見外部付費贊助；影片由 Better Stack 品牌頻道製作，含自家 observability 產品與頻道推廣。
+**贊助標示：** 未見外部付費贊助；description 含 Buy Me a Coffee、頻道會員與頻道自我推廣。
 
-**一個可立即嘗試的方法：** 不必先安裝整包；從你最近一個 TypeScript bug 找出一種「型別證據被丟掉」的 pattern，先用既有 ESLint／Oxlint 寫一條 focused rule＋兩個 fixtures，讓 Agent 只修這一類，再比較 false positives。
+**一個可立即嘗試的方法：** 拿一張 20 秒的產品流程圖，先定義 5 個 tokens（背景、主色、字型、間距、圓角），拆成三個命名場景；生成後只用 annotation 改一個局部，再把字幕大小與位置做成兩個滑桿。記錄首次生成、局部修正與 export 各花多少時間／credits。
 
-**官方／原始碼交叉查證：** `anti-slop` README 確認十條 opinionated rules、source-distributed 狀態與 npm 未發布；Oxc 官方文件確實公布 50–100 倍 benchmark，但那是 Oxc 自家測試，不是 Better Stack 的獨立結果。[anti-slop repo](https://github.com/dmmulroy/anti-slop)、[Oxlint 文件](https://oxc.rs/docs/guide/usage/linter.html)、[Oxc benchmarks](https://oxc.rs/docs/guide/benchmarks)
+**官方／原始碼交叉查證：** Anthropic 官方確認 Claude Design 是 paid-plan beta、支援 design system、canvas 編輯與多種 handoff；官方設計師也說 Design 能製作動畫與自訂編輯器。Fable 5 是否需額外 credits 依方案而異。RVE 的 template repo 是 81 個 MIT 授權的 Remotion components，Remotion 官方 resources 有收錄，但它仍是第三方專案。[Claude Design 公告](https://claude.com/blog/claude-design-stays-on-brand-for-daily-work)、[Anthropic 設計師工作流](https://claude.com/blog/how-the-product-designer-who-built-claude-design-uses-it-to-explore-ideas-before-building-them)、[Fable 5 方案說明](https://support.claude.com/en/articles/15424964-claude-fable-5-on-your-plan)、[RVE templates repo](https://github.com/reactvideoeditor/remotion-templates)、[Remotion resources](https://www.remotion.dev/docs/resources)
 
 ## 6. 今天值得嘗試
 
-### 做一個 30 分鐘的「可量測 context handoff」
+### 做一個 45 分鐘的「Memory 不一定比較好」A/B
 
-- **建議日期：2026-08-21**
-1. 選一個已聊超過十輪、但下一步仍明確的 AI coding session。
-2. 建立一頁 `HANDOFF.md`，只放已確認事實、已採用決策、證據連結／檔案、限制、未解問題與下一個驗證命令。
-3. 在新 session 只提供 handoff 與必要檔案，執行同一下一步；保存 input／cached／output tokens、工具呼叫數、總時間與測試結果。
-4. 若新 session 成本較低且驗證相同，保留流程；若漏掉關鍵資訊，就把缺漏加回 handoff schema，而不是把整段舊對話永久帶著走。
-5. 高風險任務再加一個「不得遺失」清單：權限、資料分類、不可逆 action、approval owner 與 rollback。
+- **建議日期：2026-08-22**
+1. 從你的 Agent／RAG 流程挑 10–20 個有舊專案背景、規格曾改版或同名概念的任務。
+2. A 組完全不注入 memory；B 組用現有 retriever；C 組在 retrieval 後加 admission gate，先判斷時效、scope 與是否和當前 evidence 衝突。
+3. 固定模型、prompt、工具與 token budget，各組至少重跑三次；記錄 task pass、錯誤引用舊規格、tool calls、latency 與 tokens。
+4. 若 B 比 A 差，不要先換 embedding；先看是否是「找對舊資料、但不該在此時使用」。把這類例子寫成 Reasoning Fixation／Belief Distortion regression fixtures。
+5. C 組若改善，再把 gate decision、被拒 memory 與理由寫進 trace；高風險流程仍要求人工確認，不把 prompt mitigation 當成硬安全邊界。
 
 ## 7. 來源與可信度說明
 
-- **官方事實：** Claude Academy 的功能與教學原則來自 Anthropic 官方公告；prompt caching、價格與 TTL 以 Anthropic／OpenAI 官方文件校正；Oxlint 效能數字明確標示為 Oxc 自家 benchmark。
-- **研究結果：** SkillGate、ComponentBench、A Jagged Frontier、VLA 與 stateful gates 都來自作者論文；除 ComponentBench 標示已被 COLM 2026 接受外，其餘本報使用者均應視為尚待獨立重現的研究訊號，百分比不可直接外推 production。
-- **社群案例：** Codex #39767 有 rollout replay 與原始碼分析，但仍是 open issue；Claude Code #88387 有最小重現，但尚無 maintainer 結論。兩者都不是官方確認的普遍故障。
-- **YouTube：** 兩部均於寫回前重新查核精確觀看數，超過 10,000，且已全文閱讀人工繁中／英文原始自動字幕。影片中的作者主張、示範、品牌 benchmark 與官方事實已分開標示；觀看數是截稿快照。
-- **去重：** 2026-08-20 已報的 TensorRT Model Connect、context compression、Fiducia-bench、Codex prompt-cache 400、Quipu、Hindsight 與 Claude Code 實戰影片均未重複；只有出現新且獨立的 compaction accounting 證據時才續報 Codex context 議題。
+- **官方事實：** Claude Design、Fable 5 方案與 export 清單以 Anthropic 官方公告／Help Center 校正；模型／產品「本日無新發布」是查核各家官方入口後的編輯判斷，不代表未公開 rollout 或所有地區帳號狀態。
+- **研究結果：** AI4AI-Bench、Phantom Gains、MemTrapBench、PolicyGuide、Adaptive Reasoning 均為 8 月 20 日提交的作者預印本；數字只代表各自模型、資料、harness 與 evaluator，尚未獨立重現。Phantom Gains 與 AI4AI-Bench 對「自我改進」給出互補訊號，但不是同一實驗，不能合併成單一結論。
+- **社群案例：** Codex #39808 的成本機制與 before／after 尚屬使用者假說；Claude Code #88320 有較完整的 fresh-window、idle、quit 與重現量測，但仍是單一環境、open issue。兩者都不是廠商確認的普遍故障。
+- **YouTube：** PAPAYA 影片在寫回前已重新查核超過 10,000 次，並全文閱讀人工繁中字幕；影片示範、作者建議、標題命名、官方方案與文件缺口已分開標示。觀看數是截稿快照。
+- **去重：** 2026-08-21 的 Claude Academy、SkillGate、ComponentBench、code-agent 語意改寫、隱性多 Agent 溝通、Codex compaction 與兩部影片均未重複；本日 subagent 成本 issue 是不同的新議題，重點在 fan-out 的固定 context 成本。

@@ -1,171 +1,142 @@
-# AI 情報日報｜2026-08-22
+# AI 情報日報｜2026-08-23
 
-> 閱讀時間：約 8–10 分鐘。優先涵蓋 2026-08-20 至 2026-08-22 的新進展；研究項目均為預印本，產品與開放 issue 狀態以截稿時可驗證資料為準。
+> 閱讀時間：約 9 分鐘。觀測範圍以 2026-08-20～2026-08-23（Asia/Taipei）為主；週末新增公告較少，因此只收錄具實務影響、且未在昨日重複報導的內容。
 
 ## 1. 今日最重要的 3–5 件事
 
-### 1. AI4AI-Bench：目前的 Agent 能改訓練程式，卻很少真的改到「學習演算法」
+### 1. GPT-5.6 Sol 限時降價，但官方頁面的數字尚未完全同步
 
-- **提交日期：2026-08-20｜證據層級：arXiv 預印本，作者 benchmark 結果**
-- AI4AI-Bench 用 10 個凍結的研究 repository，涵蓋 10 種訓練演算法家族。每題讓 Agent 在一張 B300 上工作 4 小時、重寫訓練演算法，再從頭執行最多 12 小時，由 Agent 看不到的固定 evaluator 評分；尺度把無資訊模型設為 0、原 repo 演算法設為 0.1、任務最優設為 1.0。
-- 6 個系統、29 種設定的平均分數只有 0.166，最佳系統 0.250；也就是最佳者只補上原演算法與最優解差距不到五分之一。多數提交甚至沒有改變模型如何學習；真的改到學習演算法的少數提交平均 0.226，其餘只有 0.126。
-- 增加 reasoning effort 主要提高「願不願意碰核心演算法」：這類提交從 8% 升到 64%，平均分數從 0.094 升到 0.196。這證明更高推理預算會改變搜尋行為，**不等於已證明遞迴自我改進可行**；任務仍有固定 repo、單卡、時限與已知訓練框架邊界。
-- 原始來源：[arXiv｜AI4AI-Bench](https://arxiv.org/abs/2608.20318)
+- **發布／更新：2026-08-21。** OpenAI 表示 GPT-5.6 Sol 的 API 與點數價格在未來三個月降低超過 20%。企業版的 token 計價表已列出 Work／Codex 每百萬 token 為輸入 **US$4**、快取輸入 **US$0.40**、輸出 **US$20**，促銷至少到 2026-11-21；既有方案內含額度不變。
+- 但目前模型頁仍顯示一般 API 標準價為輸入 US$5、快取輸入 US$0.50、輸出 US$30。這代表公告、企業計價表與公開模型頁尚未完全同步；**API 使用者應以帳戶用量頁與實際帳單為準，不宜把 US$4／US$20 直接當成所有 API 帳戶的確定費率。**
+- 來源：[OpenAI GPT-5.6 Sol 公告](https://openai.com/index/gpt-5-6/)、[企業版 token 計價表](https://help.openai.com/en/articles/20001415-chatgpt-rate-card-enterprise-token-based-pricing)、[API 模型頁](https://developers.openai.com/api/docs/models/gpt-5.6-sol)
 
-### 2. Phantom Gains：沒有「凍結控制組」，模型自我改進可能只是推論批次與單次 decode 的假象
+### 2. Claude Mythos 5 開始進入防禦端工作流程，並投入 US$35M 支援開源安全
 
-- **提交日期：2026-08-20｜證據層級：arXiv 預印本、程式碼與作者稽核結果**
-- 研究把 Qwen3-8B 的三輪 rank-32 LoRA self-training，和一個不訓練、但走過完全相同 pipeline 的 frozen control 比較，找出七種量測失敗。只用單次 greedy decode 建立逐題 gain／loss ledger 時，凍結模型也會看起來產生能力變化，主要來源是 inference batching。
-- 作者改用 pooled baseline 的逐題 exact test，再做 false-discovery-rate control；在 held-out frozen replicates 上沒有偵測到假進展。相同 stream、資料量與評測下，external distillation 改善 base model 很少答對的題目，三種 self-training 沒有；self-training 反而以高於量測底噪的比率破壞原本答對的題目。
-- 實務訊息很直接：比較 prompt、memory、fine-tune、Agent harness 或「自我改善迴圈」時，先讓**未改動版本也完整重跑同一 pipeline 多次**，量出 null distribution；不能把兩次 noisy run 的逐題差分直接叫做能力獲得或遺失。
-- 原始來源：[arXiv｜Phantom Gains](https://arxiv.org/abs/2608.20290)
+- **發布：2026-08-21。** Claude Security 公開測試版已使用 Mythos 5 掃描程式碼儲存庫，回傳 CWE、信心、嚴重度與修補建議；目前提供 Enterprise 客戶，依既有方案的標準 token 用量計費，沒有額外附加費。
+- Anthropic 強調每個修補仍需人工審查；Security 掃描權限也不等於可在其他介面直接使用 Mythos 5。官方另宣布 **Defender Advantage Fund（0xDAF）**，投入 US$35M Claude 點數支援開源安全專案，並擴大 Cyber Verification Program。
+- 這是官方產品與資助公告，不是已證明能取代安全工程師的獨立評測；基金受助名單與更廣泛的 Mythos 5 存取仍待後續公布。
+- 來源：[Anthropic：Bringing Claude Mythos 5 to more defenders](https://claude.com/blog/bringing-claude-mythos-5-to-more-defenders)
 
-### 3. MemTrapBench：記憶完全正確、也與當前任務相關，仍可能讓模型推理變差
+### 3. Anthropic 的 Computer Use、Skills API、Files API 正式 GA，並新增 Browser Use
 
-- **提交日期：2026-08-20｜狀態：work in progress｜證據層級：arXiv 預印本，作者結果**
-- 既有 memory benchmark 多半問「有沒有抽取、保存、找回正確資訊」；MemTrapBench 改測找回後是否造成 **Reasoning Fixation**（被舊解法鎖住）或 **Belief Distortion**（把舊情境錯套到新題）。陷阱不要求 memory 本身錯誤，只要它在新任務中具有誤導性即可。
-- 兩個模型家族、五種代表性 memory frameworks 的實驗中，所有 memory 策略都輸給 no-memory 設定，最強方法仍下降超過 10%。作者提出 inference-time 的 AdaptiveMem 指令，在新 benchmark 降低陷阱，同時保留或改善一般 memory benchmark 表現。
-- 這仍是作者設計的 benchmark 與提示式 mitigation，尚未獨立重現；但產品設計不應再把「retrieval relevance 高」當成「應直接注入」。需要額外判斷舊記憶是否只是相似、是否與目前證據衝突、以及任務條件是否已改變。
-- 原始來源：[arXiv｜MemTrapBench](https://arxiv.org/abs/2608.20202)
+- **發布：2026-08-20。** Computer Use、Skills API 與 Files API 已正式可用；Computer Use 現可在單一回合執行多個動作，Browser Use 則利用頁面結構與元素定位處理瀏覽器任務。
+- Skills API 支援上傳與版本化自訂技能；Files API 新增自動到期、提高 5 倍速率限制，組織儲存上限為 1 TB。Computer Use 也可在簽署 BAA 後用於符合 HIPAA 的工作負載。
+- Microsoft Foundry 已提供 Skills 與 Files；Vertex AI 的新版 Computer／Browser Use 尚在後續導入。官方列出的「32 分鐘降到 13 分鐘、成本約降 30%」是客戶案例，不是跨產業通用 benchmark。
+- 來源：[Anthropic：Computer use, Skills API, and Files API are now generally available](https://claude.com/blog/computer-use-skills-api-files-api)
 
-### 4. PolicyGuide：Agent 合規不能只在 tool call 前擋一次，要把整份政策編譯成有狀態工作流
+### 4. MidTool：先用 203 億 token 的工具語料中訓練，再做 SFT／RL
 
-- **提交日期：2026-08-20｜證據層級：arXiv 預印本，作者結果**
-- Action-local guard 能擋下「不該做的動作」，卻不一定發現 Agent 漏掉身分確認、再次確認或其他必要程序。PolicyGuide 把 domain policy 編譯成 workflow graph，在每個 user-turn boundary 讀取持久化 graph state、整理尚未完成的請求，再回傳下一個合規步驟與 remediation。
-- 在 τ²-bench 的航空、零售、電信任務上，GPT-5.4 agent＋verifier 的平均 Pass⁴ 從 0.42 升到 0.62；工作流最明確的電信領域從 0.19 升到 0.61。同一批 workflows 也能轉移到 Claude Sonnet 4.6 與 Gemini 2.5 Pro agents。
-- 數字來自作者設定，adversarial／workflow-level 補充評測也由作者設計；production 仍要測 graph coverage、政策版本遷移、例外授權與 stale approval。不過方向比「每個動作各自問一次是否安全」完整：合規狀態必須跨回合保存。
-- 原始來源：[arXiv｜PolicyGuide](https://arxiv.org/abs/2608.19861)
+- **論文提交：2026-08-20。** MidTool 建立 20.3B-token、1,122 萬筆樣本的語料，組成包含網頁 42%、程式碼 26%、PDF 23%、原生軌跡 9%，資料來自真實 API、MCP skills、文件與程式碼，再加驗證流程。
+- 在作者的 Qwen3-4B 實驗，BFCL 總分由僅 SFT 的 39.73，提高到 MidTool＋SFT 的 50.25；再加 RL 為 54.18。8B 模型則由 47.62 提高到 51.12／55.12。
+- 這是作者在特定模型、資料管線與評測上的結果，訓練還使用 32 張 H200，RL 使用 8 張 B200；尚不能推論到所有模型或真實長流程 Agent。
+- 來源：[MidTool 論文](https://arxiv.org/abs/2608.20314)、[HTML 全文](https://arxiv.org/html/2608.20314v1)
 
-### 5. Adaptive Reasoning：先選 NoThink／Short／Long，可少 41% token 而幾乎維持 MATH500 正確率
+### 5. MaliciousSkillBench 顯示：惡意 Skill 偵測器跨來源時明顯失準
 
-- **提交日期：2026-08-20｜證據層級：arXiv 預印本，作者小模型實驗結果**
-- 研究讓模型把回覆第一個 token 當作 reasoning mode：`NoThink`、`Short` 或 `Long`。選擇和答題一起在 GRPO 中學習，不另設 router；各模式有不同 reward shaping 與硬 token cap，避免全部塌縮到同一種長度。
-- 1.5B distilled model 在 MATH 訓練後，MATH500 平均正確率從 base 的 0.796 小幅降到 0.782，平均回覆長度從 4,796 降到 2,811 tokens，減少 41%。在未重新訓練的 GSM8K 上最多節省 76%，且相近長度下正確率高於比較基線。
-- 目前只證明小模型、數學題與三個離散模式；不能直接外推到 coding agent 或高風險推理。但它提供可測的產品假設：不要只讓使用者手動選固定 effort，可先用低成本 gate 判斷任務難度，再給不同 token／tool budget。
-- 原始來源：[arXiv｜Learning When to Think](https://arxiv.org/abs/2608.20256)
+- **論文提交：2026-08-20。** 資料集從 13 個公開來源整理 7,505 個惡意與 2,235 個正常 skills。隨機切分時偵測器 macro-F1 可達 0.882～0.932，但來源完全分離後只剩 0.653～0.665。
+- 最強的 TF-IDF SVM 在來源分離下雖找出 95.6% 惡意樣本，卻把 62.4% 正常樣本誤判為惡意。這表示模型可能只是記住來源風格，而非真正理解行為風險。
+- 實務上不能把單一掃描器當成安裝閘門；至少要加上來源驗證、權限最小化、沙箱執行、人工審查與執行期監控。數字仍屬作者 benchmark。
+- 來源：[MaliciousSkillBench 論文](https://arxiv.org/abs/2608.19901)
 
 ## 2. 新模型與產品更新
 
-### 最近 24–48 小時沒有新的前沿模型／正式價格表發布
+| 更新 | 可立即確認的能力 | 邊界與採用建議 |
+| --- | --- | --- |
+| GPT-5.6 Sol 限時價格調整 | 公告稱 API 與點數價格降低超過 20%；企業 Work／Codex 計價表已有促銷數字 | 公開 API 模型頁仍是標準價；先在用量儀表板做一筆小額實測，再更新成本模型 |
+| Claude Security＋Mythos 5 | 儲存庫掃描、CWE／信心／嚴重度與修補建議，Enterprise 公開測試版 | 每個修補都要人工審查；不是一般 Mythos 5 存取，也不是獨立安全認證 |
+| Claude Agent 平台 GA | 多動作 Computer Use、Browser Use、版本化 Skills、Files 自動到期與 1 TB 組織容量 | Browser／Computer Use 仍需處理提示注入、權限與不可逆操作；雲端平台支援範圍不完全相同 |
 
-- **查核日期：2026-08-22｜證據層級：官方公告與 changelog 查核後的編輯判斷**
-- 截稿前沒有找到 OpenAI、Anthropic、Google、Microsoft／GitHub、Meta、Apple 或 NVIDIA 在 2026-08-20 至 2026-08-22 公布新的可用前沿基礎模型、正式 API 價格或主要 GA endpoint。Google Gemini API changelog 最新可見項目仍是 8 月 13 日的 Gemini 3.7 Flash GA；GitHub Copilot changelog 最新可見項目仍是 8 月 14 日的 Grok 4.6。
-- 昨日已報的 Claude Academy，以及前幾日的 Grok 4.6、Gemini 3.7 Flash、Agent Plugins、MAI-Code、TensorRT Model Connect 都沒有新的獨立進展，因此不重複。
-- 查核入口：[OpenAI Developers](https://developers.openai.com/)、[Claude Blog](https://claude.com/blog)、[Gemini API release notes](https://ai.google.dev/gemini-api/docs/changelog)、[GitHub Changelog](https://github.blog/changelog/)、[Meta AI Blog](https://ai.meta.com/blog/)
-
-### Claude Design 影片是新教學，不是 Anthropic 在 8 月 21 日發布「2.0」
-
-- **影片發布日期：2026-08-21｜官方產品資料日期：2026-06-17、2026-06-30 與 2026-07-20 後方案規則**
-- PAPAYA 新片展示 Design 的 timeline、annotation、tweak panel、素材／資料匯入與動畫輸出；但 Anthropic 官方頁目前仍把 Claude Design 稱為 beta，沒有在 8 月 21 日發布名為「Claude Design 2.0」的公告。日報因此把「2.0／重大升級」視為影片標題的作者命名。
-- 官方確認 Design 可供 Pro、Max、Team、Enterprise 使用，Enterprise 預設關閉；Fable 5 在 Pro／Team standard seat 需 usage credits，但 Max／premium seat 可在方案每週額度內使用一部分，並非所有付費用戶都一定要額外購買點數。
-- 官方 Help Center 目前列出的 export 是 ZIP、PDF、PPTX、standalone HTML 與多個 partner handoff，尚未列 Video；影片畫面中的 Video export 可能是較新的 rollout 或文件尚未同步，使用前要以自己帳號 UI 實測，不應當成所有帳號已正式保證。
-- 原始來源：[Anthropic｜Claude Design now stays on brand](https://claude.com/blog/claude-design-stays-on-brand-for-daily-work)、[Claude Help｜Get started with Claude Design](https://support.claude.com/en/articles/14604416-get-started-with-claude-design)、[Claude Help｜Fable 5 on your plan](https://support.claude.com/en/articles/15424964-claude-fable-5-on-your-plan)
+截至本次查核，Google、Microsoft、Meta、Apple、NVIDIA 的官方來源沒有比昨日更值得取代上述項目的新前沿模型或定價公告，因此不以舊消息補篇幅。
 
 ## 3. 新技術、新方法
 
-### 方法一：所有「Agent 變好了」都先量 measured null
+### Skill 要「拆到可轉移的子任務」，不是把整個任務摘要存下來
 
-- **依據日期：2026-08-20**
-- 對 baseline 做至少 3–5 次完整 replicate，固定資料順序、batching、decoding、seed policy、harness 與 evaluator；先量出沒有任何修改時的逐題 flip rate、整體分數分布與方差。
-- 新版與舊版用同一 pool 比較；逐題 acquisition／regression 要做多重比較校正。若只跑一次舊版、一次新版，最多能說觀察到差異，不能說能力真的獲得或遺失。
+- **論文提交：2026-08-20。** *Break It Down, Pass It On* 的受控實驗發現，從完整任務歸納的 skills 多數讓 Agent 表現低於無記憶基線；從子任務萃取的 skills 則平均帶來改善，而且文字式 skill 通常比程式碼式 skill 更容易跨任務轉移。
+- 作者提出結合「具體性」與「抽象度」的 skill utility，可在真正執行前，僅由 skill 與目標任務描述估計是否值得重用。
+- 可採用的設計：把「研究一家公司」拆成來源定位、日期核對、宣稱分類、交叉查證等原子步驟；為每個步驟記錄適用條件與失敗訊號，而不是儲存一份只適合原任務的長摘要。
+- 來源：[Break It Down, Pass It On](https://arxiv.org/abs/2608.20274)
 
-### 方法二：Memory admission 要和 retrieval 分開
+### Repo0：先把需求、元件與對齊關係建成雙 DAG，再生成整個儲存庫
 
-- **依據日期：2026-08-20**
-- Retriever 只回答「像不像／找不找得到」；admission gate 再判斷 `scope_match`、`time_validity`、`conflict_with_current_evidence`、`task_condition_changed` 與 `confidence`。
-- 對高衝突 memory，不直接塞進 system context；改成並列「舊記憶」與「目前證據」，要求模型先解釋何者適用。每批 memory 任務都保留 no-memory control，防止 retrieval 指標進步但最終任務退步。
-
-### 方法三：把政策做成版本化 graph，而不是散落在 prompt 裡
-
-- **依據日期：2026-08-20**
-- 每個 case 保存 `policy_version`、`current_state`、`required_evidence`、`completed_steps`、`pending_confirmation` 與 `authorized_exception`。每個 user turn 先 reconcile state，再讓 Agent 決定下一步。
-- 只要政策版本、使用者請求或 evidence 改變，舊 approval 標成 stale；重新走 graph。Tool-call guard 仍保留，但角色是最後一層 enforcement，不是唯一流程引擎。
-
-### 方法四：Reasoning budget 要回報「省了多少」與「錯在哪裡」
-
-- **依據日期：2026-08-20**
-- 先在低風險任務試三段 budget，記錄 mode choice、input difficulty proxy、reasoning tokens、tool calls、latency、cost 與 pass rate；不可只報平均 token 下降。
-- 特別查看 router regret：簡單題被送進 Long 浪費多少，困難題被送進 NoThink 又造成多少錯誤。若錯誤集中在低估難度，就提高 escalation sensitivity，而不是把所有任務永久設成最高 effort。
+- **論文提交：2026-08-20。** Repo0 將零起點程式碼生成分成需求 DAG、元件 DAG 與兩者的對齊，先反覆修正模組結構，再以測試驅動方式實作。
+- 作者在 RepoCraft 的 6 個真實儲存庫、GPT-5 mini 與 DeepSeek V3.2 上，回報相對 RPG 最多提高 20.08 個百分點功能覆蓋率、29.74 個百分點測試通過率。
+- 方法值得借鏡的是「先驗證需求到元件的可追蹤性，再寫程式」；但只有 6 個儲存庫，且數字是作者結果，不能直接當成大型既有系統的效果保證。
+- 來源：[Repo0 論文](https://arxiv.org/abs/2608.19854)
 
 ## 4. 社群實戰心得
 
-### Codex subagent fan-out 可能因每個 child 重複載入固定 context，反而更耗額度
+### Claude Code 的 Advisor 可能讓 `/compact` 失去提示快取效益
 
-- **回報日期：2026-08-20｜狀態：open issue，使用者假說與 anecdotal before／after，尚無維護者確認**
-- #39808 指出每個 subagent 都可能各自承擔 system／developer instructions、`AGENTS.md`、tool schemas、Skill catalog、repo context、委派 prompt 與 forked history。把一個小調查拆成五個 child，就可能把固定 bootstrap 成本乘五；小模型不一定能抵銷重複 context。
-- 回報者表示關閉大量 plugins／skills 與頻繁 fan-out 後，連續約 4 小時只消耗約 1% 額度，但這不是控制實驗，也無法分離 plugin surface、skill metadata、parent history、prompt cache 與 agent 數量的影響。留言對 0.148→0.149 context 設定變更的解釋仍是推測。
-- 實務 workaround：只把能獨立工作、且產出價值大於 bootstrap 成本的任務交給 child；三個很小的查核合併成一個 subagent。保存單 Agent／多 Agent 的總 tokens、cached input、wall time、tool calls 與最終品質，別把 fan-out 當成免費平行化。
-- 原始來源：[openai/codex #39808](https://github.com/openai/codex/issues/39808)
+- **回報：2026-08-22，GitHub issue 尚未結案。** 回報者在 Claude Code 2.1.239 做相同情境的 A/B 測試：啟用 Advisor 時，單次壓縮成本紀錄為 86,493 microdollars；停用後為 24,688，約差 3.5 倍。啟用時另產生 54,008 個 cache-creation tokens，而停用時為 0。
+- 回報者推測內部 fork 缺少 Advisor tool／system 區段，造成提示前綴不同而無法命中快取；目前沒有維護者確認。`CLAUDE_CODE_DISABLE_ADVISOR_TOOL=1` 只是該環境的診斷性繞法，不應直接成為所有人的永久設定。
+- 可操作做法：在自己的計費紀錄對 `/compact` 前後做 A/B，記錄 cache read／creation 與模型版本；確認重現後再暫時停用，並追蹤 issue 更新。
+- 來源：[anthropics/claude-code #88755](https://github.com/anthropics/claude-code/issues/88755)
 
-### Claude Desktop 切換 session 可能一次燒掉約 569 GitHub GraphQL points
+### 多個 Coding Agent 共用同一個 clone，Git 無法保留「哪個工作階段擁有哪一行」
 
-- **回報日期：2026-08-20｜狀態：open issue，有控制量測，尚無維護者結論**
-- #88320 在 macOS Claude Desktop 1.32885.1／Claude Code 2.1.234 測得：fresh quota 下，app 啟動約 12 points、閒置為 0；連續三次 sidebar session switch 在 10 秒內增加 1,706 points，約每次 569。GitHub 個人 GraphQL limit 為每小時 5,000 時，只要 8–9 次切換就可能耗盡，並拖累同一身分的 `gh`、GitHub MCP 與 CI widgets。
-- 這是單一使用者環境，雖有 app-quit／idle control 與第二次重現，仍未證明所有帳號、repo 綁定數或新版本都會發生。原 issue 最初把 turn start 與 UI 動作混在一起，後續量測已修正為「成本附著在 session switch，而非背景輪詢」。
-- 若看到 `gh`／MCP 突然 rate limited，可先用 `gh api rate_limit` 檢查 GraphQL pool；GitHub-heavy 任務暫時改在純 terminal session 執行，並減少 Claude Desktop sidebar 來回切換。不要在 quota 已飽和、client backoff 後量測，否則 frozen counter 會造成假陰性。
-- 原始來源：[anthropics/claude-code #88320](https://github.com/anthropics/claude-code/issues/88320)
+- **回報：2026-08-22，GitHub issue 尚未結案。** 一名使用者在 3～6 個並行工作階段共用同一 working tree 時遇到 3 次歸屬混淆。其 14 天樣本中，286 個 commit 有 106 個觸及競爭檔案，其中 58 個又夾帶其他檔案。
+- 改用每個工作階段各自寫 fragment inbox 後，7 天內 23 個 fragment 的夾帶率由 55% 降至 0%；但仍有 3 次繞過約定直接編輯，顯示規範本身不是強隔離。
+- 可操作做法：每個 Agent 使用獨立 worktree／clone；提交時使用明確 pathspec，並在 commit 前檢查 staged diff。回報數字是單一團隊案例，不是普遍發生率。
+- 來源：[anthropics/claude-code #88862](https://github.com/anthropics/claude-code/issues/88862)
 
 ## 5. YouTube 深度整理
 
-本日先檢查 PAPAYA 電腦教室，再查 Gary Chen、Tech With Tim、Better Stack、IBM Technology、Matthew Berman 與其他中英文 AI／Agent／AI Coding 候選。IBM 8 月 20 日新片約 8,900 次，未達門檻；Better Stack 8 月 20 日影片已於昨日收錄，8 月 19 日 DeepSeek Harness 又與 8 月 19 日報告主題重複；Matthew Berman 的 Grok Bot 片和 8 月 15 日已收錄影片重疊。以下一部通過 10,000 次硬門檻，並已全文閱讀人工繁中字幕。觀看數為 2026-08-22 截稿快照，之後會變動。
+今天先搜尋 PAPAYA 電腦教室與多個中英文 AI／工具頻道；PAPAYA 最新公開影片仍是昨日已整理內容，故不重複。以下兩部均在交付前重新查核超過 10,000 次觀看，並已閱讀可靠字幕；觀看數會持續變動。
 
-### PAPAYA 電腦教室｜《還在用 PPT 製作廉價簡報動畫？Claude Design 2.0 迎來重大升級，今天就用這 6 個小技巧解鎖它的專業動畫功能！》
+### 1. Better Stack｜[4 Billion Free LLM Tokens… One API (FreeLLMAPI)](https://www.youtube.com/watch?v=sHOwbyMbun0)
 
-- **發布日期：2026-08-21｜查核觀看次數：18,455｜片長：12:54｜字幕：人工繁中 `zh-TW`**
-- 連結：[YouTube](https://www.youtube.com/watch?v=jn7UXxa1Llg)
+- **發布／查核：**2026-08-20；16,222 次觀看；9:13；英文自動字幕，已完整審閱。頻道品牌內容，未標示外部贊助。
+- **摘要：**影片示範把多家模型供應商的免費額度放到一個 OpenAI 相容端點後，讓路由器依模型能力、額度與健康狀態切換。重點不是「免費前沿模型」，而是用本機控制面統一個人實驗的多把金鑰。
+- **重點：**
+  1. 專案宣稱每月約可聚合 40 億 tokens；這是維護者估算，不是獨立量測。
+  2. 安裝後在本機儀表板加入 Google、Groq、Cerebras、Mistral、OpenRouter 等供應商金鑰。
+  3. Balanced routing 依智力排名、可用額度、健康狀態與速率限制選模型，失敗時再切換。
+  4. 範例用統一 base URL 與 API key 驅動 Python CLI 任務管理器，產出程式與 README。
+  5. 官方儲存庫目前列 29 家供應商、251 個模型家族與 358 個端點；影片口述與網站數字不同，顯示目錄變動很快。
+- **步驟／工作流程：**檢查安裝腳本與 Docker 設定 → 產生加密金鑰 → 啟動本機儀表板 → 加入低權限供應商金鑰 → 先在 playground 測試 → 將客戶端改成統一端點 → 人為關閉一個供應商驗證 failover。
+- **工具／模型：**FreeLLMAPI、Docker Compose、OpenAI 相容 API，以及多家免費層模型；不是單一模型評測。
+- **作者心得與優缺點：**作者認為適合 side project、原型與大量 Agent loop；優點是一把金鑰、集中額度與自動 failover，缺點是模型品質與延遲不一致、免費額度與條款隨時可能改變。
+- **限制／適合對象：**官方明確定位為單人、本機優先、個人實驗用途，無 SLA、沒有前沿模型保證，不適合正式環境或敏感資料。供應商條款仍各自適用；即使金鑰以 AES-256-GCM 儲存在本機，也應使用可撤銷、低權限金鑰。
+- **是否值得看：** **值得有多家免費額度、想快速做原型的人看**；需要穩定延遲、集中稽核與正式支援者應改用成熟閘道或受管服務。
+- **可立即嘗試：**只接兩家測試帳戶，固定一個非敏感 prompt，量測 20 次路由的成功率、P50／P95 延遲與模型漂移；通過後才接入個人專案。
+- **可靠時間點：**[0:00](https://www.youtube.com/watch?v=sHOwbyMbun0&t=0s) 前提、[1:45](https://www.youtube.com/watch?v=sHOwbyMbun0&t=105s) 安裝與路由、[4:30](https://www.youtube.com/watch?v=sHOwbyMbun0&t=270s) 範例、[6:15](https://www.youtube.com/watch?v=sHOwbyMbun0&t=375s) 同類工具比較、[7:15](https://www.youtube.com/watch?v=sHOwbyMbun0&t=435s) 優缺點。
+- **官方交叉查證：**[FreeLLMAPI GitHub](https://github.com/tashfeenahmed/freellmapi)、[FreeLLMAPI 官網](https://freellmapi.co/)
 
-**快速摘要：** 影片不是新聞朗讀，而是從建立 design system 開始，實際做出片段式動畫、局部註解修改、可自訂 tweak controls、SVG 描邊、CSV 圖表、螢幕操作模擬與講者影片 B-roll。最有價值的觀念是「先把視覺規則與資料變成可調參數，再讓 Agent 改 code」；最需要校正的是「Design 2.0」並非當日官方版號，Fable 5 計費依方案不同，Video export 也尚未出現在官方 Help Center 的完整 export 清單。
+### 2. IBM Technology｜[AI Agents vs Business Rules: Which Should Make Decisions?](https://www.youtube.com/watch?v=i1ZmNUbRGD4)
 
-**內容重點**
-
-1. `01:16–02:53`：先建立 design system，固定字體、顏色、間距與元件，避免分段生成的畫面逐步漂移；可用圖片、網站、Figma 或 codebase 作參考。
-2. `03:09–04:14`：先回答觀眾、片長、比例等澄清問題，再生成；timeline 可刪片段、改播放速度與逐格檢查。
-3. `04:18–06:09`：動畫是 code-generated，可用片段名稱＋局部需求修改，也能直接在 canvas 註解；tweak panel 可新增字級、位置等滑桿，減少反覆用自然語言微調。
-4. `06:32–08:50`：長對話完成一階段後開新 chat；上傳 PNG／SVG／字型、CSV／Excel，把品牌素材、SVG path animation 與資料驅動 chart 組進同一動畫。
-5. `09:32–11:21`：參考 RVE 的 Remotion templates，加入 Ken Burns、3D rotation 與 transition；RVE 是第三方 Remotion 生態資源，不是 Anthropic 或 Remotion 官方範本商店。
-6. `10:17–12:44`：以多張 UI 截圖模擬螢幕操作；也能把講者影片與 SRT 交給 Design，產生 B-roll／子母視窗。影片示範從 Share → Video 選解析度匯出，但官方文件是否已覆蓋所有帳號仍待確認。
-
-**教學／工作流程**
-
-1. 先定義 16:9／9:16、片長、觀眾與一頁 design tokens；素材來源要有使用權，不要直接把未授權 Pinterest 圖或機密 Figma／網站原始碼上傳。
-2. 把完整影片拆成短場景，先生成 storyboard；每個片段命名，逐格檢查文字、畫面邊界、速度與 transition。
-3. 常改參數做成 tweak controls；局部問題用 canvas annotation＋片段名稱修，不讓 Agent 重寫整支影片。
-4. 圖表先上傳乾淨 CSV／Excel，人工核對資料與座標軸；SVG 描邊要檢查 path 順序、logo clear space 與品牌規範。
-5. 完成一個穩定里程碑後保存版本、開新 chat，再處理下一組場景；最後以實際帳號測 export、解析度、字型嵌入、音訊同步與檔案大小。
-
-**涉及工具／模型／功能：** Claude Design、Claude Fable 5、Claude Opus、Design System、timeline、annotation、tweak panel、PNG／SVG／字型、CSV／Excel、Remotion／React Video Editor templates、Gemini 影片轉錄、SRT、Ken Burns、3D transform、B-roll／picture-in-picture。
-
-**作者心得：** 作者認為分段生成前先建 design system，可顯著降低間距、字重與配色漂移；視覺需求難以文字化時，annotation 與自訂滑桿比反覆 prompt 更有效。這是影片中的實作經驗，沒有 A/B 品質或成本數據。
-
-**優點：** 人工繁中字幕完整；六個技巧都有 UI 與結果展示；不只展示「一句話生成」，也涵蓋修改、參數化、資料輸入、版本切換與輸出；時間點可靠。
-
-**缺點與限制：** 沒有揭露每段生成時間、token／credit 消耗、失敗重試率或不同模型比較；只展示成功案例；「Claude 可直接讀取網站原始碼」的可達範圍受登入、robots、CSP、動態內容與權限影響；第三方素材、網站設計與字型授權也未深入討論。
-
-**適合對象：** 需要做課程動畫、產品導覽、社群短片、data storytelling 的設計師、講師與前端工程師；若需要逐幀 motion-graphics 控制、複雜音訊後製或已建立 After Effects pipeline，仍應把 Design 當原型／初稿工具。
-
-**是否值得看完整影片：** 值得。若只看實務核心，先看 `01:16–06:09` 的 design system、timeline、annotation 與 tweak panel，再看 `10:17–12:44` 的操作動畫與 B-roll。
-
-**贊助標示：** 未見外部付費贊助；description 含 Buy Me a Coffee、頻道會員與頻道自我推廣。
-
-**一個可立即嘗試的方法：** 拿一張 20 秒的產品流程圖，先定義 5 個 tokens（背景、主色、字型、間距、圓角），拆成三個命名場景；生成後只用 annotation 改一個局部，再把字幕大小與位置做成兩個滑桿。記錄首次生成、局部修正與 export 各花多少時間／credits。
-
-**官方／原始碼交叉查證：** Anthropic 官方確認 Claude Design 是 paid-plan beta、支援 design system、canvas 編輯與多種 handoff；官方設計師也說 Design 能製作動畫與自訂編輯器。Fable 5 是否需額外 credits 依方案而異。RVE 的 template repo 是 81 個 MIT 授權的 Remotion components，Remotion 官方 resources 有收錄，但它仍是第三方專案。[Claude Design 公告](https://claude.com/blog/claude-design-stays-on-brand-for-daily-work)、[Anthropic 設計師工作流](https://claude.com/blog/how-the-product-designer-who-built-claude-design-uses-it-to-explore-ideas-before-building-them)、[Fable 5 方案說明](https://support.claude.com/en/articles/15424964-claude-fable-5-on-your-plan)、[RVE templates repo](https://github.com/reactvideoeditor/remotion-templates)、[Remotion resources](https://www.remotion.dev/docs/resources)
+- **發布／查核：**2026-08-20；10,097 次觀看；10:25；人工英文字幕，已完整審閱。IBM 品牌內容，未標示外部贊助；說明欄註明逐字稿與 metadata 曾使用 AI 協助。
+- **摘要：**影片把決策系統分成可預期、可稽核的規則，以及能處理非結構化與例外情境的 Agent；最佳實務通常不是二選一，而是讓規則先處理明確案件，再把模糊案件送給 Agent，最後加守門規則與人工覆核。
+- **重點：**
+  1. Business rules 是明確的條件—動作，結果可重現、可測試、可稽核，沒有模型推論。
+  2. Agent 接收目標、上下文與工具，能處理非結構化資料與未預期情境，但輸出具機率性。
+  3. 退款、貸款、保險等結構化且受規範的決策，應先由規則處理。
+  4. 長信件、文件、異常案例或需要跨工具蒐集資料的任務，才適合交給 Agent。
+  5. 高風險混合流程是：規則初篩 → Agent 處理例外 → 決定性 guardrail → 高價值案件人工覆核 → 最終決策。
+- **步驟／工作流程：**列出決策輸入 → 標記明確與模糊案例 → 規則自動核准／拒絕明確案例 → Agent 只處理未解案例 → 以金額、權限與合規規則檢查 Agent 輸出 → 超過門檻交給人。
+- **工具／模型：**概念性架構示範，沒有指定模型或可重現程式碼；重點是規則引擎、Agent、工具呼叫、guardrail 與 human-in-the-loop。
+- **作者心得與優缺點：**規則便宜、快速、穩定且易稽核，但難處理長尾；Agent 有彈性，但成本、延遲與結果一致性較差。混合式設計把各自放在合適風險區段。
+- **限制／適合對象：**沒有實測數字，也不是法規或產業安全認證；適合正在設計審批、客服、理賠、退款流程的產品與平台團隊，不適合作為選模型的 benchmark。
+- **是否值得看：** **值得需要決定「何處真的要用 Agent」的團隊看**；內容偏架構判斷，已有成熟決策引擎經驗者可直接看後半段。
+- **可立即嘗試：**拿一條現有 AI 決策流程，先把 80% 可列舉條件改成規則，只保留模糊 20% 給 Agent，再加一條不可逆操作必須人工確認的閘門。
+- **可靠時間點：**[0:29](https://www.youtube.com/watch?v=i1ZmNUbRGD4&t=29s) 規則、[1:23](https://www.youtube.com/watch?v=i1ZmNUbRGD4&t=83s) Agent、[4:09](https://www.youtube.com/watch?v=i1ZmNUbRGD4&t=249s) 使用時機、[6:20](https://www.youtube.com/watch?v=i1ZmNUbRGD4&t=380s) 混合流程、[7:54](https://www.youtube.com/watch?v=i1ZmNUbRGD4&t=474s) guardrail 與人工覆核。
 
 ## 6. 今天值得嘗試
 
-### 做一個 45 分鐘的「Memory 不一定比較好」A/B
+### 用 45 分鐘把一條 Agent 決策流程改成「規則優先、例外才推論」
 
-- **建議日期：2026-08-22**
-1. 從你的 Agent／RAG 流程挑 10–20 個有舊專案背景、規格曾改版或同名概念的任務。
-2. A 組完全不注入 memory；B 組用現有 retriever；C 組在 retrieval 後加 admission gate，先判斷時效、scope 與是否和當前 evidence 衝突。
-3. 固定模型、prompt、工具與 token budget，各組至少重跑三次；記錄 task pass、錯誤引用舊規格、tool calls、latency 與 tokens。
-4. 若 B 比 A 差，不要先換 embedding；先看是否是「找對舊資料、但不該在此時使用」。把這類例子寫成 Reasoning Fixation／Belief Distortion regression fixtures。
-5. C 組若改善，再把 gate decision、被拒 memory 與理由寫進 trace；高風險流程仍要求人工確認，不把 prompt mitigation 當成硬安全邊界。
+1. 選一條可逆、非敏感流程，例如 issue 分類或內部文件分流，蒐集 10 個真實範例。
+2. 先寫 3～5 條可測試的決定性規則，讓明確案例不呼叫模型。
+3. 只把規則無法判斷的案例送給 Agent，限定可讀資料與工具權限。
+4. 在輸出端加兩道閘門：格式／範圍檢查，以及不可逆或高價值操作的人工確認。
+5. 記錄規則命中率、Agent 成功率、P95 延遲、token 成本與人工介入率；一週後再決定是否擴大。
+
+這個小實驗可同時驗證今日三個主題：Anthropic 的新 Agent 工具是否真的需要、IBM 提議的混合決策是否降成本，以及 MidTool 所強調的工具能力是否能在你的真實任務上成立。
 
 ## 7. 來源與可信度說明
 
-- **官方事實：** Claude Design、Fable 5 方案與 export 清單以 Anthropic 官方公告／Help Center 校正；模型／產品「本日無新發布」是查核各家官方入口後的編輯判斷，不代表未公開 rollout 或所有地區帳號狀態。
-- **研究結果：** AI4AI-Bench、Phantom Gains、MemTrapBench、PolicyGuide、Adaptive Reasoning 均為 8 月 20 日提交的作者預印本；數字只代表各自模型、資料、harness 與 evaluator，尚未獨立重現。Phantom Gains 與 AI4AI-Bench 對「自我改進」給出互補訊號，但不是同一實驗，不能合併成單一結論。
-- **社群案例：** Codex #39808 的成本機制與 before／after 尚屬使用者假說；Claude Code #88320 有較完整的 fresh-window、idle、quit 與重現量測，但仍是單一環境、open issue。兩者都不是廠商確認的普遍故障。
-- **YouTube：** PAPAYA 影片在寫回前已重新查核超過 10,000 次，並全文閱讀人工繁中字幕；影片示範、作者建議、標題命名、官方方案與文件缺口已分開標示。觀看數是截稿快照。
-- **去重：** 2026-08-21 的 Claude Academy、SkillGate、ComponentBench、code-agent 語意改寫、隱性多 Agent 溝通、Codex compaction 與兩部影片均未重複；本日 subagent 成本 issue 是不同的新議題，重點在 fan-out 的固定 context 成本。
+- **官方事實：**OpenAI、Anthropic 的產品公告、文件與計價表是功能／供應狀態的主要依據；官方客戶案例與降價敘述仍屬廠商提供，已另外標示。
+- **研究證據：**MidTool、MaliciousSkillBench、Skill transfer、Repo0 均為 2026-08-20 提交的預印本；本文只報作者實驗，不視為獨立複現或正式產品能力。
+- **社群證據：**兩個 Claude Code issues 都有具體版本、樣本或 A/B 數字，但尚未由維護者結案；只能作為診斷線索，不能推論普遍發生率。
+- **YouTube 證據：**兩部影片均於交付前重新確認觀看數門檻並完整閱讀字幕；產品數字另以官方儲存庫交叉查證。影片心得、示範與官方事實已分開表述。
+- **去重原則：**昨日已整理的 AI4AI-Bench、Phantom Gains、MemTrapBench、PolicyGuide、Adaptive Reasoning、Codex 子代理上下文限制與 Claude Desktop GitHub 限流，今日沒有新的官方進展，因此不重複。

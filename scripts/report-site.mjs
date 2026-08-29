@@ -184,9 +184,9 @@ function appendInline(element, text) {
 }
 `;
 
-const SERVICE_WORKER = `const CACHE = "ai-report-spa-v2";
+const SERVICE_WORKER = `const CACHE = "ai-report-spa-v3";
 self.addEventListener("install", (event) => event.waitUntil(caches.open(CACHE).then((cache) => cache.addAll(["./", "./styles.css", "./app.js"]))));
-self.addEventListener("activate", (event) => event.waitUntil(self.clients.claim()));
+self.addEventListener("activate", (event) => event.waitUntil(caches.keys().then((keys) => Promise.all(keys.filter((key) => key !== CACHE).map((key) => caches.delete(key)))).then(() => self.clients.claim())));
 self.addEventListener("fetch", (event) => {
   if (new URL(event.request.url).pathname.endsWith("/data/latest.json")) {
     event.respondWith(fetch(event.request).then((response) => { caches.open(CACHE).then((cache) => cache.put(event.request, response.clone())); return response; }).catch(() => caches.match(event.request)));
@@ -196,6 +196,6 @@ self.addEventListener("fetch", (event) => {
 });
 `;
 
-const CSS = `:root{font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC",sans-serif;color:#eef2ff;background:#0b1020}*{box-sizing:border-box}body{margin:0;background:linear-gradient(160deg,#111a37,#0b1020 45%);min-height:100vh}.app-shell{width:min(100%,720px);margin:auto;padding:28px 18px 48px}.report-header{color:#8fb2ff;font-size:.9rem;font-weight:700;letter-spacing:.06em;padding:8px 2px 20px}.report-content{background:#171f3b;border:1px solid #2a3762;border-radius:18px;padding:22px;box-shadow:0 12px 30px #0003}.report-content h2{font-size:clamp(1.6rem,6vw,2.3rem);line-height:1.25;margin:0 0 1.2rem}.report-content h3{font-size:1.35rem;margin:2.2rem 0 .7rem;padding-top:.4rem;border-top:1px solid #34416b}.report-content h4{font-size:1.1rem;margin:1.5rem 0 .5rem}.report-content p,.report-content li{font-size:1.03rem;line-height:1.8;overflow-wrap:anywhere}.report-content li{margin-left:1.2rem}.error{padding:2rem;color:#ffd0d0}`;
+const CSS = `:root{font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC",sans-serif;color:#eef2ff;background:#0b1020}*{box-sizing:border-box}body{margin:0;background:linear-gradient(160deg,#111a37,#0b1020 45%);min-height:100vh}.app-shell{width:min(100%,720px);margin:auto;padding:28px 18px 48px}.report-header{color:#8fb2ff;font-size:.9rem;font-weight:700;letter-spacing:.06em;padding:8px 2px 20px}.report-content{background:#171f3b;border:1px solid #2a3762;border-radius:18px;padding:22px;box-shadow:0 12px 30px #0003}.report-content a{color:#8fb2ff;text-decoration-color:#8fb2ff;text-underline-offset:.16em}.report-content a:visited{color:#c4b5fd}.report-content a:hover,.report-content a:focus-visible{color:#bfd2ff;text-decoration-thickness:2px}.report-content h2{font-size:clamp(1.6rem,6vw,2.3rem);line-height:1.25;margin:0 0 1.2rem}.report-content h3{font-size:1.35rem;margin:2.2rem 0 .7rem;padding-top:.4rem;border-top:1px solid #34416b}.report-content h4{font-size:1.1rem;margin:1.5rem 0 .5rem}.report-content p,.report-content li{font-size:1.03rem;line-height:1.8;overflow-wrap:anywhere}.report-content li{margin-left:1.2rem}.error{padding:2rem;color:#ffd0d0}`;
 
 if (process.argv[1] && process.argv[1].endsWith("report-site.mjs")) buildSite();

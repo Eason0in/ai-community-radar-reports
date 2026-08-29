@@ -122,3 +122,53 @@ test("buildSite SPA preserves Markdown tables and source links as web elements",
   assert.match(app, /document\.createElement\("table"\)/);
   assert.match(app, /document\.createElement\("a"\)/);
 });
+
+test("buildSite gives report links accessible contrast on the dark card", async () => {
+  const fixtureDir = await mkdtemp(path.join(os.tmpdir(), "daily-report-spa-"));
+  const reportsDir = path.join(fixtureDir, "reports");
+  const outputDir = path.join(fixtureDir, "docs");
+  await (await import("node:fs/promises")).mkdir(reportsDir);
+  await writeFile(path.join(reportsDir, "latest.md"), "# AI 情報日報，2026-08-28\n\n[來源](https://example.com)\n");
+
+  await buildSite({ reportPath: path.join(reportsDir, "latest.md"), outputDir });
+
+  const styles = await readFile(path.join(outputDir, "styles.css"), "utf8");
+  const cardColor = styles.match(/\.report-content\{[^}]*background:(#[0-9a-f]{6})/i)?.[1];
+  const linkRule = styles.match(/\.report-content a\{([^}]*)\}/i)?.[1] || "";
+  const linkColor = linkRule.match(/color:(#[0-9a-f]{6})/i)?.[1];
+  const visitedRule = styles.match(/\.report-content a:visited\{([^}]*)\}/i)?.[1] || "";
+  const visitedColor = visitedRule.match(/color:(#[0-9a-f]{6})/i)?.[1];
+
+  assert.ok(cardColor, "report card background color should be declared");
+  assert.ok(linkColor, "report links should have an explicit color");
+  assert.ok(visitedColor, "visited report links should have an explicit color");
+  assert.ok(contrastRatio(linkColor, cardColor) >= 4.5, "report link contrast should meet WCAG AA");
+  assert.ok(contrastRatio(visitedColor, cardColor) >= 4.5, "visited report link contrast should meet WCAG AA");
+  assert.match(linkRule, /text-decoration/);
+});
+
+test("buildSite refreshes cached assets after the link style changes", async () => {
+  const fixtureDir = await mkdtemp(path.join(os.tmpdir(), "daily-report-spa-"));
+  const reportsDir = path.join(fixtureDir, "reports");
+  const outputDir = path.join(fixtureDir, "docs");
+  await (await import("node:fs/promises")).mkdir(reportsDir);
+  await writeFile(path.join(reportsDir, "latest.md"), "# AI 情報日報，2026-08-28\n");
+
+  await buildSite({ reportPath: path.join(reportsDir, "latest.md"), outputDir });
+
+  const serviceWorker = await readFile(path.join(outputDir, "sw.js"), "utf8");
+  assert.match(serviceWorker, /CACHE = "ai-report-spa-v3"/);
+  assert.match(serviceWorker, /caches\.delete\(key\)/);
+});
+
+function contrastRatio(foreground, background) {
+  const lighter = Math.max(relativeLuminance(foreground), relativeLuminance(background));
+  const darker = Math.min(relativeLuminance(foreground), relativeLuminance(background));
+  return (lighter + 0.05) / (darker + 0.05);
+}
+
+function relativeLuminance(hex) {
+  const channels = hex.match(/[0-9a-f]{2}/gi).map((value) => Number.parseInt(value, 16) / 255);
+  const [red, green, blue] = channels.map((value) => value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4);
+  return 0.2126 * red + 0.7152 * green + 0.0722 * blue;
+}

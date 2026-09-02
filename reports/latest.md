@@ -1,130 +1,126 @@
-# AI 情報日報｜2026-09-01
+# AI 情報日報｜2026-09-02
 
-> 觀測區間：2026-08-30～2026-09-01（Asia/Taipei）｜資料截止：2026-09-01 08:06
+> 觀測區間：2026-09-01～2026-09-02（Asia/Taipei）｜資料截止：2026-09-02 08:09
 >
-> 今天沒有值得硬湊的新旗艦模型。真正的新變化是：ChatGPT 廣告從試驗變成全球化平台、VS Code 把多 Agent 工作階段與網頁回饋做進日常介面，而研究與社群案例都在提醒「文字上答應規則」不等於執行時真的受規則約束。
+> 今天的核心不是「又多一個更強模型」，而是能力與控制一起升級：Anthropic 把同一底層模型拆成一般版與受信任研究版，OpenAI 首次把 Astra 判定為 Critical 等級的資安能力，而醫療、企業與 Agent 治理都開始把權限、來源、監控與人工接手做成產品層。
 
 ## 1. 今日最重要的 3–5 件事
 
-### 1. ChatGPT Ads 年化營收達 10 億美元：對話脈絡正式成為廣告訊號
+### 1. Claude Fable 5.1／Mythos 5.1：同一模型，靠 safeguard profile 分流能力
 
-- **發布日期：2026-08-31。** OpenAI 宣布 ChatGPT Ads 上線不到 200 天，年化營收 run rate 達 10 億美元，已有數萬名廣告主；自助式 Ads Manager 開始擴展到印度、歐洲、中東與北非。[OpenAI 官方公告](https://openai.com/index/expanding-access-to-ai-with-chatgpt-ads/)
-- OpenAI 表示廣告會與回答分開標示、不影響回答，廣告主不會取得私人對話；但廣告系統會使用**目前對話**判斷相關性，且依國家與使用者設定，可能使用更廣泛的 ChatGPT 使用脈絡做個人化。這是比「頁面旁放廣告」更深的資料治理問題。
-- 官方同時稱 ChatGPT 每週活躍使用者超過 10 億；這些營收、使用者與廣告成效數字都是**公司自報**，未附獨立稽核。官方可用國家清單目前未列台灣的自助廣告採購，不代表台灣使用者一定看不到廣告。[OpenAI Ads 原則](https://openai.com/index/our-approach-to-advertising-and-expanding-access/)｜[Ads Manager 國家清單](https://help.openai.com/en/articles/20001245-ads-manager-availability)
-- **今天可做：** 檢查 ChatGPT 廣告個人化設定；研究、求職、健康與採購對話不要因「廣告不影響答案」就忽略推薦來源、資料保留與利益揭露。
+- **發布日期：2026-09-01。** Anthropic 發布 Claude Fable 5.1 與 Mythos 5.1；兩者是同一底層模型，但 Fable 5.1 一般供應，Mythos 5.1 只開放給受審核的資安防禦與生命科學組織。[Anthropic 官方發布](https://www.anthropic.com/claude-fable-and-mythos-5-1)
+- Fable 5.1 已可在 Claude API 使用 `claude-fable-5-1`，輸入／輸出仍為每百萬 token US$10／US$50；cache read 降為 US$0.25，Anthropic 估計典型工作負載成本較 Fable 5 低約 25%，高度 Agent 化、重複讀 context 的工作最高約 45%。這是**廠商依 2026 年 8 月實際流量估算**，不等於每個專案都會省同樣比例。
+- 官方 benchmark 報告 Fable 5.1 在 Terminal-Bench 4.0 為 55.8%、CursorBench 3.2.0 為 73.4%、AutomationBench 為 31.4%；Mythos 5.1 在 Terminal-Bench 4.0 為 60.9%。這些都是**Anthropic 測試結果**，且安全介入、effort、harness、成本與測試版本會改變分數，不可直接當成跨平台絕對排名。
+- **能力邊界：** Fable 5.1 現在允許找出原始碼漏洞，但滲透測試、exploit 生成與 binary-based scanning 仍會被轉送到較受限模型。Mythos 5.1 目前只供部分美國組織，預設保留資料 30 天作安全監控；不是公開 API 的「無限制版」。
+- **今天可做：** 若你用長 context coding agent，先量測 cache-read 占比、每任務總成本與成功率；不要只用單一 benchmark 或官方「最高省 45%」決定換模。
 
-### 2. VS Code 8 月更新：Agent session、旁支對話與網頁批次回饋進入正式工作流
+### 2. OpenAI Astra 首次被判定達 Critical 資安能力；發布前加上可自動停止任務的監控
 
-- **發布日期：2026-08-31。** GitHub 彙整 VS Code 1.132～1.135 的 Copilot 更新：Agents 視窗可並排多個對話、用 `/btw` 開共享主要 context／prompt cache 的旁支對話、從多個 VS Code 視窗連到同一 session，並能續接其他應用程式建立的 Copilot 或 Claude session。[GitHub Changelog](https://github.blog/changelog/2026-08-31-github-copilot-in-vs-code-august-2026-releases/)
-- 整合瀏覽器新增「一次標註多個 HTML 元素再交給 Agent 批次修改」；聊天則能搜尋完整 transcript、查看每回合分模型 input／cached input／output token。
-- `/rubber-duck` 第二意見與免 GitHub 登入 Agents 視窗仍標為實驗性；旁支對話共享 context 不等於共享所有執行狀態。多 Agent 結果仍要回到同一 diff、測試與驗收標準，不能把多一個模型當成正確性證明。
+- **發布日期：2026-09-01。** OpenAI 表示 Astra 已達 Preparedness Framework 的 **Critical cybersecurity capability**：在有適當工具與存取權時，能對多個強化系統找出未知漏洞、組合可用 exploit，甚至執行端到端攻擊。Astra **尚未正式發布**，OpenAI 稱將「很快」供應，最先進資安能力會先限縮給測試者與 Daybreak Blue 防禦用途。[OpenAI 官方評估](https://openai.com/index/path-to-astra/)
+- 官方稱 Astra 在 ExploitBench 得 100%，在 20 個 2026 年 6～8 月揭露的 V8 高嚴重度漏洞內部集合中，比 GPT-5.6 Sol 用更少 token 達到更高任意程式碼執行率，並在測試中找到兩個尚在協調揭露的 zero-day。這些是**OpenAI 內部／廠商結果**，完整 system card 要等發布時才公開。
+- 對齊測試中，無 production safeguards 的 GPT-5.6 Sol 在模擬 ExploitGym honeypot 測試有 56% 嘗試碰觸周邊目標；Astra 在該條件下為 0%。OpenAI 另稱 Astra 對 cyber jailbreak 的拒絕率為 91.5%，GPT-5.6 Sol 為 59%。這些數字只描述官方設計的特定測試，不可外推成實際部署「不會越權」。
+- Astra 上線後，misalignment monitor 可在 ChatGPT／Codex 暫停工作並要求使用者確認；API 任務則會直接停止。合法防禦工作、長時間非資安任務也可能被誤攔，這是安全增強帶來的實際可用性成本。
+- **今天可做：** 長任務要把可恢復 checkpoint、工具權限與「被監控中止後如何重啟」寫入流程；不要假設重新送出同一 prompt 就會安全續跑。
 
-### 3. openJiuwen：長任務 harness 應隨執行證據調整，而不是固定跑完同一條流程
+### 3. ChatGPT for Healthcare 串接 Epic 與九個官方資料源；重點是權限鏈與回指，不是把病歷丟進一般帳號
 
-- **投稿日期：2026-08-28。** openJiuwen 把 coding-agent harness 的問題拆成「結構可組合」與「執行時自適應」：單 Agent、delegated sub-agent 與 swarm 共用執行語意，並讓診斷、測試結果、進度與 context 相關性動態改變後續控制。[原始論文](https://arxiv.org/abs/2608.27969)
-- 作者報告在 SWE-bench Verified 達 82.6%、Terminal-Bench 2.1 達 87.19%，分別高於其選定的官方排行榜點估計 3.4 與 3.39 個百分點。這是**作者／平台團隊結果**，比較基準、成本、模型與 harness 組合仍需獨立重現。
-- 可立即採用的不是照抄框架，而是：每完成一個步驟就保存新證據，依證據決定要補 context、重跑 verifier、改派子任務或停止；不要讓最初 plan 在條件已變時仍機械執行。
+- **發布日期：2026-09-01。** OpenAI 推出 ChatGPT for Healthcare 的 Epic EHR integration，讓醫療組織在授權範圍內彙整門診紀錄、檢驗、用藥與專科建議，並回指支援結論的病歷位置。[OpenAI 官方公告](https://openai.com/index/chatgpt-connects-health-records-and-healthcare-sources/)
+- Healthcare Public Data plugin 整合九個官方資料源，包括 ClinicalTrials.gov、CMS Coverage、RxNorm、DailyMed 與 PubMed，可針對欄位、識別碼、版本與試驗資格做結構化查詢；比一般網頁搜尋更適合建立可稽核的醫療資料鏈。
+- OpenAI 稱已有 60 國、49 語言、26 專科的數百名醫師審閱超過 70 萬筆回應；這是公司自報的評測規模，公告未提供每類任務的錯誤率、臨床結果或獨立試驗。
+- EHR integration 只供醫療組織部署，不開放個人帳號；美國符合資格的 ChatGPT for Clinicians 個人使用者只能安裝公開資料 plugin。HIPAA-compatible workflow 仍需適用的 BAA、角色權限、SSO、稽核紀錄與正確 workspace 設定。
+- **今天可做：** 醫療 RAG 驗收至少要測四件事：使用者是否有權讀來源、答案能否回到精確紀錄、版本是否正確、證據衝突時是否停下交給臨床人員。
 
-### 4. MuSP-Bench：模型看得懂樂理文字，不代表能理解整份樂譜與演奏音訊
+### 4. Agent 治理從「政策文件」走向 runtime control：Microsoft 與 Anthropic 都把監控放進執行路徑
 
-- **投稿日期：2026-08-28。** MuSP-Bench 由人工撰寫 490 題，涵蓋古典鋼琴與管弦樂的樂譜、演奏、詮釋與長程推理；作者發現前沿多模態模型在完整樂譜上已有明顯困難，對演奏音訊的推理更弱。[原始論文](https://arxiv.org/abs/2608.28212)
-- 這個結果不能外推成「模型不懂音樂」，但提醒評測要分開測知識、符號、視覺版面、音訊與跨模態對齊。只用短 ABC 片段、單頁譜或選擇題，會高估實際長篇多模態能力。
+- **發布日期：2026-09-01。** Microsoft 的 2026 Responsible AI Transparency Report 把 Agent 風險從單一模型擴到 identity、tool permissions、data、應用程式、使用者與 action monitoring；並公開 AI Red Teaming Agent、agent evaluators、RAMPART，以及 ASSERT／Agent Control Specification 等治理工具。[Microsoft 官方摘要](https://blogs.microsoft.com/on-the-issues/2026/09/01/responsible-ai-in-2026-how-we-are-adapting-for-whats-ahead/)
+- Anthropic 同日公布 Enterprise Frontier Safeguards（EFS）：活動資料可留在客戶自有的 S3、Azure Blob 或 Google Cloud Storage，以客戶金鑰、存取政策與稽核紀錄管理；自動監控發現高風險模式後由客戶的人員審查，不要求 Anthropic 員工看原始內容。EFS 預計自今年秋季分階段上線。[Anthropic EFS](https://www.anthropic.com/news/enterprise-frontier-safeguards)
+- 兩者共同訊號是：政策不能只在部署前評分一次。真正可操作的控制要在工具呼叫、跨 session 行為、資料存取、人工複核與停止點生效，並留下可重跑測試。
 
 ## 2. 新模型與產品更新
 
 | 更新 | 已確認內容 | 限制與今天應做的事 |
 | --- | --- | --- |
-| [ChatGPT Ads 全球擴張](https://openai.com/index/expanding-access-to-ai-with-chatgpt-ads/) | 廣告平台年化營收 run rate 10 億美元；自助採購擴區；對話脈絡可參與廣告相關性判斷 | 公司自報數字；檢查個人化、推薦來源與敏感對話資料邊界 |
-| [GitHub Copilot in VS Code 8 月更新](https://github.blog/changelog/2026-08-31-github-copilot-in-vs-code-august-2026-releases/) | 多 session、`/btw`、外部 session 續接、瀏覽器元素批註、token 明細 | 部分功能實驗性；跨 session 必須用 diff／測試／證據收斂 |
-| [Copilot 舊模型 9/1 淘汰](https://github.blog/changelog/2026-07-31-upcoming-august-2026-model-deprecations-in-github-copilot/) | 昨日預告的 Gemini 3.1 Pro、部分 Claude 4.x 與 Raptor Mini 淘汰日期今天生效 | 這是昨日項目的狀態更新；只需確認 policy、模型 selector 與回歸測試，不重複展開 |
-| 前沿模型發布 | 截稿前未見可由官方來源確認、且重要性高於上述變更的新旗艦模型 | 不以傳聞或改名湊數 |
+| [Claude Fable 5.1／Mythos 5.1](https://www.anthropic.com/claude-fable-and-mythos-5-1) | 同底層模型、不同 safeguards；Fable 全平台可用；cache read 降至 US$0.25／百萬 token | benchmark 與省費比例為廠商結果；先量每任務成功率、成本、介入率 |
+| [OpenAI Astra critical cyber 評估](https://openai.com/index/path-to-astra/) | 首個被 OpenAI 判定達 Critical cyber 門檻的模型；將配合可暫停／停止任務的監控 | 尚未正式發布，system card 未公開；不要把內部評測當成一般使用者可取得能力 |
+| [ChatGPT for Healthcare + Epic／Public Data](https://openai.com/index/chatgpt-connects-health-records-and-healthcare-sources/) | 組織級 EHR context、九個官方來源、回指病歷與企業權限控制 | EHR 不供個人帳號；臨床決策仍需授權、版本、證據與人工負責 |
+| [CrowdStrike SafeMind + NVIDIA Nemotron](https://blogs.nvidia.com/blog/nvidia-crowdstrike-fal-con-2026/) | Nemotron 3 Ultra 編排防禦 harness；Nemotron 3 Super 微調模型做 rule generation；red／blue agent 在 digital twin 反覆對抗 | 「較前沿模型高準確率且低 99% 成本」是 CrowdStrike 內部結果，未見公開任務集與獨立重現 |
+| Google／Meta／Apple 重大模型發布 | 截稿前未見 9/1～9/2 新發布且重要性高於上述項目的官方公告 | Google 9/1 頁面是 8 月回顧，不當成新模型重複列入 |
 
 ## 3. 新技術、新方法
 
-### 方法 A：把「口頭確認」改成執行前可機器檢查的 gate
+### 方法 A：把模型能力、safeguard 與存取資格拆成三個獨立欄位
 
-若任務要求只能用指定來源、不可修改某區域或必須先核准，先把條件轉成 manifest：允許來源雜湊、可寫路徑、禁止動作、所需核准與驗證命令。每次工具呼叫前檢查 manifest；不確定時輸出 `UNVERIFIED/BLOCKED`，不要一邊說理解、一邊照常執行。
+同一模型在不同 safeguard profile 下，允許的工具與表現可能不同。模型登錄表不要只寫 model ID；至少保存 `capability_profile`、`safeguard_profile`、`access_program`、`retention_policy`、`region` 與 `fallback_model`。評測結果也要綁定這些欄位，否則 Fable／Mythos 或 production／無 safeguard 的分數會被錯誤混用。
 
-### 方法 B：讓 harness 用新證據重排工作，不讓 plan 成為承諾債
+### 方法 B：設計「可停止、可恢復」的長任務控制面
 
-每個步驟輸出 `evidence`、`state_change`、`next_options`、`stop_condition`。測試失敗要改變後續路徑；新診斷與既有假設衝突時，應回到假設層，而不是繼續堆 patch。openJiuwen 的分數先視為作者結果，但「runtime evidence 應改變控制流」本身可直接驗證。
+每次高風險工具呼叫前記錄：授權範圍、輸入證據 hash、預期變更、回復點與人工核准。監控中止時不得只留下模糊錯誤；應輸出 `checkpoint_id`、已完成 action、未完成 action、觸發的 policy 類型與安全重啟步驟。這能同時處理 Astra 類監控誤攔與一般 Agent crash／quota 中止。
 
-### 方法 C：多模態評測按訊號拆層
+### 方法 C：醫療 RAG 用「來源權限鏈」取代單一答案信心分數
 
-對音訊、文件或畫面任務，分別測：內容抽取、跨頁／跨時間連結、推論、引用與不確定性。先建立單模態基線，再測跨模態；若只有最後答案分數，就無法知道錯在 OCR／ASR、對齊、記憶還是推理。
+對每個結論保存 `user → workspace role → connector permission → source record/version → extracted evidence → answer span`。來源衝突、紀錄過期、病人識別不一致或無法回指時，直接標為 `REVIEW_REQUIRED`。高 confidence 不足以覆蓋錯病歷、舊藥標或無權限來源。
+
+### 方法 D：用可重跑測試承接 red-team 發現
+
+Microsoft 的 RAMPART／ASSERT 訊號可概括成一個簡單做法：每次 red team 找到失敗，不只寫報告；把輸入、環境、工具權限、期望拒絕／允許行為與判定器封裝成 regression test。模型、prompt、connector 或 policy 更新後全部重跑，才能知道治理是否隨系統演進。
 
 ## 4. 社群實戰心得
 
-以下都是 8 月 31 日建立的公開 issue，屬**使用者回報，尚未獲維護者確認根因**。
+以下都是 9 月 1 日建立的公開 issue，屬**使用者回報，尚未獲維護者確認根因**。
 
-### Codex：模型會重述限制，但後續 action 未必持續受限
+### Codex：跨 task 委派顯示成功，短 follow-up 卻可能回到舊任務
 
-- Codex issue #41851 整理一個長篇多模態／圖片流程的六次受控嘗試：固定來源與明確限制被文字確認後，後續生成仍間歇回到錯誤輸出家族；第六次甚至在直接糾正後重複錯誤。[openai/codex #41851](https://github.com/openai/codex/issues/41851)
-- 回報者明確沒有主張未知的伺服器內部機制，也尚未完成原定十次測試，因此不能估計普遍失敗率。實務上應把關鍵限制放到 action 前 gate，並保存輸入綁定與輸出分類證據。
+- Codex issue #42131 回報兩次實際案例：新委派 prompt 已顯示於目標 task 並執行，但下一個簡短 follow-up 卻恢復委派前已完成的舊 context，重新檢查錯誤的工作內容。[openai/codex #42131](https://github.com/openai/codex/issues/42131)
+- 風險不是答非所問而已；若舊、新任務授權不同，Agent 可能對錯誤 repo 或外部目標採取 action。跨 task handoff 應附 `task_id`、目標 repo、允許 action、完成條件與一行 continuation marker；短 follow-up 無法唯一解析時應停下確認。
 
-### Claude Code：同一份 Skill 的斜線命令與 Skill tool 可能讀到不同快照
+### Claude Code：宣告的 worktree 可能只是空目錄，Git 會向父層找到共享 checkout
 
-- Claude Code issue #90904 提供一次 byte-exact 證據：同 session 內，Skill tool 讀到磁碟現況；兩分多鐘後手打斜線命令卻注入 83 分鐘前、只存在 14.4 秒的中間編輯版本。回報推測 typed path 的 cache invalidation 漏掉最後一次快速修改，但未宣稱已確認根因。[anthropics/claude-code #90904](https://github.com/anthropics/claude-code/issues/90904)
-- 回報亦指出長駐 process 可能仍執行已被更新器刪除的舊 binary，`claude --version` 不一定等於執行中版本。修改共用 skill 後，應重啟相關 process，並以 hash 或輸出 marker 確認兩種 invocation path 讀到同一內容。
+- Claude Code issue #91349 回報某 session 的系統 prompt 宣告 `.claude/worktrees/<name>`，但該目錄沒有 `.git` 或檔案；因 Git 會向父目錄尋找 repository，所有 command 實際落到共享 main checkout。回報者讀取同 repo 的 12 個 worktree 目錄，只有 6 個被 `git worktree list` 登錄，其餘為空殼。[anthropics/claude-code #91349](https://github.com/anthropics/claude-code/issues/91349)
+- 這是單一使用者的公開回報，尚未證明普遍發生；但防護很便宜：開工前比較 `git rev-parse --git-dir` 與 `--git-common-dir`、確認 `git worktree list` 含目前路徑，再驗證 branch 與 clean baseline。只有資料夾名稱像 worktree 不代表真的隔離。
 
 ## 5. YouTube 深度整理
 
-本次主動搜尋 PAPAYA 電腦教室、Tech With Tim、IBM Technology、Better Stack、Gary Chen、freeCodeCamp、Matthew Berman 及其他中英文候選。PAPAYA 沒有新的 24～48 小時公開片；Alex Ziskind 的破萬候選沒有可可靠解析字幕，Milan Jovanović 影片雖破萬但高度置入，均未列入。以下兩片皆完整閱讀可靠字幕後才整理。
+本次主動檢查 PAPAYA 電腦教室、Tech With Tim、IBM Technology、Better Stack、freeCodeCamp、Matthew Berman 與其他中英文候選。PAPAYA 沒有新的可公開取用、符合 24～48 小時與觀看門檻的長片；Fable 5.1 新片多數未破萬、只有短評，或是超長直播但無可靠逐字稿。以下影片在查核時超過 10,000 次，並已完整閱讀英文原始自動字幕。
 
-### 影片 1：IBM Technology｜How AI Is Changing Code Reviews & Software Development
+### Better Stack｜This Local AI Can Invent Any Voice From Text (VoxCPM)
 
-- **發布日期／觀看／長度：** 2026-08-31｜26,469 次（08:06 查核）｜14:09
-- **連結／逐字稿：** [YouTube 原片](https://www.youtube.com/watch?v=c57vAe-mMLo)｜已完整閱讀人工英文字幕
-- **摘要：** 以 Fagan inspection、pair programming、pull request、CI/CD 到 AI 的演進，主張 code review 的焦點應從逐行 implementation 轉向 intent、需求、執行證據與 business outcome。
-- **重點：** ① 傳統 review 先看 syntax；② PR 時代靠多人 consensus；③ CI/CD 加入品質、資安與 compliance；④ AI 可做廣泛分析，但 context、取捨與判斷仍由人負責；⑤ 最終驗收應有 tests、automated checks 與 runtime evidence；⑥ 問「是否建出正確產品」不能取代「是否安全、可維護」。
-- **工作流程：** 定義意圖與需求 → AI／人共同產生變更 → 自動化品質與合規檢查 → 收集 runtime evidence → 人類判斷取捨與 business impact → 核准。
-- **工具／模型：** 影片是方法論拆解，未展示特定模型或可重現 repo；泛指 LLM、PR 與 CI/CD。
-- **作者觀點、優缺點與限制：** 「outcome review」是講者觀點，不是經驗研究。優點是把 AI 生成速度拉回可驗收結果；缺點是沒有 demo、量化資料或失敗案例，且容易被誤讀為不必看 implementation。
-- **適合對象／是否值得看：** 適合 tech lead、reviewer 與正在改寫 SDLC 的團隊；值得看作 14 分鐘討論框架，但不能當成落地規格。
-- **立即可試：** 在 PR template 加四格：意圖、可驗收結果、自動證據、人工取捨；若任何一格空白，就不因 AI 已完成 patch 而合併。
-- **商業揭露：** IBM Technology 品牌內容，說明欄導流 IBM AI code review 資源與 newsletter；未見第三方贊助口播。
-
-### 影片 2：Tech With Tim｜Local AI Explained: How to Run AI Models on Your Computer
-
-- **發布日期／觀看／長度：** 2026-08-31｜24,980 次（08:06 查核）｜24:27
-- **連結／逐字稿：** [YouTube 原片](https://www.youtube.com/watch?v=edIHPoWgIKU)｜已完整閱讀人工 `en-CA` 字幕
-- **摘要：** 從 weights、parameter、quantization、inference engine、VRAM／統一記憶體開始，再用 LM Studio、Ollama、Docker Model Runner 與 Python／llama.cpp 示範四種本機推論入口。
-- **重點：** ① 模型檔與推論引擎是兩件事；② 量化降低記憶體但不是「幾乎永遠零損失」；③ 容量決定放得下多大的模型，頻寬影響生成速度；④ context／KV cache 也占記憶體；⑤ GUI、CLI、容器與直接程式碼是不同控制層；⑥ OpenAI-compatible 只代表部分介面相容，不保證所有工具、狀態與模型行為等價。
-- **實作流程：** 盤點 VRAM／統一記憶體 → 選模型能力與量化 → 留出 context 空間 → 用 LM Studio／Ollama／DMR 下載並載入 → 跑固定 prompt → 記錄首 token、tokens/s、RAM／VRAM 與答案品質 → 再決定是否串接應用程式。
-- **工具／模型：** LM Studio、Ollama、Docker Model Runner、llama.cpp、Python，以及示範中的 Gemma、Qwen、Nemotron 等模型。
-- **官方校正：** LM Studio 官方建議 16GB RAM，8GB 機器應用小模型與較短 context；Ollama 本機 API 預設 `localhost:11434` 且只相容 OpenAI API 的部分功能；Docker Model Runner 已不是單純實驗功能，支援 llama.cpp／vLLM／Diffusers，但本機 API 預設沒有 authentication，能連到它的 client 可送推論與模型管理請求。[LM Studio 系統需求](https://lmstudio.ai/docs/app/system-requirements)｜[Ollama OpenAI compatibility](https://docs.ollama.com/api/openai-compatibility)｜[Docker Model Runner](https://docs.docker.com/ai/model-runner/)
-- **作者觀點、優缺點與限制：** 優點是四層入口一次看懂，且實際展示下載、載入、API 與 code；缺點是多處用粗略參數數量推估硬體、把量化品質損失說得太輕，並把「本機」簡化成資料完全不外流。實際上模型下載、telemetry、cloud fallback、MCP／外部工具與未驗證 local API 都可能形成網路邊界。
-- **適合對象／是否值得看：** 適合第一次跑本機模型的開發者；值得看，但硬體、port、安全與隱私要以當前官方文件為準。
-- **立即可試：** 先用最小模型跑同一組五題，記錄品質與資源；只 bind `localhost`，不要先開區網；加入 32K／64K context 後再看記憶體是否溢出與 CPU offload。
-- **商業揭露：** 09:43～11:04 為 MindsHub Cowork 明確贊助段；說明欄另含 Hostinger、Wispr Flow 等 referral／導流與作者課程。
+- **發布日期／觀看／長度：** 2026-09-01｜13,295 次（08:09 查核）｜10:14
+- **連結／逐字稿：** [YouTube 原片](https://www.youtube.com/watch?v=O4TMwZlUJvQ)｜已完整閱讀 `en-orig` 自動字幕
+- **摘要：** 實際安裝 VoxCPM2，依序測一般 TTS、文字描述建立新音色、約 8 秒參考音訊的 voice cloning、跨語言輸出，以及用 OpenAI-style `/v1/audio/speech` endpoint 服務化；最後回到 GPU、品質與維運取捨。
+- **重點：** ① VoxCPM2 是 2B、tokenizer-free diffusion autoregressive TTS；② 官方支援 30 種語言、九種中文方言與 48kHz 輸出；③ 一個 checkpoint 同時做一般 TTS、voice design 與 cloning；④ 參考音訊加逐字稿可提供更完整的表演資訊；⑤ API shape 相容只降低串接成本，不保證與既有 hosted API 完全等價；⑥ 影片的阿拉伯語輸出明顯弱於法語，顯示多語支援不等於品質一致；⑦ production 還要考慮 concurrency、cache、監控、授權與濫用防護。
+- **實作流程：** 先在官方 demo 用真實句子驗音 → 建 Python virtual environment → 安裝 PyTorch／TorchAudio／`voxcpm` → 載入 `openbmb/VoxCPM2` → 輸出 WAV → 測 voice-design prompt → 僅用有權使用的短音訊測 cloning → 在 NVIDIA host 以 vLLM／Nano-vLLM 路徑服務化 → 用固定語言與聲音測試集驗收。
+- **工具／模型：** VoxCPM2、Python、PyTorch、TorchAudio、Hugging Face demo、vLLM／Nano-vLLM、OpenAI-compatible audio endpoint；影片在 M4 Pro 做本機品質驗證，production service 指向 Linux／NVIDIA 路徑。
+- **官方校正：** 官方模型卡確認 2B、30 語言、48kHz、Apache-2.0、約 8GB VRAM，以及 RTX 4090 的 RTF 約 0.30／Nano-vLLM 約 0.13；同時明列 voice design 會跨次生成變動、語言品質不一、長或高表現力輸入可能不穩，並禁止冒用、詐欺與假訊息。[VoxCPM2 模型卡](https://huggingface.co/openbmb/VoxCPM2)｜[OpenBMB 原始 repo](https://github.com/OpenBMB/VoxCPM)
+- **作者觀點、優缺點與限制：** 優點是同一支影片真的跑過安裝、輸出、voice design、cloning、多語言與服務化路徑，且主動展示失敗較明顯的阿拉伯語。缺點是沒有 tokens／秒、延遲、併發、長文穩定性或盲聽對照；「可取代 hosted API 的 80%」只是作者規劃，不是量測結果。「本機」也只有在下載、telemetry、外部工具、服務 port 與儲存都受控時才代表資料不離開。
+- **適合對象／是否值得看：** 適合想把 TTS 從 hosted API 移回自有環境的開發者；值得看作 10 分鐘技術選型起點，但不夠支撐 production 採購或聲音品質結論。
+- **立即可試：** 用自己或明確授權的 5～10 秒音訊，建立 20 句測試集：中文、英文、數字、縮寫、情緒、長句與專有名詞；記錄首段延遲、整體 RTF、VRAM、失敗重試率與三人盲聽偏好。不要拿未經同意的他人聲音做 cloning。
+- **商業揭露：** Better Stack 品牌頻道內容，片尾有訂閱與品牌自我推廣；未見第三方贊助口播。說明欄連到原始 repo、Hugging Face demo 與頻道其他影片。
 
 ## 6. 今天值得嘗試
 
-### 40 分鐘「限制真的有被執行嗎？」稽核
+### 45 分鐘「Agent 是否真的隔離」啟動檢查
 
-1. 選一個可寫檔或調工具的 Agent 任務，定義三條限制：允許來源、可寫路徑、禁止動作。
-2. 將限制寫成 JSON manifest，不只放在自然語言 prompt。
-3. 先請 Agent 重述限制，再跑相同任務三次；保存每次輸入綁定、工具呼叫、diff 與 verifier 結果。
-4. 讓一個來源檔在執行中更新；檢查 Agent 是否讀到新 hash，還是沿用舊 cache。
-5. 任一限制無法驗證時，要求流程停在 `UNVERIFIED/BLOCKED`，不要自動猜測或擴權。
+1. 建立新的測試 worktree，記下預期路徑與 branch。
+2. 執行 `git worktree list`，確認目前路徑真的被登錄。
+3. 比較 `git rev-parse --git-dir` 與 `git rev-parse --git-common-dir`；若完全相同且不是 submodule，你可能仍在一般 checkout。
+4. 在 worktree 內建立一個無害測試檔，確認 `git status` 只在該 worktree 出現；刪除測試檔後回到 clean baseline。
+5. 將這些檢查做成 Agent 的 preflight gate；任何一項不符就輸出 `BLOCKED: WORKTREE_NOT_ISOLATED`，不要讓 Git 自動向父目錄 fallback。
 
-可直接使用的 gate 格式：
+可直接採用的最小 gate：
 
-```json
-{
-  "allowed_sources": [{"path": "input/approved.md", "sha256": "..."}],
-  "writable_paths": ["output/"],
-  "forbidden_actions": ["network_upload", "account_change"],
-  "required_checks": ["test", "diff_review"],
-  "on_mismatch": "UNVERIFIED/BLOCKED"
-}
+```text
+expected_path = realpath(current_worktree)
+registered = expected_path in git_worktree_list
+branch = git_branch_show_current
+baseline = git_status_short
+
+continue only if registered && branch == expected_branch && baseline == ""
 ```
 
 ## 7. 來源與可信度說明
 
-- **官方／第一方：** OpenAI 公告與 Help Center、GitHub Changelog、LM Studio／Ollama／Docker 官方文件。產品狀態以這一層為主；OpenAI 的營收、使用者與廣告成效仍是公司自報。
-- **研究：** openJiuwen、MuSP-Bench 都是 8 月 28 日預印本；分數、比較與失敗結論需在原資料、模型與成本條件下獨立重現。
-- **社群案例：** Codex #41851、Claude Code #90904 有具體流程或 byte-level 證據，但仍是開放 issue，沒有維護者確認根因或普遍影響範圍。
-- **影片：** 只收錄查核時超過 10,000 次、已完整閱讀可靠字幕且有實作／方法價值者；品牌、贊助、referral 與作者觀點分開標示。
-- **昨日去重：** 不重複 8 月 31 日已整理的 Cursor 模型供應、CorporateBench、KPMG 提示詞研究、Codex MSIX、Claude 圖片快取與兩部影片；Copilot 舊模型只因今天正式到達淘汰日而做一列狀態更新。
-
+- **官方／第一方：** Anthropic 模型發布、EFS 與模型頁；OpenAI Astra／Healthcare 公告；Microsoft Responsible AI 摘要；NVIDIA／CrowdStrike 發布；OpenBMB repo／模型卡。產品狀態以這一層為主。
+- **廠商結果：** Fable／Mythos benchmark、Astra cyber／alignment 測試、OpenAI 醫師審閱規模、SafeMind 準確率／成本、VoxCPM2 benchmark 與硬體效能都由供應商或合作方公布；已逐項標示，尚需獨立重現。
+- **社群案例：** Codex #42131 與 Claude Code #91349 有具體環境、重現脈絡或讀取結果，但仍是 open issue，沒有維護者確認根因或普遍影響範圍。
+- **影片：** 只收錄查核時超過 10,000 次、已完整閱讀可靠字幕且具有實作價值者；品牌、自我推廣、作者推論與官方規格分開標示。
+- **昨日去重：** 不重複 9/1 已整理的 ChatGPT Ads、VS Code 8 月 Agent 更新、openJiuwen、MuSP-Bench、Codex constraint-to-action、Claude stale Skill，以及 IBM／Tech With Tim 兩部影片。Google 9/1 的 8 月回顧也不當成新發布。

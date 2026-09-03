@@ -5,9 +5,12 @@ import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { buildPublicReport } from "./report-site.mjs";
 
+const outputDir = process.env.REPORT_OUTPUT_DIR || "reports";
+
 const CONFIG = {
   timeZone: process.env.REPORT_TIME_ZONE || "Asia/Taipei",
-  outputDir: process.env.REPORT_OUTPUT_DIR || "reports",
+  outputDir,
+  latestReportPath: path.join(path.dirname(outputDir), "LATEST_REPORT.md"),
   maxStaleDays: toPositiveInt(process.env.REPORT_MAX_STALE_DAYS || process.env.GITHUB_LOOKBACK_DAYS, 2),
   registryMaxPages: toPositiveInt(process.env.MCP_REGISTRY_MAX_PAGES, 8),
   npmSearchSize: toPositiveInt(process.env.NPM_SEARCH_SIZE, 30),
@@ -82,7 +85,7 @@ async function main() {
   await Promise.all([
     writeFile(path.join(CONFIG.outputDir, `${reportDate}.md`), markdown, "utf8"),
     writeFile(path.join(CONFIG.outputDir, "latest.md"), markdown, "utf8"),
-    writeFile("LATEST_REPORT.md", markdown, "utf8")
+    writeFile(CONFIG.latestReportPath, markdown, "utf8")
     ,writeFile(path.join(CONFIG.dataDir, `${reportDate}.json`), `${JSON.stringify(publicReport, null, 2)}\n`, "utf8")
     ,writeFile(path.join(CONFIG.dataDir, "latest.json"), `${JSON.stringify(publicReport, null, 2)}\n`, "utf8")
   ]);

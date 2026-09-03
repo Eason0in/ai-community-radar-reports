@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-09-03",
+  "generatedAt": "2026-09-03T03:26:00.729Z",
+  "timeZone": "Asia/Taipei",
+  "summary": "今日收錄 3 個 GitHub AI 專案與 5 個可嘗試方向。",
+  "githubProjects": [
+    {
+      "name": "affaan-m/ECC",
+      "url": "https://github.com/affaan-m/ECC",
+      "stars": 246421,
+      "language": "JavaScript",
+      "activityAt": "2026-09-03T00:48:58Z",
+      "reason": "The agent harness performance optimization system. Skills, instincts, memory, security, and research-first development for Claude Code, Codex, Opencode, Cursor and beyond.",
+      "what": "The agent harness performance optimization system. Skills, instincts, memory, security, and research-first development for Claude Code, Codex, Opencode, Cursor and beyond.",
+      "problem": "降低建置 AI agent、工具調用、任務規劃或多步驟自動化的成本。",
+      "contribution": "可先做 read-only MCP companion 或文件搜尋工具，若 repo 沒有官方 MCP integration，這會是低風險且有社群價值的切入點。",
+      "tier": "primary",
+      "tierLabel": "7 日內新建或重大更新"
+    },
+    {
+      "name": "NousResearch/hermes-agent",
+      "url": "https://github.com/NousResearch/hermes-agent",
+      "stars": 240205,
+      "language": "Python",
+      "activityAt": "2026-09-03T03:17:50Z",
+      "reason": "The agent that grows with you.",
+      "what": "The agent that grows with you.",
+      "problem": "降低建置 AI agent、工具調用、任務規劃或多步驟自動化的成本。",
+      "contribution": "可先做 read-only MCP companion 或文件搜尋工具，若 repo 沒有官方 MCP integration，這會是低風險且有社群價值的切入點。",
+      "tier": "primary",
+      "tierLabel": "7 日內新建或重大更新"
+    },
+    {
+      "name": "tensorflow/tensorflow",
+      "url": "https://github.com/tensorflow/tensorflow",
+      "stars": 198362,
+      "language": "C++",
+      "activityAt": "2026-09-03T03:17:28Z",
+      "reason": "An Open Source Machine Learning Framework for Everyone.",
+      "what": "An Open Source Machine Learning Framework for Everyone.",
+      "problem": "解決 AI 應用開發中重複整合、理解成本高或從 prototype 到可用工具落差大的問題。",
+      "contribution": "可先做 read-only MCP companion 或文件搜尋工具，若 repo 沒有官方 MCP integration，這會是低風險且有社群價值的切入點。",
+      "tier": "primary",
+      "tierLabel": "7 日內新建或重大更新"
+    }
+  ],
+  "actions": [
+    "挑一個專案先讀 README 與最近 release，再決定是否試用。",
+    "把有價值的發現記錄成可驗證的工作流，而不是只收藏連結。"
+  ],
+  "sourceUrl": "https://github.com/Eason0in/ai-community-radar-reports"
+}

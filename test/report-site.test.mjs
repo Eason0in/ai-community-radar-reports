@@ -123,6 +123,20 @@ test("buildSite SPA preserves Markdown tables and source links as web elements",
   assert.match(app, /document\.createElement\("a"\)/);
 });
 
+test("buildSite SPA renders Markdown bold as semantic strong text", async () => {
+  const fixtureDir = await mkdtemp(path.join(os.tmpdir(), "daily-report-spa-"));
+  const reportsDir = path.join(fixtureDir, "reports");
+  const outputDir = path.join(fixtureDir, "docs");
+  await (await import("node:fs/promises")).mkdir(reportsDir);
+  await writeFile(path.join(reportsDir, "latest.md"), "# AI 情報日報，2026-08-19\n\n**重要提醒**\n");
+
+  await buildSite({ reportPath: path.join(reportsDir, "latest.md"), outputDir });
+
+  const app = await readFile(path.join(outputDir, "app.js"), "utf8");
+  assert.match(app, /document\.createElement\("strong"\)/);
+  assert.match(app, /strong\.textContent = match\[0\]\.slice\(2, -2\)/);
+});
+
 test("buildSite gives report links accessible contrast on the dark card", async () => {
   const fixtureDir = await mkdtemp(path.join(os.tmpdir(), "daily-report-spa-"));
   const reportsDir = path.join(fixtureDir, "reports");
@@ -157,7 +171,7 @@ test("buildSite refreshes cached assets after the link style changes", async () 
   await buildSite({ reportPath: path.join(reportsDir, "latest.md"), outputDir });
 
   const serviceWorker = await readFile(path.join(outputDir, "sw.js"), "utf8");
-  assert.match(serviceWorker, /CACHE = "ai-report-spa-v3"/);
+  assert.match(serviceWorker, /CACHE = "ai-report-spa-v4"/);
   assert.match(serviceWorker, /caches\.delete\(key\)/);
 });
 

@@ -169,22 +169,28 @@ function node(tag, className, text) {
 
 function appendInline(element, text) {
   let position = 0;
-  const links = /\\[([^\\]]+)\\]\\((https?:\\/\\/[^\\s)]+)\\)/g;
-  for (const match of text.matchAll(links)) {
+  const tokens = /(\\*\\*[^*]+\\*\\*|\\[([^\\]]+)\\]\\((https?:\\/\\/[^\\s)]+)\\))/g;
+  for (const match of text.matchAll(tokens)) {
     element.append(document.createTextNode(text.slice(position, match.index)));
-    const link = document.createElement("a");
-    link.href = match[2];
-    link.target = "_blank";
-    link.rel = "noreferrer";
-    link.textContent = match[1];
-    element.append(link);
+    if (match[0].startsWith("**")) {
+      const strong = document.createElement("strong");
+      strong.textContent = match[0].slice(2, -2);
+      element.append(strong);
+    } else {
+      const link = document.createElement("a");
+      link.href = match[3];
+      link.target = "_blank";
+      link.rel = "noreferrer";
+      link.textContent = match[2];
+      element.append(link);
+    }
     position = match.index + match[0].length;
   }
   element.append(document.createTextNode(text.slice(position)));
 }
 `;
 
-const SERVICE_WORKER = `const CACHE = "ai-report-spa-v3";
+const SERVICE_WORKER = `const CACHE = "ai-report-spa-v4";
 self.addEventListener("install", (event) => event.waitUntil(caches.open(CACHE).then((cache) => cache.addAll(["./", "./styles.css", "./app.js"]))));
 self.addEventListener("activate", (event) => event.waitUntil(caches.keys().then((keys) => Promise.all(keys.filter((key) => key !== CACHE).map((key) => caches.delete(key)))).then(() => self.clients.claim())));
 self.addEventListener("fetch", (event) => {

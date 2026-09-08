@@ -1,8 +1,8 @@
-# AI Community Radar - 2026-09-07
+# AI Community Radar - 2026-09-08
 
-> Generated: 2026-09-07T00:49:03.447Z
+> Generated: 2026-09-08T01:03:55.577Z
 > Timezone: Asia/Taipei
-> Active cutoff: updated since 2026-09-05; archived GitHub repos excluded; max stale age 2 days.
+> Active cutoff: updated since 2026-09-06; archived GitHub repos excluded; max stale age 2 days.
 
 ## 今日摘要
 
@@ -17,9 +17,9 @@
 
 | # | Repo | Stars | Forks | Language | Updated |
 | --- | --- | ---: | ---: | --- | --- |
-| 1 | [affaan-m/ECC](https://github.com/affaan-m/ECC) | 251,319 | 37,784 | JavaScript | 2026-09-05T21:47:27Z |
-| 2 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 242,546 | 49,886 | Python | 2026-09-07T00:17:01Z |
-| 3 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 198,906 | 76,289 | C++ | 2026-09-06T23:33:06Z |
+| 1 | [affaan-m/ECC](https://github.com/affaan-m/ECC) | 252,855 | 37,931 | JavaScript | 2026-09-07T22:36:32Z |
+| 2 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 243,048 | 50,046 | Python | 2026-09-08T00:38:51Z |
+| 3 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 199,336 | 76,296 | C++ | 2026-09-08T00:24:33Z |
 
 ### 1. [affaan-m/ECC](https://github.com/affaan-m/ECC)
 
@@ -77,7 +77,7 @@ An Open Source Machine Learning Framework for Everyone.
 | 指標 | 值 |
 | --- | --- |
 | Registry sample | 800 servers |
-| Active baseline since | 2026-09-05 |
+| Active baseline since | 2026-09-06 |
 | GitHub stale cutoff | 2 days |
 
 ### 可能還沒上官方 MCP Registry 的候選
@@ -132,30 +132,30 @@ An Open Source Machine Learning Framework for Everyone.
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/payloadcms/payload](https://github.com/payloadcms/payload) |
 
-#### 6. [jameswniu/quilr-fde-assessment](https://github.com/jameswniu/quilr-fde-assessment)
+#### 6. [iiishop/StratumCode](https://github.com/iiishop/StratumCode)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Four Forward Deployed Engineer tasks. An MCP server over stdio with strict validation, an MCP security gateway with role based tool filtering, a streaming PII redaction guardrail, and a token aware rate limiter with model failover on sqlite. Python, 267 tests, no network needed. |
+| 說明 | AI coding agent that shows its work — every step visible, every patch approved by you. Build projects brick by brick, stay in control. |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 7. [edgar-durand/codeagent-mobile-clients](https://github.com/edgar-durand/codeagent-mobile-clients)
+#### 7. [vedantxn/domainpeek](https://github.com/vedantxn/domainpeek)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Public source for CodeAgent Mobile clients: codeam-cli (npm), VS Code / Cursor / Windsurf extension, and JetBrains plugin. Control AI coding agents (Claude Code, Copilot, Cursor) from your phone. |
+| 說明 | Domain Intelligence via CLI (for humans and agents) |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 8. [felipecastro-data/medallion-data-dictionary-rag-system](https://github.com/felipecastro-data/medallion-data-dictionary-rag-system)
+#### 8. [creatornader/agent-bridge](https://github.com/creatornader/agent-bridge)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | RAG chatbot that auto-generates and searches a data dictionary over a Databricks medallion lakehouse, using Claude + Voyage AI + ChromaDB |
+| 說明 | Let AI agents message each other and hand off work across tools, sessions, and machines. |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 

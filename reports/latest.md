@@ -1,51 +1,64 @@
-# AI 實用日報｜2026-09-07
+# AI 實用日報｜2026-09-08
 
-約 3 分鐘閱讀。今天的主線是：Agent 能力進入研究與長期記憶，但驗證、權限與隱私仍要留在人手中。社群案例與產品展示未代表獨立實測。
+約 3–4 分鐘閱讀。今日主線是：Agent 正逐漸成為能研究、連工具、管理長任務的工作層，但「工具輸出是否可信」與「人是否仍在控制迴圈」比模型名稱更值得先處理。社群回報、廠商數字與作者展示分開標示，未把它們當成獨立實測。
 
 ## 1. 社群實戰用法
 
-### 讓記憶成為可審查的工程產物
+### 把 MCP 工具結果當成不受信任輸入
 
-9 月 5–6 日社群討論的 OKF Agent Memory，把長期知識放進 Git 追蹤的 Markdown/YAML。這個方向值得借用：每個決策都要有來源、日期與可信度，Agent 只在需要時搜尋，不把整個「記憶庫」塞進 context。
+9 月 7 日 r/Notion 有使用者回報，Notion 官方 MCP 的工具描述／結果疑似帶入促銷導向，甚至要求 Agent 不要解釋來源；貼文有大量社群反應，但目前仍是單一社群回報，尚無 Notion 公開回應或第三方重現，不能直接定性為漏洞。
 
-怎麼試：先建立 5–10 個小型 `knowledge/` 條目，記錄一個架構決策、一個踩坑與一個操作步驟；讓 Agent 用搜尋取用，完成任務後只提出記憶草稿，人工查看 `git diff` 再合併。把「是否仍為真」與失效日期也寫進條目。
+怎麼試：先把外部 MCP 當成「可影響 Agent 行為的輸入」，建立只讀、只連一個資料庫的專用 Agent；逐一檢查工具名稱、描述、輸入欄位與回傳內容，再開啟寫入權限。這個做法與 Notion 自己的安全建議一致：最小化資料與工具、優先 read-only、非只讀呼叫要求人工確認。
 
-編輯心得：Git diff、版本與退回能力比「永遠記得」更重要；這是工作流建議，不是 OKF 或該工具的成效保證。
+編輯心得：MCP 不只是 API 轉接層，也會把工具描述放進模型 context；權限審核應包含「它會叫 Agent 說什麼」，不只看它能讀寫什麼。
 
-來源：[Google OKF v0.2 規格](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md)｜[Hacker News 討論](https://news.ycombinator.com/item?id=45199989)｜[專案](https://github.com/okf-memory/okf-agent-memory)
+來源：[社群回報（9/7）](https://www.reddit.com/r/Notion/comments/1w9depq/notions_official_mcp_connector_prompt_injects_ai/)｜[Notion MCP 安全最佳實務](https://www.notion.com/en-gb/help/security-best-practices-for-agent-connections)｜[Notion 的 prompt injection 說明](https://www.notion.com/help/how-notion-protects-against-prompt-injection-risks)
 
 ## 2. 社群新工具與新玩法
 
-### OKF Agent Memory：本地、Git-native、內建 MCP 的長期記憶
+### 先掃描，再把 MCP 工具面鎖進 CI
 
-這個 Go 工具主打跨 session 的持久記憶、Markdown/YAML、漸進式揭露與 MCP 介面；適合想把 Agent 的工作知識放在自己 repo、能 review 和回滾的人。專案自稱 in-memory BM25 搜尋低於 300µs、可減少 80% token；9 月 6 日的獨立稽核則指出，5,000 個概念時測得約 354ms，且 ranking 會變動。兩者量測條件不同，不能把 README 數字當成通用保證。
+近期開源工具 `mcp-risk` 0.4.0 把 MCP 安全檢查做成安裝前與 CI 流程：可指定 npm 版本、檢查 tarball SHA-256、靜態掃描原始碼與 MCP 設定、固定 GitHub ref 到不可變 commit，並輸出 JSON／Markdown／SARIF。另一個 `AgentGate` 則採「scan → lock → gate」概念，鎖住 Agent 實際看到的 tool name、description 與 schema，再對 drift 產生 diff。
 
-推薦玩法：先只放公開文件或合成資料，設定 `source`、`freshness`、`owner` 三個欄位；連續跑同一個任務 3 次，比較搜尋結果、token 用量與錯誤引用，再決定是否接入私人專案。真正有價值的賣點是可追蹤性，不是單一 benchmark。
+推薦玩法：先對公開或合成設定跑 `npx mcp-risk scan`，再為真正要用的 server 固定版本與 commit；把掃描結果放進 PR，遇到工具描述或權限改變時要求人工 review。兩個專案的數量與涵蓋範圍屬作者／專案聲明，不能當成安全保證。
 
-來源：[專案 README](https://github.com/okf-memory/okf-agent-memory)｜[獨立 benchmark 稽核](https://blog.compendialabs.org/posts/2026-09-06-dk-okf-agent-memory-benchmark-audit)
+來源：[mcp-risk GitHub](https://github.com/CoderSufiyan/mcp-risk)｜[AgentGate GitHub](https://github.com/wookat/agentgate)｜[OSV 惡意 MCP 套件案例](https://osv.dev/vulnerability/MAL-2026-10711)
 
 ## 3. 官方新功能與推薦用法
 
-- **OpenAI Research acceleration（官方，9/6）**：OpenAI 表示，截至 8 月中研究組每個人類工作日對應 3.1 個 Agent 工作日；依 Agent 用量排序的研究者中位數，每日用量以 API 價格計超過 600 美元，第 90 百分位超過 7,000 美元，並以 2028 年 3 月前達到自動化 AI researcher 為目標。這是供應商內部數據，不是獨立 benchmark。推薦用法：把 Agent 用在可平行的程式、實驗與資料整理，留下 log、成本上限與人工驗收點。[原文](https://openai.com/index/research-acceleration-view-inside-openai/)
+- **OpenAI〈An Alien Mind〉（官方，9/6）**：Chief Scientist Jakub Pachocki 表示，隨著模型進入電腦操作、協作與研究，CoT 監控的可靠性正在下降；他認為目前沒有任何實驗室已把對齊與監控做到足以長期以最高速度擴張，並呼籲安全門檻與國際協調。這是 OpenAI 的安全立場與研究判斷，不是已被獨立驗證的能力數據。推薦用法：長任務保留完整 tool trace、人工 checkpoint 與可停止機制，不把「模型看起來很會做」當成可放權證據。[原文](https://openai.com/index/an-alien-mind/)
+
+- **Google DeepMind AI for the Planet APAC（官方，9/7）**：首屆計畫選出亞太 16 個新創、非營利組織與研究團隊，提供三個月專家輔導與 AI 工具支援，聚焦生物多樣性、永續農業與碳方案。這是支持計畫，不是成效 benchmark。推薦用法：若做環境 AI，先把資料來源、現場指標與部署責任寫成可驗收的 pilot，再使用模型或加速器資源。[公告](https://blog.google/innovation-and-ai/models-and-research/google-deepmind/ai-planet-accelerator-apac/)｜[計畫頁](https://deepmind.google/accelerators/ai-for-the-planet/)
 
 ## 4. 使用心得與避坑
 
-### 「省 80% token」要看拿什麼相比
+### 「Agent 已自動化」不等於「可以取消驗收」
 
-9 月 6 日的 OKF 稽核指出，專案的節省數字來自「載入整份資料」與「只取一份相關文件」的比較；這不代表換上工具後，每種任務都會省 80%。稽核也回報資料量增大後搜尋變慢、相同查詢的排序可能改變，本報未自行重現這些量測。
+今日最實用的組合是：OpenAI 的官方安全文章提醒監控會變難，Notion 的官方文件則把風險落到可操作的權限設定。避坑時不要只問模型多強，至少逐項確認：
 
-怎麼避坑：先用自己熟悉的小任務，比較答案有沒有正確引用、是否漏掉必要資料，再看用量。可以先整理既有文件、按需搜尋，不急著導入新服務。
+1. 工具輸出是否被當成資料而非指令。
+2. 是否只開啟完成任務所需的最小頁面、資料庫與工具。
+3. 所有寫入、刪除、外部傳送是否仍需人工確認。
+4. 是否有完整 log、可回滾狀態與明確停損點。
 
-來源：[原始稽核與量測方法](https://blog.compendialabs.org/posts/2026-09-06-dk-okf-agent-memory-benchmark-audit)
+先用熟悉的小任務做三次回放，檢查 Agent 是否引用正確、是否越權、是否能在中途停止，再考慮背景執行或擴大權限。
+
+來源：[OpenAI 安全文章](https://openai.com/index/an-alien-mind/)｜[Notion 連線安全建議](https://www.notion.com/en-gb/help/security-best-practices-for-agent-connections)
 
 ## YouTube：推薦 1 部
 
-### Tech With Tim｜Everyone Needs an AI Brain (This Is the Easiest Way to Build One)
+### Tech With Tim｜How AI Agents Actually Work (Every Piece Explained & Built)
 
-- **查核資料**：2026-09-05 發布；2026-09-07 查核約 1.6 萬次觀看；片長 11:01。[影片](https://www.youtube.com/watch?v=8yFb8QfAxRg)
-- **字幕查核**：已閱讀今早匯出的 YouTube 逐字稿；匯出檔標記 en-CA，但正文為中文轉譯，因此僅摘要清楚可辨的示範，不作逐字引用。
-- **摘要與重點**：影片把「AI brain」定義成位於使用者與模型之間的長期 context 層，依序完成 capture、store、recall；示範用 Genspark Workspace 6.0 的 SecondBrain 連接 Gmail、GitHub、Drive、Slack、Notion，再用 GenMail 做信箱整理與每日 briefing。可留意 2:03 的三步驟、5:29 的記憶摘要示範、8:48 的自然語言自動化流程。
-- **作者觀點、工具與贊助**：作者認為自動建立與更新記憶比手動維護 Notion/Obsidian 輕鬆；工具是 Genspark SecondBrain、GenMail、Workspace 6.0。影片明確揭露由 Genspark 贊助，描述欄另有 referral/折扣導流。
-- **優點、限制與適合對象**：適合想快速理解「記憶層如何串進工作流」的開發者、產品人與自動化初學者；但這是贊助產品展示，未驗證資料留存、權限、召回正確率或成本，也不應當作採購證據。值得看流程，不值得只因 demo 就連接私人信箱。
+- **查核資料**：Tech With Tim，2026-09-03 發布；2026-09-08 查核 71,910 次觀看；片長 19:28。[影片](https://www.youtube.com/watch?v=HzGOWq5UyjY)
+- **字幕查核**：已下載並閱讀 YouTube `en-orig` 自動字幕全文；可靠時間點包括 00:49 贊助揭露、02:28 harness、03:40 MCP、05:36 sandbox、07:22 trace／observability。不是根據標題或簡介推測。
+- **摘要與 5 個重點**：影片把 Agent 拆成 model 之外的執行層，並從零示範一個可工作的流程。
+  1. Harness 是負責 prompt、工具呼叫、context 管理、狀態與重啟的 runtime，不是另一個模型。
+  2. MCP 是讓 Agent 取得外部工具的標準橋接方式；真正能否工作仍取決於 harness 的支援與權限。
+  3. Sandbox 用來隔離程式／檔案操作；本機 sandbox 與雲端 sandbox 的可靠性、成本和資料邊界不同。
+  4. 示範把 Exa MCP、skills、sub-agents 和 web research 串起來，並在 UI／terminal 看 tool trace。
+  5. 作者最後展示以自然語言建立 dashboard 與可重用 Agent，但一次成功的 demo 不代表穩定性或安全性。
+- **工具／模型與作者心得**：工具是 MIT 開源的 [TrueForge](https://github.com/truefoundry/trueforge)、Exa MCP、skills 與 sandbox；字幕示範使用可替換模型，後段提到 Qwen 3.6。作者的核心觀點是：生產 Agent 的差異往往在 harness、工具、sandbox、狀態與可觀測性，而不只是模型。
+- **優點、限制與適合對象**：優點是把常被混在一起的 model、harness、MCP、skills、sandbox 拆清楚，並有可跟做的建置流程；限制是由贊助工具主導，未提供獨立可靠性、成本或安全比較，且示範使用的雲端 sandbox／外部 MCP 會帶來額外權限與費用。適合剛開始做 Agent 的開發者、產品工程師與想理解架構分層的人。
+- **贊助與是否值得看**：影片明確揭露由 True Foundry 贊助，並導向其開源工具；值得看架構解說與 trace 觀念，不宜只因 demo 就把私人資料或高權限工具接上去。
 
-今天先試一件事：用 3 份公開或合成文件做一個可刪除的 context pack，為每條記憶加來源與日期，跑一次 Agent 任務後先看 diff 和引用，再決定是否保留。
+今天先試一件事：用公開文件和合成資料建一個只讀 Agent，開啟 tool trace；完成一個小任務後，人工檢查每次 MCP 呼叫、輸入／輸出與 sandbox 邊界，再決定是否加入寫入工具。

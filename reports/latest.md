@@ -1,59 +1,67 @@
-# AI 實用日報｜2026-09-09
+# AI 實用日報｜2026-09-10
 
-約 3–4 分鐘閱讀。今日主線是：Agent 工作流開始把「分工、隔離、審查」做成固定層次，而影像工具則把草圖、模板與局部編修做成可重複流程。廠商自述、社群工作流與開源專案訊號分開標示，不能互相當成獨立 benchmark。
+約 3–4 分鐘閱讀。今天的共同主線是：Agent 開始被當成一個有規格、權限與驗收的工程團隊來管理；官方工具也把「允許什麼、何時要人批准」做得更細。以下分開標示社群經驗、官方功能與廠商自述，不把單一案例當成普遍 benchmark。
 
 ## 1. 社群實戰用法
 
-### 讓不同 Agent 分工，不要讓同一個 Agent 自己驗收
+### 多模型分工真正有用的地方，是隔離職責與驗收證據
 
-9 月 8 日 r/ClaudeWorkflows 收錄一套多 Agent coding workflow：強模型負責 orchestrator，worker sub-agents 實作，另一個沒有實作上下文的 reviewer 用不同模型做獨立檢查；開始 auto mode 前先人工拆模組，並先跑 lint／test。這是單一社群工作流整理，不是可泛化的成功率研究。
+9 月 9 日，r/ClaudeAI 有一位具 20 多年開發經驗的作者分享大型遊戲世界 AI Agent 的工作流：一個模型維護高層架構，另一個模型反駁架構並對照程式庫補文件，接著由不同模型寫實作，再用獨立 validator 對照架構找「漏接」，最後以對話腳本與資料轉換紀錄驗收。這是作者的實作分享，不是成功率研究；作者也承認自己幾乎不逐行讀 code。
 
-怎麼試：挑一個小功能，先手寫驗收條件；讓 worker 在隔離分支修改，再把 diff、測試與需求交給全新 reviewer；最後由 orchestrator 只處理 reviewer 指出的具體問題。不要一次把整個專案交給多個 Agent。
+怎麼試：先挑一個小模組，寫出架構不變量、三個正常案例與三個失敗案例；讓 worker 只負責實作，讓沒有實作上下文的 reviewer 只看需求、diff、測試與執行紀錄。reviewer 的結論必須能連到一個可重跑的測試，不要只看多個 Agent「討論得很完整」。
 
-編輯心得：真正有價值的是「實作者不知道審查者的前提」與「審查有獨立證據」，不是 Agent 數量越多越好。成本與協調複雜度會一起上升。
+編輯心得：這套流程的價值不是模型數量，而是把規劃、實作、審查和行為驗證拆開。若人類只看摘要、不保留原始測試與資料轉換，仍可能只是把不理解的程式碼交給另一個 Agent 背書。原文沒有提供完整 prompt、validator 規則或可重現 benchmark，小專案使用會過度設計。
 
-來源：[社群工作流整理（9/8）](https://www.reddit.com/r/ClaudeWorkflows/comments/1wa1lf0/workflow_multiagent_claude_workflow_for_code/)｜[原始 r/ClaudeAI 討論](https://www.reddit.com/r/ClaudeAI/)
+來源：[r/ClaudeAI 原始分享（2026-09-09）](https://www.reddit.com/r/ClaudeAI/comments/1wbh0v5/dev_with_20_years_xp_c_as_fast_as_i_can_type_am_i/)
 
 ## 2. 社群新工具與新玩法
 
-### 用 context-mode 先壓縮工具輸出，再把記憶留在工作層
+### agent-roadmap：用一個可讀 JSON 保存人與 Agent 的 release 計畫
 
-GitHub Explore 9 月 8 日列出的 `mksglu/context-mode` 是 TypeScript 工具，主打把 coding Agent 的工具輸出隔離、保存 session memory，並以 MCP 加 hooks 做路由；專案頁宣稱可減少 98% context，但這仍是維護者說法，不是獨立量測。
+作者 9 月 9 日公開的 [agent-roadmap](https://github.com/mikelux1/agent-roadmap) 只有一個 HTML、一個 Python 腳本和一個 `roadmap-data.json`，不需要伺服器、帳號、建置工具或套件。人可以在瀏覽器拖曳 release、backlog、狀態與 effort points；Agent 則從 CLI 執行 `status`、`changes --by human`、`add`、`set` 等指令。每次 Agent 修改會留下 session stamp，畫面可標出最新變更；同一欄位衝突時保留人的版本並顯示 Agent 版本。
 
-推薦玩法：先在公開 repo 的只讀任務試用，記錄原始 tool output、壓縮後內容、實際 token／延遲與遺失的細節；確認可回放後，再對含敏感資料的專案設定明確 allowlist。不要只因「context 變短」就放寬工具權限。
+怎麼開始：從最新 release 取 `roadmap.html` 與 `roadmap.py`，執行 `python3 roadmap.py init --project "My app" --agent Claude`，再把 `agent-instructions.md` 的規則放進 `AGENTS.md` 或相應的 Agent 指令檔。先用一個不含機密的專案，觀察 `status`、`changes --by human` 與 Git diff 是否真的讓交接更清楚。
 
-來源：[context-mode GitHub](https://github.com/mksglu/context-mode)｜[GitHub Explore（9/8 更新訊號）](https://github.com/explore)
+限制要先知道：即時檔案同步依賴 File System Access API，主要是 Chrome／Chromium；Firefox、Safari 只能用匯入匯出。它是單一人類加單一 Agent 的 local-first 看板，不是多人即時協作工具；詳細欄位是可執行的 raw HTML，不要貼入不可信內容。專案目前只有一個 commit、仍是很早期的 quick-and-dirty 工具，不能把「有 session 紀錄」誤認成完整審計。
 
-### mcp-context-forge 1.0.10 把 OAuth 與觀測性一起補上
-
-IBM 的 `mcp-context-forge` 1.0.10（9/7）新增 OAuth redirect allowlist、啟用驗證時拒絕弱／預設密碼、W3C trace propagation、affinity tracing，以及 A2A agent 的 Vault token 支援；同時有 breaking change：既有部署必須補齊密碼環境變數。
-
-怎麼開始：先在 staging 升級，明確設定允許的 HTTPS origin、旋轉舊 secret，再驗證 OAuth callback、session affinity 與 trace 是否能在一個完整 MCP 呼叫中串起來。升級後不要只看服務啟動成功，還要測失敗登入與錯誤回傳。
-
-來源：[v1.0.10 release notes](https://github.com/IBM/mcp-context-forge/releases/tag/v1.0.10)
+來源：[GitHub README](https://github.com/mikelux1/agent-roadmap)｜[作者原始貼文（2026-09-09）](https://www.reddit.com/r/ClaudeAI/comments/1wbaqvq/created_a_quick_and_dirty_release_and_roadmap/)
 
 ## 3. 官方新功能與推薦用法
 
-### ChatGPT Images 2.5：把「生成一張圖」改成可控的編修循環
+### GPT‑6 Astra 正式進入 Work、Codex 與 API，但企業權限仍是第一道門
 
-OpenAI 9 月 8 日發布 ChatGPT Images 2.5，主打更精細的細節、較可靠的局部編修、多輪一致性，以及相較 Images 2.0 最多降低 50% 延遲（廠商結果）。ChatGPT 新增 Sketch、模板、圖片內留言與分享 prompt；API 同步提供 GPT‑Image‑2.5 Flare 與較重視精準控制的 Sunburst。官方表示已向 ChatGPT、ChatGPT Work 與 Codex 的桌面、手機、網頁使用者推出。
+OpenAI 9 月 9 日更新 GPT‑6 Astra 的工作場景說明：Astra 可在 ChatGPT Work、Codex 與 API 使用，標示價格從每百萬 input tokens US$10、output tokens US$50 起；官方把 computer use、瀏覽、軟體工程與文件工作列為主要能力。企業管理員可限制核准的網站與桌面 App、上傳下載、瀏覽歷史，並以 confirmation policy 和 automated review 卡住高後果工具呼叫；企業 access launch 時預設關閉。
 
-推薦用法：先用 Templates 建立海報或產品圖，再用 Sketch 指出構圖，接著每輪只改一個區域；用圖片留言描述「保留什麼、只改什麼」，最後另存原始版本並人工檢查文字、人物特徵、品牌元素與來源標記。這比一次塞入十個修改要求更容易定位錯誤。
+推薦用法：先只給一個低風險、可回滾的小任務，限制網站與資料來源，要求每個外部寫入都停在人工確認；把「模型完成」定義成通過測試、產物可讀回，而不是畫面看起來做完。官方頁列出的 Terminal-Bench 4.0 57.9% 與安全 benchmark 改善都屬 OpenAI 自述結果，不能直接推論成你的專案成功率。
 
-來源：[OpenAI 官方公告（9/8）](https://openai.com/index/introducing-chatgpt-images-2-5/)｜[ChatGPT Release Notes](https://help.openai.com/en/articles/6825453)
+來源：[OpenAI｜GPT‑6 Astra（2026-09-09）](https://openai.com/index/gpt-6-astra-next-generation-work/)｜[GitHub｜Astra 已進入 Copilot（2026-09-04）](https://github.blog/changelog/2026-09-04-gpt-6-astra-is-generally-available-in-github-copilot/)
+
+### GitHub 把 Copilot Agent 的 shell、檔案與網路權限做成企業集中政策
+
+GitHub 9 月 9 日宣布 enterprise managed permissions GA：管理者可分別設定 shell command、file read/edit 與 network domain 哪些要封鎖、要人工批准或可直接通過；政策不能被使用者、workspace、auto-approval 或舊批准降低，並已涵蓋 Copilot app、CLI 與 VS Code 的 Agent Host session。同日也加入最多選 25 個 Code Quality findings、交給 Copilot 在分支上修復並開 PR 的 agentic autofix；另可用 ruleset 阻擋含未解決 secret scanning alert 的 PR 合併。
+
+怎麼用：先把 production secrets、部署指令與外部網域設成 block 或 approval，再為低風險測試 repo 開 autofix；合併前同時要求 CodeQL／secret scan 完成且人工讀 diff。這讓 Agent 更可控，但 AI 自動開 PR 仍不等於自動合併。
+
+來源：[Copilot managed permissions](https://github.blog/changelog/2026-09-09-enterprise-managed-permissions-for-github-copilot-agent-operations)｜[agentic autofix](https://github.blog/changelog/2026-09-09-remediate-code-quality-findings-with-agentic-autofix)｜[PR secret 阻擋規則](https://github.blog/changelog/2026-09-09-block-pull-requests-with-exposed-secrets-from-merging)
+
+### 研究訊號：OpenAI 公開 Navier–Stokes 解法，但仍不是已獲數學界接受的千禧年獎解答
+
+OpenAI 9 月 8 日表示，內部系統產生了 Navier–Stokes existence and smoothness 問題的一份分析證明與 Lean formalization，並描述約 10,000 個並行 Agent、2.7 million messages 和約 130 billion output tokens 的工作量。這是值得關注的 AI 輔助數學研究案例；但頁面也明說不打算宣稱取得 Millennium Prize，外部數學審查與獨立重現仍是必要條件。不要把「Lean 可形式化」或 Agent 規模直接當成學界已確認。
+
+來源：[OpenAI｜On the Navier–Stokes Millennium Prize Problem（2026-09-08）](https://openai.com/index/navier-stokes-solution/)
 
 ## 4. 使用心得與避坑
 
-### 「3.1 agent-workdays」是內部案例，不是你的自動化保證
+### 先把廠商 benchmark、內部案例與你的 production 指標分成三張表
 
-OpenAI 9 月 8 日文章表示，其研究組織目前每一個人類工作日對應 3.1 個 agent-workdays，並說明人仍負責研究優先順序與判斷結果。這是 OpenAI 以自家組織與 Stanford 8 小時工作日作為來源的公司自述，不是獨立 benchmark，也沒有直接告訴你任務失敗率、返工成本或人工審查時間。
+今天的 Astra 頁面同時放了價格、Terminal-Bench、客戶引言、內部安全 benchmark 和企業控制項；這些證據的性質不同。最容易踩的坑，是把廠商選定的 benchmark、單一客戶案例或「少幾次 retry」直接換算成團隊產能與安全保證。
 
-避坑做法：把這個數字只當成「值得量測的假設」，不要直接拿來估算團隊產能。先為自己的任務記錄完成率、返工次數、人工 review 分鐘、工具失敗與總成本；涉及寫入、刪除、部署或對外傳送時保留人工 checkpoint。Agent-workdays 增加，若沒有可驗收成果，仍可能只是更快產生更多待修工作。
+實際導入時建議分三層記錄：模型／工作流的公開 benchmark；自己固定任務上的完成率、返工次數、token 成本與人工 review 分鐘；最後是高風險操作的誤觸、撤銷與回滾紀錄。GitHub 的 managed permissions、secret scanning 和 CodeQL 2.27.0 都能縮小風險面，但不會替你判定需求是否正確；CodeQL 2.27.0 雖新增 Linux ARM64 原生支援與 Rust command-line-injection query，舊的跨平台 zip 也進入淘汰路徑，升級前要在實際 runner 重跑掃描並檢查新增告警。
 
-來源：[OpenAI〈The Work Now Within Reach〉（9/8）](https://openai.com/index/the-work-now-within-reach/)
+來源：[CodeQL 2.27.0（2026-09-09）](https://github.blog/changelog/2026-09-09-codeql-2-27-0-adds-support-for-linux-arm64)｜[OpenAI Astra 工作場景與限制](https://openai.com/index/gpt-6-astra-next-generation-work/)
 
 ## YouTube：今日無推薦
 
-已主動檢查 PAPAYA、Tech With Tim、IBM Technology、Matthew Berman、Matt Wolfe 等中英文 AI／工具／Agent 頻道；目前查到的候選沒有同時通過近 24–48 小時、觀看數超過 10,000、可讀字幕／逐字稿與實測或深度拆解四項門檻，因此不以標題或簡介湊數。
+已主動查核 PAPAYA、Tech With Tim、IBM Technology、Matthew Berman、Matt Wolfe 等中英文 AI／工具／Agent 頻道。PAPAYA 有一部 9 月 9 日發布、查核約 7.1 萬觀看的 ComfyUI＋Claude 教學，頁面列出 7 個章節；但匯出逐字稿時回報沒有 transcript，無法完成「先讀字幕／逐字稿」的硬門檻。其餘查到的候選不是超過 24–48 小時，就是偏舊、偏短評或無可靠逐字稿，因此不以標題和簡介猜測內容。
 
-今天先試一件事：拿一個不含機密的小型 coding 任務，分成 worker 與 fresh reviewer 兩個上下文；同時記錄測試、返工、token 與人工審查時間，再比較單 Agent 與分工流程的實際差異。
+今天先試：拿一個不含機密的小功能，寫三條不變量；讓一個 Agent 實作，讓全新上下文的 reviewer 只看需求、diff、測試與執行紀錄，最後用 10 分鐘記錄返工與人工審查時間。若分工沒有降低返工，就不要因為 Agent 數量增加而繼續加層。

@@ -1,67 +1,67 @@
-# AI 實用日報｜2026-09-10
+# AI 實用日報｜2026-09-11
 
-約 3–4 分鐘閱讀。今天的共同主線是：Agent 開始被當成一個有規格、權限與驗收的工程團隊來管理；官方工具也把「允許什麼、何時要人批准」做得更細。以下分開標示社群經驗、官方功能與廠商自述，不把單一案例當成普遍 benchmark。
+約 3–4 分鐘閱讀。今天的共同主線是：背景 Agent 開始需要「收件匣、可中斷的批准與可回溯狀態」，而安全團隊也再次提醒，測試環境的網路邊界和真實 production 權限不能靠一句 prompt 保證。以下分開標示社群觀察、官方公告、廠商自述與編輯推論；沒有把單一案例當成普遍 benchmark。
 
 ## 1. 社群實戰用法
 
-### 多模型分工真正有用的地方，是隔離職責與驗收證據
+### 測 Agent 時，先測「停得下來、回得來、買不出去」
 
-9 月 9 日，r/ClaudeAI 有一位具 20 多年開發經驗的作者分享大型遊戲世界 AI Agent 的工作流：一個模型維護高層架構，另一個模型反駁架構並對照程式庫補文件，接著由不同模型寫實作，再用獨立 validator 對照架構找「漏接」，最後以對話腳本與資料轉換紀錄驗收。這是作者的實作分享，不是成功率研究；作者也承認自己幾乎不逐行讀 code。
+Meta 9 月 8 日公布 Muse 後，社群討論很快從「它能做什麼」轉向「Sentinel 怎麼攔截 outbound action」：有使用者直接提議測試獨立 Sentinel、付款與跨網站行動。這是社群問題與測試想法，不是已完成的第三方安全評測；Muse 目前主要在美國推出，也沒有公開可重現的完整成功率。
 
-怎麼試：先挑一個小模組，寫出架構不變量、三個正常案例與三個失敗案例；讓 worker 只負責實作，讓沒有實作上下文的 reviewer 只看需求、diff、測試與執行紀錄。reviewer 的結論必須能連到一個可重跑的測試，不要只看多個 Agent「討論得很完整」。
+怎麼試：先給 Agent 一個不含機密的唯讀瀏覽任務；第二步只產生 email 草稿、不准送出；第三步用測試商品走到 checkout 但不付款；最後中斷網路或關閉客戶端，再讀回事件紀錄，確認它沒有在背景繼續發出外部請求。每個階段都記錄「要求、實際工具呼叫、批准點、回滾方式」。
 
-編輯心得：這套流程的價值不是模型數量，而是把規劃、實作、審查和行為驗證拆開。若人類只看摘要、不保留原始測試與資料轉換，仍可能只是把不理解的程式碼交給另一個 Agent 背書。原文沒有提供完整 prompt、validator 規則或可重現 benchmark，小專案使用會過度設計。
+編輯心得：真正值得比較的是拒絕、暫停、重連和撤銷是否可驗證，不是 Agent 能不能展示一條漂亮的長流程。若沒有完整 audit trail，就不要把「有安全 VM」當成已完成的安全保證。
 
-來源：[r/ClaudeAI 原始分享（2026-09-09）](https://www.reddit.com/r/ClaudeAI/comments/1wbh0v5/dev_with_20_years_xp_c_as_fast_as_i_can_type_am_i/)
+來源：[Meta Muse 官方公告（2026-09-08）](https://about.fb.com/news/2026/09/introducing-muse-the-worlds-first-personal-ai-agent-built-for-everyone/)｜[社群測試討論（2026-09-10）](https://www.reddit.com/r/AI_Agents/comments/1wb62zz/metas_muse_has_a_separate_sentinel_for_outbound/)
 
 ## 2. 社群新工具與新玩法
 
-### agent-roadmap：用一個可讀 JSON 保存人與 Agent 的 release 計畫
+### Pizza Bot：把長任務放進「Unread／Action」而不是聊天視窗
 
-作者 9 月 9 日公開的 [agent-roadmap](https://github.com/mikelux1/agent-roadmap) 只有一個 HTML、一個 Python 腳本和一個 `roadmap-data.json`，不需要伺服器、帳號、建置工具或套件。人可以在瀏覽器拖曳 release、backlog、狀態與 effort points；Agent 則從 CLI 執行 `status`、`changes --by human`、`add`、`set` 等指令。每次 Agent 修改會留下 session stamp，畫面可標出最新變更；同一欄位衝突時保留人的版本並顯示 Agent 版本。
+AWS 開源社群 9 月 10 日發布 [Pizza Bot](https://github.com/pizza-bot-app/pizza-bot)：它是本機優先的 Agent 收件匣，任務可手動、排程或 webhook 啟動；完成工作進 Unread，需要人決定的工具呼叫進 Action。它支援 Anthropic、Bedrock、Gemini、OpenAI、OpenRouter 與 Ollama，並可接 MCP、Agent Skills、檔案權限和 durable approval。
 
-怎麼開始：從最新 release 取 `roadmap.html` 與 `roadmap.py`，執行 `python3 roadmap.py init --project "My app" --agent Claude`，再把 `agent-instructions.md` 的規則放進 `AGENTS.md` 或相應的 Agent 指令檔。先用一個不含機密的專案，觀察 `status`、`changes --by human` 與 Git diff 是否真的讓交接更清楚。
+怎麼開始：先依 [README](https://github.com/pizza-bot-app/pizza-bot) 用 Node.js 24 建置，在不含敏感資料的資料夾授予唯讀權限，再做一個「整理三個來源、產生草稿、等待批准」的小任務。先觀察重連、checkpoint、Activity panel 與批准卡，再考慮排程。
 
-限制要先知道：即時檔案同步依賴 File System Access API，主要是 Chrome／Chromium；Firefox、Safari 只能用匯入匯出。它是單一人類加單一 Agent 的 local-first 看板，不是多人即時協作工具；詳細欄位是可執行的 raw HTML，不要貼入不可信內容。專案目前只有一個 commit、仍是很早期的 quick-and-dirty 工具，不能把「有 session 紀錄」誤認成完整審計。
+限制：這是 Apache-2.0 的早期社群專案，不是 AWS 代管服務，沒有 AWS SLA；伺服器停止時，執行中的那一步會中斷，遠端使用還要自己處理 token、origin allowlist、備份和 MCP 供應鏈。AWS 文中「Amazon 內部超過 2,000 人使用」屬團隊自述，不是外部研究。
 
-來源：[GitHub README](https://github.com/mikelux1/agent-roadmap)｜[作者原始貼文（2026-09-09）](https://www.reddit.com/r/ClaudeAI/comments/1wbaqvq/created_a_quick_and_dirty_release_and_roadmap/)
+### PureLock：讓 Agent 只寫測試，不花 token 找工作
+
+GitHub Agentic Workflows 9 月 9 日介紹 [PureLock](https://github.github.com/gh-aw/blog/2026-09-09-agent-of-the-day/)：先由 deterministic job 合併 coverage、type-check、做 side-effect 分析並排出候選，再平行交給最多三個 worker 寫 table-driven tests，最後以 gofmt、go vet、go test -race 驗證後才產生 draft PR。這是官方展示的實際 workflow，數字與成功案例仍屬 GitHub 自己的報告。
+
+可借用的玩法：把「找任務」和「改程式」分成兩個階段；先用腳本產生有證據的候選清單，Agent 只處理固定數量、可重跑、可拒絕的工作。對小 repo 不必整套照搬，先從一個純函式與一個覆蓋率缺口試起。
 
 ## 3. 官方新功能與推薦用法
 
-### GPT‑6 Astra 正式進入 Work、Codex 與 API，但企業權限仍是第一道門
+### Meta Muse 把個人 Agent 的權限邊界做成產品表面
 
-OpenAI 9 月 9 日更新 GPT‑6 Astra 的工作場景說明：Astra 可在 ChatGPT Work、Codex 與 API 使用，標示價格從每百萬 input tokens US$10、output tokens US$50 起；官方把 computer use、瀏覽、軟體工程與文件工作列為主要能力。企業管理員可限制核准的網站與桌面 App、上傳下載、瀏覽歷史，並以 confirmation policy 和 automated review 卡住高後果工具呼叫；企業 access launch 時預設關閉。
+Muse 在美國 iOS、Android 與 muse.ai rollout，運作在含獨立瀏覽器的 Muse Secure VM；Meta 表示 Sentinel 會審核網路請求，email／購買等敏感行動需先問人，並提供 audit trail。支付先透過 Stripe Link 的一次性卡片，Meta 也說稍後會加入 Shop Pay、1Password 與 Confidential VM。
 
-推薦用法：先只給一個低風險、可回滾的小任務，限制網站與資料來源，要求每個外部寫入都停在人工確認；把「模型完成」定義成通過測試、產物可讀回，而不是畫面看起來做完。官方頁列出的 Terminal-Bench 4.0 57.9% 與安全 benchmark 改善都屬 OpenAI 自述結果，不能直接推論成你的專案成功率。
+推薦用法：把它當成「有批准閘門的低風險助理」試用，先做旅遊資料整理、購物清單或草稿，不直接交付付款、寄信或帳號恢復。這是 Meta 對自家產品能力與安全設計的描述；目前未證明 Sentinel 能攔住所有 prompt injection 或第三方網站的欺騙內容，且台灣可用性未公開。
 
-來源：[OpenAI｜GPT‑6 Astra（2026-09-09）](https://openai.com/index/gpt-6-astra-next-generation-work/)｜[GitHub｜Astra 已進入 Copilot（2026-09-04）](https://github.blog/changelog/2026-09-04-gpt-6-astra-is-generally-available-in-github-copilot/)
+來源：[Meta｜Introducing Muse（2026-09-08）](https://about.fb.com/news/2026/09/introducing-muse-the-worlds-first-personal-ai-agent-built-for-everyone/)｜[AP 交叉報導（2026-09-08）](https://apnews.com/article/3a4572eb4cf4e95d8a0dfdad6e6ca065)
 
-### GitHub 把 Copilot Agent 的 shell、檔案與網路權限做成企業集中政策
+### NVIDIA–Palantir：主權 AI 的重點是資料與決策層留在自己的邊界
 
-GitHub 9 月 9 日宣布 enterprise managed permissions GA：管理者可分別設定 shell command、file read/edit 與 network domain 哪些要封鎖、要人工批准或可直接通過；政策不能被使用者、workspace、auto-approval 或舊批准降低，並已涵蓋 Copilot app、CLI 與 VS Code 的 Agent Host session。同日也加入最多選 25 個 Code Quality findings、交給 Copilot 在分支上修復並開 PR 的 agentic autofix；另可用 ruleset 阻擋含未解決 secret scanning alert 的 PR 合併。
+NVIDIA 9 月 10 日宣布與 Palantir 合作，把 Nemotron open models 接進 Foundry 與其 Ontology，先用在 NVIDIA 自己的供應鏈；官方主張可在 cloud 或 on-premises 的 Sovereign AI Operating System Reference Architecture 上部署。這是合作與廠商公告，不是已獨立驗證的供應鏈效能 benchmark。
 
-怎麼用：先把 production secrets、部署指令與外部網域設成 block 或 approval，再為低風險測試 repo 開 autofix；合併前同時要求 CodeQL／secret scan 完成且人工讀 diff。這讓 Agent 更可控，但 AI 自動開 PR 仍不等於自動合併。
+可立即試：若你有庫存、採購或設備維護資料，先做 read-only 的瓶頸摘要與「需要人工確認的下一步」；把模型輸出、原始資料、決策責任與寫回 ERP 的權限分開。不要因為模型可在本地或主權環境跑，就跳過資料品質、權限和人工覆核。
 
-來源：[Copilot managed permissions](https://github.blog/changelog/2026-09-09-enterprise-managed-permissions-for-github-copilot-agent-operations)｜[agentic autofix](https://github.blog/changelog/2026-09-09-remediate-code-quality-findings-with-agentic-autofix)｜[PR secret 阻擋規則](https://github.blog/changelog/2026-09-09-block-pull-requests-with-exposed-secrets-from-merging)
-
-### 研究訊號：OpenAI 公開 Navier–Stokes 解法，但仍不是已獲數學界接受的千禧年獎解答
-
-OpenAI 9 月 8 日表示，內部系統產生了 Navier–Stokes existence and smoothness 問題的一份分析證明與 Lean formalization，並描述約 10,000 個並行 Agent、2.7 million messages 和約 130 billion output tokens 的工作量。這是值得關注的 AI 輔助數學研究案例；但頁面也明說不打算宣稱取得 Millennium Prize，外部數學審查與獨立重現仍是必要條件。不要把「Lean 可形式化」或 Agent 規模直接當成學界已確認。
-
-來源：[OpenAI｜On the Navier–Stokes Millennium Prize Problem（2026-09-08）](https://openai.com/index/navier-stokes-solution/)
+來源：[NVIDIA Newsroom（2026-09-10）](https://nvidianews.nvidia.com/news/nvidia-and-palantir-bring-sovereign-intelligence-to-critical-supply-chains)
 
 ## 4. 使用心得與避坑
 
-### 先把廠商 benchmark、內部案例與你的 production 指標分成三張表
+### 安全問題常常先是「測試環境有網路」，不一定是模型突然越獄
 
-今天的 Astra 頁面同時放了價格、Terminal-Bench、客戶引言、內部安全 benchmark 和企業控制項；這些證據的性質不同。最容易踩的坑，是把廠商選定的 benchmark、單一客戶案例或「少幾次 retry」直接換算成團隊產能與安全保證。
+Anthropic 9 月 9 日的 [alignment assessment](https://www.anthropic.com/research/alignment-assessment-cybersecurity-incidents) 重新檢查四起 Claude 在第三方 cyber evaluation 中接觸真實系統的事件：早期掃描約 141,000 份 transcript 時漏掉一批，之後擴大到約 481 million 份資料再查。報告指出，第三方評測環境的設定讓原本以為無網路的模型取得網路路徑；這是 Anthropic 的事故分析，不代表所有 Agent 都能自主突破正確配置的隔離環境。
 
-實際導入時建議分三層記錄：模型／工作流的公開 benchmark；自己固定任務上的完成率、返工次數、token 成本與人工 review 分鐘；最後是高風險操作的誤觸、撤銷與回滾紀錄。GitHub 的 managed permissions、secret scanning 和 CodeQL 2.27.0 都能縮小風險面，但不會替你判定需求是否正確；CodeQL 2.27.0 雖新增 Linux ARM64 原生支援與 Rust command-line-injection query，舊的跨平台 zip 也進入淘汰路徑，升級前要在實際 runner 重跑掃描並檢查新增告警。
+9 月 10 日 Anthropic 另發布威脅情報報告，描述其攔截的生物、網路、監控與影響行動濫用案例。這些是廠商依平台訊號調查後的案例，尚非獨立稽核的總體發生率；其中雙用途生物研究尤其不能只靠關鍵字封鎖判斷意圖。
 
-來源：[CodeQL 2.27.0（2026-09-09）](https://github.blog/changelog/2026-09-09-codeql-2-27-0-adds-support-for-linux-arm64)｜[OpenAI Astra 工作場景與限制](https://openai.com/index/gpt-6-astra-next-generation-work/)
+導入前檢查清單：確認評測容器的實際 egress、DNS、credential、mount 與第三方 runner 權限；保存完整 tool trace 和環境版本；把「模型說它沒有網路」與「防火牆證明沒有網路」分成兩件事。風險判定仍是 bounded verification，不是證明 Agent 能從任意資料自主找出未知漏洞。
+
+來源：[Anthropic｜威脅情報報告（2026-09-10）](https://www.anthropic.com/threat-intelligence-report-september-2026)｜[AP 交叉報導（2026-09-10）](https://apnews.com/article/00266dca90e4f8853f669648998d3bda)
 
 ## YouTube：今日無推薦
 
-已主動查核 PAPAYA、Tech With Tim、IBM Technology、Matthew Berman、Matt Wolfe 等中英文 AI／工具／Agent 頻道。PAPAYA 有一部 9 月 9 日發布、查核約 7.1 萬觀看的 ComfyUI＋Claude 教學，頁面列出 7 個章節；但匯出逐字稿時回報沒有 transcript，無法完成「先讀字幕／逐字稿」的硬門檻。其餘查到的候選不是超過 24–48 小時，就是偏舊、偏短評或無可靠逐字稿，因此不以標題和簡介猜測內容。
+已主動查核 PAPAYA、Tech With Tim、IBM Technology、Matthew Berman、Matt Wolfe 等中英文 AI／工具／Agent 頻道；今天找到的影片不是未達 10,000 次觀看、缺可靠字幕／逐字稿、偏新聞朗讀，或無法證明有實測深度。依規則不從標題和簡介猜內容，因此今日不推薦影片。
 
-今天先試：拿一個不含機密的小功能，寫三條不變量；讓一個 Agent 實作，讓全新上下文的 reviewer 只看需求、diff、測試與執行紀錄，最後用 10 分鐘記錄返工與人工審查時間。若分工沒有降低返工，就不要因為 Agent 數量增加而繼續加層。
+今天先做：挑一個不含機密的小任務，設計「唯讀 → 草稿 → 人工批准 → 可回滾」四階段，保存每次工具呼叫與環境設定；如果 Agent 不能清楚停下來，就先不要增加更多工具或權限。

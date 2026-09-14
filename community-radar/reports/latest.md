@@ -1,8 +1,8 @@
-# AI Community Radar - 2026-09-11
+# AI Community Radar - 2026-09-14
 
-> Generated: 2026-09-11T00:53:38.290Z
+> Generated: 2026-09-14T00:51:42.484Z
 > Timezone: Asia/Taipei
-> Active cutoff: updated since 2026-09-09; archived GitHub repos excluded; max stale age 2 days.
+> Active cutoff: updated since 2026-09-12; archived GitHub repos excluded; max stale age 2 days.
 
 ## 今日摘要
 
@@ -17,9 +17,9 @@
 
 | # | Repo | Stars | Forks | Language | Updated |
 | --- | --- | ---: | ---: | --- | --- |
-| 1 | [affaan-m/ECC](https://github.com/affaan-m/ECC) | 255,899 | 38,303 | JavaScript | 2026-09-10T20:57:26Z |
-| 2 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 244,219 | 50,527 | Python | 2026-09-11T00:41:40Z |
-| 3 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 199,698 | 76,292 | C++ | 2026-09-11T00:51:29Z |
+| 1 | [affaan-m/ECC](https://github.com/affaan-m/ECC) | 257,752 | 38,552 | JavaScript | 2026-09-12T11:45:41Z |
+| 2 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 245,166 | 51,002 | Python | 2026-09-14T00:51:41Z |
+| 3 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 200,064 | 76,326 | C++ | 2026-09-13T20:56:07Z |
 
 ### 1. [affaan-m/ECC](https://github.com/affaan-m/ECC)
 
@@ -77,7 +77,7 @@ An Open Source Machine Learning Framework for Everyone.
 | 指標 | 值 |
 | --- | --- |
 | Registry sample | 800 servers |
-| Active baseline since | 2026-09-09 |
+| Active baseline since | 2026-09-12 |
 | GitHub stale cutoff | 2 days |
 
 ### 可能還沒上官方 MCP Registry 的候選
@@ -102,17 +102,7 @@ An Open Source Machine Learning Framework for Everyone.
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/launchdarkly/mcp-server](https://github.com/launchdarkly/mcp-server) |
 
-#### 3. [@utcp/mcp](https://www.npmjs.com/package/@utcp/mcp)
-
-| 欄位 | 內容 |
-| --- | --- |
-| 類型 | npm-package |
-| 說明 | Model Context Protocol integration for UTCP |
-| 為什麼值得看 | npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。 |
-| 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
-| Repo | [https://github.com/universal-tool-calling-protocol/typescript-utcp](https://github.com/universal-tool-calling-protocol/typescript-utcp) |
-
-#### 4. [@payloadcms/plugin-mcp](https://www.npmjs.com/package/@payloadcms/plugin-mcp)
+#### 3. [@payloadcms/plugin-mcp](https://www.npmjs.com/package/@payloadcms/plugin-mcp)
 
 | 欄位 | 內容 |
 | --- | --- |
@@ -122,7 +112,7 @@ An Open Source Machine Learning Framework for Everyone.
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/payloadcms/payload](https://github.com/payloadcms/payload) |
 
-#### 5. [@traceloop/instrumentation-mcp](https://www.npmjs.com/package/@traceloop/instrumentation-mcp)
+#### 4. [@traceloop/instrumentation-mcp](https://www.npmjs.com/package/@traceloop/instrumentation-mcp)
 
 | 欄位 | 內容 |
 | --- | --- |
@@ -132,30 +122,40 @@ An Open Source Machine Learning Framework for Everyone.
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/traceloop/openllmetry-js](https://github.com/traceloop/openllmetry-js) |
 
-#### 6. [tyvsmith/monarch-money-remote-mcp](https://github.com/tyvsmith/monarch-money-remote-mcp)
+#### 5. [@kubb/mcp](https://www.npmjs.com/package/@kubb/mcp)
+
+| 欄位 | 內容 |
+| --- | --- |
+| 類型 | npm-package |
+| 說明 | MCP server for Kubb. Exposes code generation as a tool over the Model Context Protocol so AI assistants like Claude, Cursor, and other MCP-compatible clients can generate TypeScript types, clients, and more. |
+| 為什麼值得看 | npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。 |
+| 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
+| Repo | [https://github.com/kubb-labs/kubb](https://github.com/kubb-labs/kubb) |
+
+#### 6. [chrisns/uk-tenders-mcp](https://github.com/chrisns/uk-tenders-mcp)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Remote MCP for monarch.com on gcloud run |
+| 說明 | MCP server indexing UK public procurement (Find a Tender, Contracts Finder, Public Contracts Scotland, Sell2Wales, eTendersNI) into BigQuery, queryable by AI assistants over MCP. |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 7. [Xero-Team/cosplaytele-mcp](https://github.com/Xero-Team/cosplaytele-mcp)
+#### 7. [danielsogl/lighthouse-mcp-server](https://github.com/danielsogl/lighthouse-mcp-server)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | 面向 CosplayTele 及同类图库站点的 MCP 2（Model Context Protocol，规范 2026-07-28）服务器。 |
+| 說明 | MCP server that enables AI agents to perform comprehensive web audits using Google Lighthouse with 13+ tools for performance, accessibility, SEO, and security analysis. |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 8. [luckyPipewrench/pipelock](https://github.com/luckyPipewrench/pipelock)
+#### 8. [NormB/sipnab](https://github.com/NormB/sipnab)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Open-source AI agent firewall for MCP security and agent egress. Scans mediated HTTP, MCP, A2A, and WebSocket traffic for exfiltration, SSRF, and prompt injection, and emits mediator-signed action receipts: verifiable audit evidence from outside the agent. |
+| 說明 | SIP & RTP capture, analysis, and security tool. One binary, one dependency (libpcap), built in Rust. |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 

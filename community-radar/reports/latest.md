@@ -1,8 +1,8 @@
-# AI Community Radar - 2026-09-14
+# AI Community Radar - 2026-09-15
 
-> Generated: 2026-09-14T00:51:42.484Z
+> Generated: 2026-09-15T01:18:52.487Z
 > Timezone: Asia/Taipei
-> Active cutoff: updated since 2026-09-12; archived GitHub repos excluded; max stale age 2 days.
+> Active cutoff: updated since 2026-09-13; archived GitHub repos excluded; max stale age 2 days.
 
 ## 今日摘要
 
@@ -17,9 +17,9 @@
 
 | # | Repo | Stars | Forks | Language | Updated |
 | --- | --- | ---: | ---: | --- | --- |
-| 1 | [affaan-m/ECC](https://github.com/affaan-m/ECC) | 257,752 | 38,552 | JavaScript | 2026-09-12T11:45:41Z |
-| 2 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 245,166 | 51,002 | Python | 2026-09-14T00:51:41Z |
-| 3 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 200,064 | 76,326 | C++ | 2026-09-13T20:56:07Z |
+| 1 | [affaan-m/ECC](https://github.com/affaan-m/ECC) | 258,403 | 38,651 | JavaScript | 2026-09-14T04:55:52Z |
+| 2 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 245,529 | 51,148 | Python | 2026-09-15T01:17:56Z |
+| 3 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 200,085 | 76,332 | C++ | 2026-09-15T01:16:59Z |
 
 ### 1. [affaan-m/ECC](https://github.com/affaan-m/ECC)
 
@@ -77,7 +77,7 @@ An Open Source Machine Learning Framework for Everyone.
 | 指標 | 值 |
 | --- | --- |
 | Registry sample | 800 servers |
-| Active baseline since | 2026-09-12 |
+| Active baseline since | 2026-09-13 |
 | GitHub stale cutoff | 2 days |
 
 ### 可能還沒上官方 MCP Registry 的候選
@@ -132,30 +132,30 @@ An Open Source Machine Learning Framework for Everyone.
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/kubb-labs/kubb](https://github.com/kubb-labs/kubb) |
 
-#### 6. [chrisns/uk-tenders-mcp](https://github.com/chrisns/uk-tenders-mcp)
+#### 6. [aks129/HealthClawGuardrails](https://github.com/aks129/HealthClawGuardrails)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | MCP server indexing UK public procurement (Find a Tender, Contracts Finder, Public Contracts Scotland, Sell2Wales, eTendersNI) into BigQuery, queryable by AI assistants over MCP. |
+| 說明 | Open-source guardrails between AI agents and FHIR clinical data — PHI redaction, immutable audit, step-up auth, tenant isolation. MCP server + OpenAI/Gemini adapters. A healthclaw.io project. |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 7. [danielsogl/lighthouse-mcp-server](https://github.com/danielsogl/lighthouse-mcp-server)
+#### 7. [Vectorion/codestack-automator](https://github.com/Vectorion/codestack-automator)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | MCP server that enables AI agents to perform comprehensive web audits using Google Lighthouse with 13+ tools for performance, accessibility, SEO, and security analysis. |
+| 說明 | Revolutionize Your Dev Workflow 2026: Auto-Scan & Optimize 100+ Tech Stacks Instantly |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 8. [NormB/sipnab](https://github.com/NormB/sipnab)
+#### 8. [watchara7696/Intelligent-Voice-Driving-System](https://github.com/watchara7696/Intelligent-Voice-Driving-System)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | SIP & RTP capture, analysis, and security tool. One binary, one dependency (libpcap), built in Rust. |
+| 說明 | Monitor driver safety and control in-vehicle systems using computer vision, real-time behavior tracking, and a local Qwen-7B language model. |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 

@@ -1,8 +1,8 @@
-# AI Community Radar - 2026-09-15
+# AI Community Radar - 2026-09-16
 
-> Generated: 2026-09-15T01:18:52.487Z
+> Generated: 2026-09-16T01:13:53.401Z
 > Timezone: Asia/Taipei
-> Active cutoff: updated since 2026-09-13; archived GitHub repos excluded; max stale age 2 days.
+> Active cutoff: updated since 2026-09-14; archived GitHub repos excluded; max stale age 2 days.
 
 ## 今日摘要
 
@@ -17,9 +17,9 @@
 
 | # | Repo | Stars | Forks | Language | Updated |
 | --- | --- | ---: | ---: | --- | --- |
-| 1 | [affaan-m/ECC](https://github.com/affaan-m/ECC) | 258,403 | 38,651 | JavaScript | 2026-09-14T04:55:52Z |
-| 2 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 245,529 | 51,148 | Python | 2026-09-15T01:17:56Z |
-| 3 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 200,085 | 76,332 | C++ | 2026-09-15T01:16:59Z |
+| 1 | [affaan-m/ECC](https://github.com/affaan-m/ECC) | 259,331 | 38,795 | JavaScript | 2026-09-15T19:33:00Z |
+| 2 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 245,871 | 51,307 | Python | 2026-09-16T01:07:05Z |
+| 3 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 200,114 | 76,455 | C++ | 2026-09-16T01:03:08Z |
 
 ### 1. [affaan-m/ECC](https://github.com/affaan-m/ECC)
 
@@ -77,7 +77,7 @@ An Open Source Machine Learning Framework for Everyone.
 | 指標 | 值 |
 | --- | --- |
 | Registry sample | 800 servers |
-| Active baseline since | 2026-09-13 |
+| Active baseline since | 2026-09-14 |
 | GitHub stale cutoff | 2 days |
 
 ### 可能還沒上官方 MCP Registry 的候選
@@ -102,60 +102,60 @@ An Open Source Machine Learning Framework for Everyone.
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/launchdarkly/mcp-server](https://github.com/launchdarkly/mcp-server) |
 
-#### 3. [@payloadcms/plugin-mcp](https://www.npmjs.com/package/@payloadcms/plugin-mcp)
+#### 3. [@utcp/mcp](https://www.npmjs.com/package/@utcp/mcp)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | npm-package |
-| 說明 | MCP (Model Context Protocol) capabilities with Payload |
+| 說明 | Model Context Protocol integration for UTCP |
 | 為什麼值得看 | npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。 |
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
-| Repo | [https://github.com/payloadcms/payload](https://github.com/payloadcms/payload) |
+| Repo | [https://github.com/universal-tool-calling-protocol/typescript-utcp](https://github.com/universal-tool-calling-protocol/typescript-utcp) |
 
-#### 4. [@traceloop/instrumentation-mcp](https://www.npmjs.com/package/@traceloop/instrumentation-mcp)
+#### 4. [nx-mcp](https://www.npmjs.com/package/nx-mcp)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | npm-package |
-| 說明 | MCP (Model Context Protocol) Instrumentation |
+| 說明 | A Model Context Protocol server implementation for Nx |
 | 為什麼值得看 | npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。 |
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
-| Repo | [https://github.com/traceloop/openllmetry-js](https://github.com/traceloop/openllmetry-js) |
+| Repo | [https://github.com/nrwl/nx-console](https://github.com/nrwl/nx-console) |
 
-#### 5. [@kubb/mcp](https://www.npmjs.com/package/@kubb/mcp)
+#### 5. [@clerk/mcp-tools](https://www.npmjs.com/package/@clerk/mcp-tools)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | npm-package |
-| 說明 | MCP server for Kubb. Exposes code generation as a tool over the Model Context Protocol so AI assistants like Claude, Cursor, and other MCP-compatible clients can generate TypeScript types, clients, and more. |
+| 說明 | Tools for writing MCP clients and servers without pain |
 | 為什麼值得看 | npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。 |
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
-| Repo | [https://github.com/kubb-labs/kubb](https://github.com/kubb-labs/kubb) |
+| Repo | [https://github.com/clerk/mcp-tools](https://github.com/clerk/mcp-tools) |
 
-#### 6. [aks129/HealthClawGuardrails](https://github.com/aks129/HealthClawGuardrails)
+#### 6. [JoshuaRamirez/shared-mcp](https://github.com/JoshuaRamirez/shared-mcp)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Open-source guardrails between AI agents and FHIR clinical data — PHI redaction, immutable audit, step-up auth, tenant isolation. MCP server + OpenAI/Gemini adapters. A healthclaw.io project. |
+| 說明 | Run a stdio MCP server once per machine and let every Claude Code session share it — stdlib bridge, mcp gateway, launchd/systemd supervision, safe fallback |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 7. [Vectorion/codestack-automator](https://github.com/Vectorion/codestack-automator)
+#### 7. [dmmdea/agentic-memory-stack-for-claude-code](https://github.com/dmmdea/agentic-memory-stack-for-claude-code)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Revolutionize Your Dev Workflow 2026: Auto-Scan & Optimize 100+ Tech Stacks Instantly |
+| 說明 | Persistent, multi-tier, measurably-faithful memory backend for Claude Code on Windows + WSL2 (mem0 + Qdrant + EmbeddingGemma + Codex). Self-contained, operator-agnostic installer skill. |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 8. [watchara7696/Intelligent-Voice-Driving-System](https://github.com/watchara7696/Intelligent-Voice-Driving-System)
+#### 8. [malindo77/smartchannels](https://github.com/malindo77/smartchannels)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Monitor driver safety and control in-vehicle systems using computer vision, real-time behavior tracking, and a local Qwen-7B language model. |
+| 說明 | Deliver a secure, multi-channel AI assistant platform with persistent memory and local-first intelligence for seamless messaging integration. |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 

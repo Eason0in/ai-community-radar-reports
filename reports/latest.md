@@ -1,82 +1,114 @@
-# AI 情報日報｜2026-09-19
+# AI 情報日報｜2026-09-20
 
-約 4 分鐘閱讀。今天的主線是：AI coding 已經不只是在「幫人寫程式」，而是在改變研究、review、瀏覽器操作與企業治理；可驗證的軌跡、權限和人類判斷，仍然是不能省略的部分。
+約 4 分鐘閱讀。今天的主線是：Agent 開始需要一個「快速判斷層」來分流、審查與守門，但 Jev、MCP 或任何 confidence 數字都不能取代測試、證據和人類核准。
 
-> 截稿時間：2026-09-19 08:05（Asia/Taipei）
-> 查核範圍：優先 2026-09-17～09-19 的官方公告、官方文件、第一手 repo 與社群實戰；沒有重大新模型發布時，補充仍具立即使用價值的本週進展。
-> 證據標示：官方資料是官方事實；社群文章是個人經驗；廠商／作者 benchmark 與數字均不等於獨立驗證。
+> 截稿時間：2026-09-20 08:05（Asia/Taipei）
+> 查核範圍：優先 2026-09-18～09-20 的官方公告、官方文件、第一手 repo、社群實作與影片字幕；沒有重大新模型發布時，補充仍具立即使用價值的本週進展。
+> 證據標示：官方資料是官方事實；社群文章、Reddit 與影片是個人實作；廠商／作者 benchmark、速度、費用與準確率都不等於獨立驗證。
 
 ## 1. 社群實戰用法
 
-### 先看 Agent 做了什麼，再判斷它是否真的省時間
+### 把快速判斷模型放在昂貴 Agent 前面，但只做「篩選」
 
-- **新在哪裡：** r/ClaudeCode 的 9/18 Showcase 有開發者分享 Claudescope：把 Claude Code、Codex、Copilot CLI 等 session 的 JSONL 做成本、token、工具呼叫、變更檔案與全文搜尋；作者特別提到，實際成本常和直覺不同，cache read 可能佔很大一部分。
-- **可以怎麼開始：** 先在 disposable repo 或本機唯讀地索引 session；每次任務結束記錄「改了哪些檔案、跑了哪些測試、用了多少 token、是否重試」，再決定要縮短上下文、拆任務或換 harness。可先試 [Claudescope](https://github.com/vladar107/claudescope) 的本機模式。
-- **編輯心得：** 這比單看最後 diff 更有用，因為能把「模型能力」和「上下文重播、工具往返、session 過長」拆開看。
-- **限制：** 這是單一作者的早期工具與自述；各 Agent 的 transcript 格式未必穩定，成本欄位也應用自己的帳單或 API log 交叉核對。
+- **新在哪裡：** r/LLMDevs 有開發者分享兩個 Jev 實驗：寫 prompt 時先產生結構化訊號，以及在 Claude 前面做 routing layer；不是讓小模型寫完整答案，而是先判斷「要不要交給大模型、哪個路徑值得看」。
+- **可以怎麼開始：** 對一個小型 diff 先問 3 個 bounded questions：是否對應需求、是否削弱測試、是否碰到高風險面；把選項、機率、規則版本和原始檔案位置一起記錄。高風險或不確定結果一律升級給完整 Agent、測試或人。
+- **編輯心得：** 這個 pattern 的價值不在「Jev 比 Claude 強」，而是把大量低訊號項目先排隊，讓主 Agent 專注真正需要上下文的少數問題。
+- **限制：** Reddit 貼文仍是個人實驗；結構化輸出不等於正確。先用已標註的 diff／錯誤案例測 calibration，再談自動分流。
 
-來源：[r/ClaudeCode Weekly Showcase，2026-09-18](https://www.reddit.com/r/ClaudeCode/comments/1wg0ux6/weekly_showcase_thread_what_are_you_building_with/)；[Claudescope repo](https://github.com/vladar107/claudescope)；可信度：社群第一手經驗／開源 repo。
+來源：[r/LLMDevs 實驗分享，2026-09-20](https://www.reddit.com/r/LLMDevs/comments/1wkjufw/tried_using_jev_for_prompt_observability_and_llm/)；[Jev + Claude Code 實作拆解](https://www.ai.joaoqueiros.com/blog/jev-claude-code-agentic-coding-review-loop-ray-amjad)；可信度：社群第一手實驗與獨立拆解。
 
 ## 2. 社群新工具與新玩法
 
-### BrowserSkill：讓 Agent 使用你已登入的瀏覽器，但權限風險也一起帶進來
+### typesafe-mcp：讓 Claude Code／Codex 直接呼叫 Jev 做 Choice、Score、Noul
 
-- **新在哪裡：** [Tencent/BrowserSkill](https://github.com/Tencent/BrowserSkill) 以 CLI、瀏覽器 extension 和 skill，讓 Claude Code、Codex、Cursor、Hermes 等 Agent 操作現有的登入瀏覽器，不必複製 session 或重新登入。9/17 的 AI GitHub 趨勢整理把它列為當日上升最快的瀏覽器 Agent 工具之一；這是活躍度訊號，不是品質保證。
-- **可以怎麼開始：** 先只開一個測試 profile 和低風險網站，限制 Agent 只能讀取頁面與產生草稿；確認每個 click、download、submit 都有人工確認，再考慮寫入或外部送出。
-- **編輯心得：** 它補上「headless browser」和「接管真人桌面」之間的空隙，適合需要既有登入狀態、又想保留人工瀏覽控制的流程。
-- **限制：** 已登入瀏覽器等於把 cookie、個人資料與可操作帳號暴露給 Agent 的工具鏈；不要把銀行、信箱、學生資料或生產後台直接接上。extension、Agent、網站三者的權限邊界要分開驗證。
+- **新在哪裡：** 這個 Go MCP server 把 Jev 接成單一 `evaluate` 工具，Agent 可以送入 state 和 typed questions，再依機率做 routing、context 篩選或風險 gate；9/19 的獨立實測使用 v0.4.1、11 個測試通過。
+- **可以怎麼開始：** 先在 disposable repo 試 `TYPESAFE_API_KEY=your-key evaluate setup mcp`，只對 review queue 做 advisory 結果；先檢查現有是否已有名為 `jev` 的 MCP，再讓它註冊。
+- **編輯心得：** 它比「請 LLM 回 JSON 再自己猜格式」更容易接進程式流程，且輸入驗證、Choice／Score／Noul 的問題界線寫得清楚。
+- **限制：** 安裝會把 key 寫入 client config，且可能移除既有名為 `jev` 的 server；OpenRouter 的 Decisions endpoint 仍是 `/api/alpha/` 路徑。不要把 production secret 或真實敏感資料直接拿來試。
 
-### OpenCodeReview：用 deterministic pipeline 限制 LLM review 的自由度
+來源：[typesafe-mcp 實測與注意事項](https://mrjev.com/projects/itsmostafa-typesafe-mcp/)；[typesafe-mcp GitHub](https://github.com/itsmostafa/typesafe-mcp)；[TypeSafe 官方 Jev 說明](https://typesafe.ai/blog/introducing-system-one-models-and-jev)；可信度：獨立 hands-on review、原始 repo、官方公告。
 
-- **新在哪裡：** Alibaba 將內部使用的 [OpenCodeReview](https://github.com/alibaba/open-code-review) 開源：先由工程邏輯決定檔案選擇、分組、規則匹配與 comment 定位，再讓 LLM 做需要判斷的部分；支援 diff review、整檔 scan、JSON 輸出與 Codex／Claude Code 整合。
-- **可以怎麼開始：** 先對一個小型 PR 執行 `ocr review --format json --output result.json`，把既有 linter、測試和人工 review 保留，觀察 false positive、漏報與 comment 定位，再決定是否接 CI。
-- **可信度與限制：** repo 宣稱在 50 個 repo、200 個 PR、10 種語言的 AACR-Bench 上，以同一模型達到較高 Precision/F1 且約 1/9 token；這是專案方 benchmark，不能視為獨立結論。它也明說 Recall 較低，是偏向少噪音的取捨。
+### Ouroboros 7.2.1：把「能自我修改」和「要留下審查證據」放在同一個 Agent 產品裡
 
-來源：[OpenCodeReview 官方 repo](https://github.com/alibaba/open-code-review)，2026-09-18 查核；[AI GitHub Trending，2026-09-17](https://github.com/Vic563/ai-github-trending)；可信度：專案官方資料／第三方趨勢整理，benchmark 為廠商／專案方結果。
+- **新在哪裡：** 9/19 版修正 optional argument、reflection evidence、錯誤回報與 plan review 的狀態混淆；產品本身主打 durable memory、專家 swarm、獨立 review 與可修改自身程式／prompt／工具。
+- **可以怎麼開始：** 把它當實驗性 orchestrator，先讓它讀取小型 repo、產生 review receipt，再由另一個 context 檢查 diff；不要一開始就給外部帳號、刪除權限或自動部署。
+- **限制：** README 仍揭露 plan-review 可能把早期 critic verdict 顯示成自己的結論；「自我建造」是產品能力描述，不是自主可靠性證明。
+
+來源：[Ouroboros GitHub 與 7.2.1 changelog](https://github.com/razzant/ouroboros)；可信度：開源專案一手資料，仍需自行驗收。
 
 ## 3. 官方新功能與推薦用法
 
-### Anthropic：AI 已參與建造下一代 AI，但還沒有「完全自我改進」
+### Anthropic：把獨立 evaluator 放進 frontier lab 內部
 
-- **官方更新：** Anthropic Institute 9/18 更新〈[When AI builds itself](https://www.anthropic.com/institute/recursive-self-improvement)〉，表示 Claude 已能在明確目標下寫程式、跑實驗、平行委派 Agent；截至 2026 年 5 月，Anthropic 合併進 codebase 的程式碼超過 80% 由 Claude 撰寫，並稱工程師平均每日合併的程式量約為 2024 年的 8 倍。
-- **推薦用法：** 把這篇當成「如何量測 AI 參與研發」的範本：分開記錄模型執行任務、提出實驗、選擇研究方向和人類審查，不要只用 lines of code 當生產力指標。Anthropic 自己也承認程式行數是有缺陷的數量指標。
-- **重要限制：** Anthropic 明確寫出目前還沒有 recursive self-improvement；人類仍掌握問題選擇和方向判斷。內部成功率、8 倍程式量、benchmark 進展都是公司資料或引用資料，不是獨立驗證的整體產業預測。
+- **官方更新：** Anthropic 於 2026-09-18 宣布與 Accenture 的 Faculty 合作，進行模型 evaluation、red-teaming、alignment assessment 和 safeguard testing；雙方預計未來五年各投入至少 10 億美元建立能力。
+- **推薦用法：** 小團隊不必複製金額，但可以複製結構：在 release gate 旁放一個與開發者不同責任線的 evaluator，讓它看得到足夠的 trace、工具權限與失敗案例，再把發現回填測試集。
+- **重要限制：** Anthropic 自己承認 embedded evaluation 還沒有共同標準、存取範圍和資金制度；這是合作與方向公告，不是已證明的安全成效。
 
-### OpenAI Astra for Law：專業領域模型的重點在資料、工具與治理組合
+來源：[Anthropic：Partnering with Accenture on embedded evaluation，2026-09-18](https://www.anthropic.com/news/accenture-embedded-evaluation)；可信度：官方公告。
 
-- **官方新功能：** [Astra for Law](https://openai.com/index/astra-for-law/)（2026-09-17）把 GPT‑6 Astra、法律搜尋索引、法律分析指令和企業控制組合成給律所與 legal-tech 建置的 foundation；初期透過 Trusted Access 提供給選定律所與 Codex／ChatGPT 使用者，API 即將提供。
-- **推薦用法：** 對任何垂直領域先畫出「模型、搜尋索引、專業工具、客戶資料隔離、人工覆核」五層，再做小型固定題集驗收；不要只比較裸模型聊天品質。OpenAI 自己的法律 benchmark 是 200 題私有 validation set，應標成供應商結果。
-- **重要限制：** 目前是選定客戶的早期存取；法律搜尋結果仍需律師檢查權威性、時效與適用範圍，不能把 54.0% correctness 或相對提升直接當作一般法律工作的保證。
+### GitHub Copilot：Sentry Canvas 與 VS Code Dev Containers 讓 Agent 更靠近可驗證的修復流程
 
-### GitHub Copilot：review 與 Agent 使用量開始變成可追蹤的治理資料
+- **官方更新：** 9/18 weekly release 加入 Copilot app 的 Sentry canvas：可從 crash report、stack trace 和相關 context 進入調查、驗證修復並準備 PR；VS Code Agents 也逐步支援在 local Dev Container 裡使用專案工具與 dependencies。
+- **推薦用法：** 先讓 Agent 只處理可重現的 Sentry issue，在 container 內跑既定測試，再人工看 diff 和 PR 描述；把「已重現、測試通過、未覆蓋的風險」分開寫進 PR。
+- **限制：** Dev Container 需要 Docker 與支援的設定且仍是逐步 rollout；Sentry context 能幫助定位，不代表修復一定正確。
 
-- **新功能：** 9/18 的 [Copilot code review 更新](https://github.blog/changelog/2026-09-18-copilot-code-review-an-improved-review-experience/) 讓 overview 顯示 open、已解決、後續才發現的問題，並在批次套用建議時產生 commit message；9/17 的 [CLI metrics API](https://github.blog/changelog/2026-09-17-agentic-cli-customizations-now-in-the-usage-metrics-api/) 則加入 skills、custom agents、MCP、slash commands 和 plugins 的使用統計。
-- **推薦用法：** 把「哪個 skill／MCP 被用到」和 PR 通過率、測試結果、人工退回率一起看；MCP 的 interaction count 只代表連線／重連嘗試，不代表工具呼叫成功，更不代表產生價值。
-- **限制：** 企業需開啟 usage metrics policy 並具備相應權限；客製名稱會被歸到 `other`，所以數據適合看採用趨勢，不適合精確評估每個團隊的實際產出。
+來源：[GitHub Copilot weekly releases，2026-09-18](https://github.blog/changelog/2026-09-18-github-copilot-weekly-releases-september-14)；可信度：官方 changelog。
+
+### OpenAI：澳洲青少年安全 Blueprint 把產品護欄拆成六個支柱
+
+- **官方更新：** 2026-09-18 的 Blueprint 涵蓋 AI literacy、年齡適配護欄、隱私保護的年齡 assurance、危機支援連接與家長控制等六個方向；OpenAI 也表示 8 月已在澳洲逐步推出 13–17 歲的 ChatGPT for Teens 預設體驗。
+- **推薦用法：** 做教育或親子 AI 時，把年齡、危機升級、隱私、家長可見度和模型回應限制分成獨立驗收項，不要只寫一條「未成年模式」的 prompt。
+- **限制：** 這是 OpenAI 的政策與產品方向，不是澳洲法規合規認證，也沒有替所有地區或所有風險提供保證。
+
+來源：[OpenAI：Australian Youth Safety Blueprint，2026-09-18](https://openai.com/index/australian-youth-safety-blueprint/)；可信度：官方公司公告。
 
 ## 4. 使用心得與避坑
 
-### Instruction file 是上下文，不是安全邊界
+### Jev 的 confidence 不是安全核准章
 
-- Claude Code 官方文件現在支援在沒有 `CLAUDE.md` 時讀取 repo 的 `AGENTS.md`；這能讓不同 coding agent 共用專案規則，但官方同時明說：這些檔案是 context，不是 enforced configuration。要「無論模型怎麼判斷都不能做」的事情，應使用 PreToolUse hook 或更外層的權限控制。
-- **立即可試：** 把 `AGENTS.md`／`CLAUDE.md` 限制在架構、測試與工作流程；把秘密、外部傳送、刪除、部署和資料庫寫入改成工具層 deny-by-default，並要求每次高風險動作留下 diff、參數、核准者與結果。規則文字寫得再清楚，也不能取代 hook、sandbox 或人工批准。
-- **來源與限制：** [Claude Code memory／AGENTS.md 官方文件](https://code.claude.com/docs/en/memory)，2026-09-18 查核；這是產品文件的行為說明，不是對所有 Agent 的安全保證。
+TypeSafe 把 Jev 定位成輸入 state、輸出 typed probabilistic decision 的 System One model；它適合 classify、route、score、gate，但高機率仍可能錯。最安全的第一步是：先做 advisory-only queue，保留原始 evidence、問題與 rubric，拿人工標籤／測試結果做 held-out 評估，再決定 threshold；不要讓它單獨批准付款、刪除、部署、登入或安全修復。
+
+獨立拆解也指出，影片中的 150 則 comment／9.3 秒／約 1 美分、10 倍閱讀量和大規模 browser testing，多數是創作者展示、估算或未完成的延伸，不是完整 benchmark。速度快只代表適合前置篩選，不代表 coverage 或 correctness。
+
+來源：[TypeSafe 官方 Jev 公告](https://typesafe.ai/blog/introducing-system-one-models-and-jev)；[獨立實作拆解與限制](https://www.ai.joaoqueiros.com/blog/jev-claude-code-agentic-coding-review-loop-ray-amjad)；可信度：官方資料加獨立校正。
+
+### GitHub Copilot 模型汰換日是 2026-10-19
+
+GitHub 已公告下列模型會在 10/19 於 Chat、inline edits、ask／agent mode 和 code completions 全面退場：Gemini 3.7 Flash、GPT-5.5、GPT-5.4、GPT-5.4 mini、GPT-5 mini、Grok 4.5；建議替代為 Gemini 3.8 Flash、GPT-5.6 Sol、GPT-5.6 Luna、Grok 4.6。現在就檢查 workflow、模型 policy、API／extension 的硬編碼 model ID；企業若關掉 global default，替代模型不會自動可用。
+
+來源：[GitHub：Upcoming deprecation of selected Copilot models，2026-09-18](https://github.blog/changelog/2026-09-18-upcoming-deprecation-of-selected-github-copilot-models-in-mid-october)；可信度：官方 changelog。
 
 ## YouTube
 
-**今日無推薦。** 查核 Tech With Tim 9/18《Top 7 AI Agent Tools That Actually Work》（約 3 萬觀看）與 9/15《How to Build Your Own AI Agent Team From Scratch》（約 3.3 萬觀看）；兩部都符合觀看門檻，但目前頁面沒有可可靠匯出的字幕／逐字稿，因此不猜測內容、不納入。9/17 已報導的《Cursor Costs $20. This AI Agent Costs $1,000,000.》也不重複收錄。
+### Ray Amjad：Jev + Claude Code = The Cheapest Agentic Coding Loop Yet
+
+- **頻道／日期／連結：** Ray Amjad；2026-09-18；[YouTube 影片](https://www.youtube.com/watch?v=ScvXFi4MUSc)。2026-09-20 查核約 6.8 萬觀看、27:27；已匯出並讀完英文字幕。
+- **摘要：** 影片示範把 TypeSafe Jev 當成快速 System 1 判斷層，把 Claude Code、Codex 或 GPT‑5.6 Astra 這類較慢的 System 2 Agent 留給規劃、修復和反思；實作涵蓋技能選擇、瀏覽器流程、comment screening、code smell 與 code review。
+- **重點：**
+  1. Jev 不產生長文，而是對 Choice、Score、Noul 等窄問題回傳選項與機率。
+  2. 把 skill selection、diff 風險和 browser observation 先篩選，再交給主 Agent。
+  3. Minecraft demo 展示高層 Astra 規劃、Jev 快速決策、Codex 定期 review 的分工。
+  4. 作者展示 150 則 comment 約 9.3 秒、約 1 美分；這是作者當次觀察，不是獨立 benchmark。
+  5. 影片提出全天候 browser adversarial testing 和 qualitative linter，但多數是方向或估算，不能當成已完成的 production proof。
+- **步驟／工作流程：** 先用大模型定義 rubric → Jev 對每個 diff／狀態做小問題篩選 → 保存機率與 evidence → 讓 Claude Code／Codex 只調查高風險或不確定項 → 跑測試與人工 review → 用結果回調 threshold。
+- **工具／模型：** TypeSafe Jev、Claude Code、Codex、GPT‑5.6 Astra、Claude Fable 5.1／Opus 5、Hermes skills、瀏覽器 controller、Minecraft demo。
+- **作者心得：** 作者認為 System 1 快速決策層與 System 2 深度 Agent 的組合，可能讓 code review、skill routing 和 feedback loop 更便宜、更密集。
+- **優點：** 概念清楚、實測畫面多、把「便宜前置判斷」接到 coding workflow 的方法具體，且字幕提供可靠時間點。
+- **缺點／限制：** 影片有 Agentic Coding School 課程、newsletter 與 AgentStack 服務導流；trade bot 只是展示，不能當投資建議。Jev 的準確率、成本和速度會依模型版本、provider、問題設計與資料改變。
+- **適合對象：** 已在用 Claude Code／Codex、想降低 review queue 成本，或正在設計 routing、MCP、browser testing 的工程師。
+- **是否值得看：** 值得；尤其看 12:32 skill selection、14:53 browser use、17:56 comment screening、20:27 code smells、22:44 code review，但把估算與已驗證結果分開。
+- **可立即嘗試：** 在小型測試 repo 做一個 advisory check：只問「這個 diff 是否完成需求／是否削弱測試／是否碰到安全面」，把 Jev 結果和既有 test、人工標籤對照 20–50 次，再決定是否接入 CI。
 
 ## 今日一句話
 
-Agent 的下一個競爭點不是「能不能自己做事」，而是能不能把它做過什麼、花了多少、哪些判斷仍由人負責，清楚留下來。
+讓 Agent 更可靠的下一步，不是再給它一個更大的 prompt，而是把快速分流、獨立評估、測試證據和人工核准接成可回溯的閉環。
 
 ## 來源總覽
 
-- Anthropic Institute：When AI builds itself，2026-09-18。
+- TypeSafe AI：Jev 官方公告與產品定位，2026-09-15。
 - Anthropic：Accenture embedded evaluation，2026-09-18。
-- OpenAI：Astra for Law，2026-09-17。
-- GitHub Changelog：Copilot code review、CLI customizations，2026-09-17～09-18。
-- Claude Code Docs：AGENTS.md／memory，2026-09-18 查核。
-- Alibaba OpenCodeReview、Tencent BrowserSkill：官方 repo。
-- Reddit r/ClaudeCode：Claudescope 社群實戰，2026-09-18。
-- YouTube：Tech With Tim 候選影片頁與字幕查核結果。
+- GitHub Changelog：Copilot weekly releases、review 改版與模型汰換，2026-09-18。
+- OpenAI：Australian Youth Safety Blueprint，2026-09-18。
+- GitHub：Ouroboros 7.2.1、typesafe-mcp。
+- Reddit：r/LLMDevs Jev routing／prompt observability 實驗，2026-09-20。
+- YouTube：Ray Amjad 影片頁與英文字幕，2026-09-18，2026-09-20 查核。

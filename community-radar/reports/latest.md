@@ -1,8 +1,8 @@
-# AI Community Radar - 2026-09-18
+# AI Community Radar - 2026-09-21
 
-> Generated: 2026-09-18T01:09:32.482Z
+> Generated: 2026-09-21T00:57:24.245Z
 > Timezone: Asia/Taipei
-> Active cutoff: updated since 2026-09-16; archived GitHub repos excluded; max stale age 2 days.
+> Active cutoff: updated since 2026-09-19; archived GitHub repos excluded; max stale age 2 days.
 
 ## 今日摘要
 
@@ -17,9 +17,9 @@
 
 | # | Repo | Stars | Forks | Language | Updated |
 | --- | --- | ---: | ---: | --- | --- |
-| 1 | [affaan-m/ECC](https://github.com/affaan-m/ECC) | 261,176 | 39,097 | JavaScript | 2026-09-17T18:04:07Z |
-| 2 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 246,559 | 51,650 | Python | 2026-09-18T00:55:42Z |
-| 3 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 200,161 | 76,709 | C++ | 2026-09-18T01:08:31Z |
+| 1 | [affaan-m/ECC](https://github.com/affaan-m/ECC) | 263,740 | 39,456 | JavaScript | 2026-09-20T19:37:57Z |
+| 2 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 247,477 | 52,058 | Python | 2026-09-21T00:43:35Z |
+| 3 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 200,216 | 77,026 | C++ | 2026-09-21T00:43:53Z |
 
 ### 1. [affaan-m/ECC](https://github.com/affaan-m/ECC)
 
@@ -77,7 +77,7 @@ An Open Source Machine Learning Framework for Everyone.
 | 指標 | 值 |
 | --- | --- |
 | Registry sample | 800 servers |
-| Active baseline since | 2026-09-16 |
+| Active baseline since | 2026-09-19 |
 | GitHub stale cutoff | 2 days |
 
 ### 可能還沒上官方 MCP Registry 的候選
@@ -132,30 +132,30 @@ An Open Source Machine Learning Framework for Everyone.
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/traceloop/openllmetry-js](https://github.com/traceloop/openllmetry-js) |
 
-#### 6. [higherorderfunctor/nix-agentic-tools](https://github.com/higherorderfunctor/nix-agentic-tools)
+#### 6. [no42-org/blittermib](https://github.com/no42-org/blittermib)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Nix flake monorepo: stacked workflow skills, MCP server packages, and home-manager modules for AI coding CLIs |
+| 說明 | Pixelperfect MIB browser - no strings attached |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 7. [kyisaiah47/compound-mcp](https://github.com/kyisaiah47/compound-mcp)
+#### 7. [punkpeye/awesome-mcp-servers](https://github.com/punkpeye/awesome-mcp-servers)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | MCP server from Compound Labs: eleven read-only lookups over live public data, including AI model pricing and routing, dependency maintenance and service pricing |
+| 說明 | A collection of MCP servers. |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 8. [eabz/tirith](https://github.com/eabz/tirith)
+#### 8. [icloudbb/buildmax](https://github.com/icloudbb/buildmax)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | The tower of guard for parallel coding agents. Keeps parallel coding agents from stepping on each other. Claims, contracts and change notices over MCP. |
+| 說明 | Build Everything with AI |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 

@@ -1,8 +1,8 @@
-# AI Community Radar - 2026-09-21
+# AI Community Radar - 2026-09-22
 
-> Generated: 2026-09-21T00:57:24.245Z
+> Generated: 2026-09-22T01:31:59.437Z
 > Timezone: Asia/Taipei
-> Active cutoff: updated since 2026-09-19; archived GitHub repos excluded; max stale age 2 days.
+> Active cutoff: updated since 2026-09-20; archived GitHub repos excluded; max stale age 2 days.
 
 ## 今日摘要
 
@@ -17,9 +17,9 @@
 
 | # | Repo | Stars | Forks | Language | Updated |
 | --- | --- | ---: | ---: | --- | --- |
-| 1 | [affaan-m/ECC](https://github.com/affaan-m/ECC) | 263,740 | 39,456 | JavaScript | 2026-09-20T19:37:57Z |
-| 2 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 247,477 | 52,058 | Python | 2026-09-21T00:43:35Z |
-| 3 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 200,216 | 77,026 | C++ | 2026-09-21T00:43:53Z |
+| 1 | [affaan-m/ECC](https://github.com/affaan-m/ECC) | 264,768 | 39,566 | JavaScript | 2026-09-21T19:00:51Z |
+| 2 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 247,789 | 52,193 | Python | 2026-09-22T01:27:00Z |
+| 3 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 200,231 | 77,040 | C++ | 2026-09-22T01:23:13Z |
 
 ### 1. [affaan-m/ECC](https://github.com/affaan-m/ECC)
 
@@ -77,22 +77,12 @@ An Open Source Machine Learning Framework for Everyone.
 | 指標 | 值 |
 | --- | --- |
 | Registry sample | 800 servers |
-| Active baseline since | 2026-09-19 |
+| Active baseline since | 2026-09-20 |
 | GitHub stale cutoff | 2 days |
 
 ### 可能還沒上官方 MCP Registry 的候選
 
-#### 1. [@launchdarkly/mcp-server](https://www.npmjs.com/package/@launchdarkly/mcp-server)
-
-| 欄位 | 內容 |
-| --- | --- |
-| 類型 | npm-package |
-| 說明 | The official Model Context Protocol (MCP) server for LaunchDarkly. |
-| 為什麼值得看 | npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。 |
-| 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
-| Repo | [https://github.com/launchdarkly/mcp-server](https://github.com/launchdarkly/mcp-server) |
-
-#### 2. [@supabase/mcp-utils](https://www.npmjs.com/package/@supabase/mcp-utils)
+#### 1. [@supabase/mcp-utils](https://www.npmjs.com/package/@supabase/mcp-utils)
 
 | 欄位 | 內容 |
 | --- | --- |
@@ -101,6 +91,16 @@ An Open Source Machine Learning Framework for Everyone.
 | 為什麼值得看 | npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。 |
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/supabase/mcp](https://github.com/supabase/mcp) |
+
+#### 2. [@launchdarkly/mcp-server](https://www.npmjs.com/package/@launchdarkly/mcp-server)
+
+| 欄位 | 內容 |
+| --- | --- |
+| 類型 | npm-package |
+| 說明 | The official Model Context Protocol (MCP) server for LaunchDarkly. |
+| 為什麼值得看 | npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。 |
+| 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
+| Repo | [https://github.com/launchdarkly/mcp-server](https://github.com/launchdarkly/mcp-server) |
 
 #### 3. [@payloadcms/plugin-mcp](https://www.npmjs.com/package/@payloadcms/plugin-mcp)
 
@@ -132,30 +132,30 @@ An Open Source Machine Learning Framework for Everyone.
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/traceloop/openllmetry-js](https://github.com/traceloop/openllmetry-js) |
 
-#### 6. [no42-org/blittermib](https://github.com/no42-org/blittermib)
+#### 6. [AccelerationConsortium/sdl-lab-hostops](https://github.com/AccelerationConsortium/sdl-lab-hostops)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Pixelperfect MIB browser - no strings attached |
+| 說明 | Whitelisted host-operations MCP server for SDL2 lab machines (service status/logs/restart, serial enumeration, local STATUS_SPEC probes). No hardware control by design. |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 7. [punkpeye/awesome-mcp-servers](https://github.com/punkpeye/awesome-mcp-servers)
+#### 7. [Unconventional-paleness785/PDF-Context-Extractor](https://github.com/Unconventional-paleness785/PDF-Context-Extractor)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | A collection of MCP servers. |
+| 說明 | Extract specific pages from PDF documents into clean text for AI prompts or notes with this local web tool. |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 8. [icloudbb/buildmax](https://github.com/icloudbb/buildmax)
+#### 8. [ficaviolaodorata520/met-museum-mcp-server](https://github.com/ficaviolaodorata520/met-museum-mcp-server)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Build Everything with AI |
+| 說明 | Search the Metropolitan Museum of Art collection and retrieve artwork records and open-access images using an MCP server via STDIO or HTTP. |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 

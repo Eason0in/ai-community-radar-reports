@@ -1,8 +1,8 @@
-# AI Community Radar - 2026-09-22
+# AI Community Radar - 2026-09-23
 
-> Generated: 2026-09-22T01:31:59.437Z
+> Generated: 2026-09-23T01:21:47.868Z
 > Timezone: Asia/Taipei
-> Active cutoff: updated since 2026-09-20; archived GitHub repos excluded; max stale age 2 days.
+> Active cutoff: updated since 2026-09-21; archived GitHub repos excluded; max stale age 2 days.
 
 ## 今日摘要
 
@@ -17,9 +17,9 @@
 
 | # | Repo | Stars | Forks | Language | Updated |
 | --- | --- | ---: | ---: | --- | --- |
-| 1 | [affaan-m/ECC](https://github.com/affaan-m/ECC) | 264,768 | 39,566 | JavaScript | 2026-09-21T19:00:51Z |
-| 2 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 247,789 | 52,193 | Python | 2026-09-22T01:27:00Z |
-| 3 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 200,231 | 77,040 | C++ | 2026-09-22T01:23:13Z |
+| 1 | [affaan-m/ECC](https://github.com/affaan-m/ECC) | 265,464 | 39,663 | JavaScript | 2026-09-22T23:09:59Z |
+| 2 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 248,120 | 52,353 | Python | 2026-09-23T01:12:43Z |
+| 3 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 200,260 | 77,045 | C++ | 2026-09-23T01:15:14Z |
 
 ### 1. [affaan-m/ECC](https://github.com/affaan-m/ECC)
 
@@ -77,7 +77,7 @@ An Open Source Machine Learning Framework for Everyone.
 | 指標 | 值 |
 | --- | --- |
 | Registry sample | 800 servers |
-| Active baseline since | 2026-09-20 |
+| Active baseline since | 2026-09-21 |
 | GitHub stale cutoff | 2 days |
 
 ### 可能還沒上官方 MCP Registry 的候選
@@ -102,7 +102,17 @@ An Open Source Machine Learning Framework for Everyone.
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/launchdarkly/mcp-server](https://github.com/launchdarkly/mcp-server) |
 
-#### 3. [@payloadcms/plugin-mcp](https://www.npmjs.com/package/@payloadcms/plugin-mcp)
+#### 3. [@utcp/mcp](https://www.npmjs.com/package/@utcp/mcp)
+
+| 欄位 | 內容 |
+| --- | --- |
+| 類型 | npm-package |
+| 說明 | Model Context Protocol integration for UTCP |
+| 為什麼值得看 | npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。 |
+| 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
+| Repo | [https://github.com/universal-tool-calling-protocol/typescript-utcp](https://github.com/universal-tool-calling-protocol/typescript-utcp) |
+
+#### 4. [@payloadcms/plugin-mcp](https://www.npmjs.com/package/@payloadcms/plugin-mcp)
 
 | 欄位 | 內容 |
 | --- | --- |
@@ -112,50 +122,40 @@ An Open Source Machine Learning Framework for Everyone.
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/payloadcms/payload](https://github.com/payloadcms/payload) |
 
-#### 4. [@kubb/mcp](https://www.npmjs.com/package/@kubb/mcp)
+#### 5. [@stripe/mcp](https://www.npmjs.com/package/@stripe/mcp)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | npm-package |
-| 說明 | MCP server for Kubb. Exposes code generation as a tool over the Model Context Protocol so AI assistants like Claude, Cursor, and other MCP-compatible clients can generate TypeScript types, clients, and more. |
+| 說明 | A command line tool for setting up Stripe MCP server |
 | 為什麼值得看 | npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。 |
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
-| Repo | [https://github.com/kubb-labs/kubb](https://github.com/kubb-labs/kubb) |
+| Repo | [https://github.com/stripe/ai](https://github.com/stripe/ai) |
 
-#### 5. [@traceloop/instrumentation-mcp](https://www.npmjs.com/package/@traceloop/instrumentation-mcp)
-
-| 欄位 | 內容 |
-| --- | --- |
-| 類型 | npm-package |
-| 說明 | MCP (Model Context Protocol) Instrumentation |
-| 為什麼值得看 | npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。 |
-| 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
-| Repo | [https://github.com/traceloop/openllmetry-js](https://github.com/traceloop/openllmetry-js) |
-
-#### 6. [AccelerationConsortium/sdl-lab-hostops](https://github.com/AccelerationConsortium/sdl-lab-hostops)
+#### 6. [Alerandre123/trexo-pdf-signer](https://github.com/Alerandre123/trexo-pdf-signer)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Whitelisted host-operations MCP server for SDL2 lab machines (service status/logs/restart, serial enumeration, local STATUS_SPEC probes). No hardware control by design. |
+| 說明 | 📄 Simplify secure and compliant digital signatures for PDFs with Trexo PDF Signer, an open-source solution tailored for enterprise needs. |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 7. [Unconventional-paleness785/PDF-Context-Extractor](https://github.com/Unconventional-paleness785/PDF-Context-Extractor)
+#### 7. [Wackodacko/agent-skills-mcp](https://github.com/Wackodacko/agent-skills-mcp)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Extract specific pages from PDF documents into clean text for AI prompts or notes with this local web tool. |
+| 說明 | 🛠️ Implement skills for AI agents using a Model Context Protocol server that allows easy definition and invocation of specialized tasks and resources. |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 8. [ficaviolaodorata520/met-museum-mcp-server](https://github.com/ficaviolaodorata520/met-museum-mcp-server)
+#### 8. [api-evangelist/telemetron-ai](https://github.com/api-evangelist/telemetron-ai)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Search the Metropolitan Museum of Art collection and retrieve artwork records and open-access images using an MCP server via STDIO or HTTP. |
+| 說明 | Telemetron — independent third-party profile of a public API surface, by API Evangelist. Telemetron is an AI-powered customer support platform for hardware companies, backed by Y Combinator. It connects to IoT devices in real time, correlates device telemetry with customer records, diagnoses issues with AI, and resolves support tickets automaticall |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 

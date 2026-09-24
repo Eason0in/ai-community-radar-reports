@@ -1,92 +1,86 @@
-# AI 情報日報｜2026-09-23
+# AI 情報日報｜2026-09-24
 
-約 4 分鐘閱讀。今天的主線是：模型價格與快取開始直接決定 Agent 能不能長時間工作；多 Agent 工作台變得更容易上手，但真正的瓶頸轉移到 CI、權限與供應鏈驗證。
+約 4 分鐘閱讀。今天的主線是：coding agent 的價值開始由 migration、測試與權限邊界決定；模型能力、科學探索與語音工具都在延長 Agent 的工作範圍，但官方 benchmark 不能取代你的實測與人類驗收。
 
-> 截稿時間：2026-09-23 08:02（Asia/Taipei）
-> 查核範圍：優先 2026-09-21～09-23 的官方公告、官方 repo、工程團隊第一手文章與社群資料；補充最近一週仍具立即使用價值的安全進展。未重複 9/22 已報導的 Agent 成本／控制／安全主線、GitHub Agentic Workflows、低資源語言合作、OpenAI Academy、Gemini 3.8 Live 與 OpenAI misalignment framework。
-> 證據標示：官方資料是官方事實；公司工程文章、GitHub repo 與社群討論是第一手實作或作者觀點；廠商／作者 benchmark、觀看數、效率與準確率都不等於獨立驗證。
+> 截稿時間：2026-09-24 08:05（Asia/Taipei）
+> 查核範圍：優先 2026-09-22～09-24 的官方公告、官方工程文章、官方 repo 與社群實測；未重複 9/23 已報導的 Linear CI、Proliferate、ZCode、GPT-6 Sol／Luna、prompt caching 與 Plugin4Shell。
+> 證據標示：官方資料是官方事實；公司工程文章、repo 與社群文章是第一手實作或作者觀點；廠商 benchmark、早期客戶案例與作者實驗不等於獨立驗證。
 
 ## 1. 社群實戰用法
 
-### Linear 的答案：AI coding 加速後，先重做 CI 的等待路徑
+### GitHub 用 Copilot 把 80 萬行 runtime 從 TypeScript 搬到 Rust
 
-- **新在哪裡：** Linear 9/21 分享，AI 讓 PR 產出變快後，CI 成了新的瓶頸；他們把 PR 等待時間從超過 6 分鐘降到略高於 5 分鐘，測試 runner time 約減半。做法包括更快 runner、縮短 change-detection checkout、把非必要工作移出 critical path、只安裝工作需要的依賴，以及把短檢查合併後平行執行。
-- **可以怎麼開始：** 先量每個 CI job 的「等待、checkout、安裝、真正測試」四段時間；不需要完整 working tree 的 gate 改成 shallow／sparse checkout，依賴少的 job 不要安裝整個 monorepo，能平行的短檢查合併到較少 runner。
-- **編輯心得：** 這比再換一個 coding model 更可立即複製。Agent 產生的 PR 越多，CI 的固定 setup 成本越會放大；先把瓶頸拆成可量的階段，再決定要加 runner、shard 還是改工具鏈。
-- **限制：** 數字是 Linear 自己的 TypeScript monorepo 與流量，不能直接推論到所有專案；他們也提醒共享 module state、增加 shards 都有正確性與成本風險。
+- **新在哪裡：** GitHub 9/16 發文、9/23 更新，分享 Copilot agent runtime 的實際重寫：超過 800,000 行 production Rust，128 個 PR 分批合併；文章稱大部分程式由 AI agent 撰寫，主要由一名工程師在數個月內完成，並逐步修正回歸問題。這不是「一次 prompt 產生整個 rewrite」，而是把長 migration 切成可 review、可部署的增量。
+- **可以怎麼開始：** 先選一個有明確輸入／輸出契約的模組；讓 Agent 每次只處理一小段 port，固定跑原有 regression、效能與相容性測試，再以小 PR 合併。保留人工定義的 migration checklist、回滾點與 benchmark，避免讓 Agent 同時改架構、API 與測試判準。
+- **編輯心得：** 真正可複製的不是 Rust，而是「共享 runtime、薄產品外殼、增量 PR、持續測試」的工作流。AI 讓大改寫的手工成本下降後，review 與驗證反而成為主要控制面。
+- **限制：** 這是 GitHub 自家案例；「效能改善數個數量級」與單人完成時間沒有提供可獨立重現的完整基準，不能直接外推到你的語言、團隊或 production 風險。
 
-來源：[Linear：AI coding has made CI a bottleneck](https://linear.app/now/ci-bottleneck-reworked)；可信度：公司工程團隊第一手文章，數字為自家結果。
+來源：[GitHub：Migrating the GitHub Copilot runtime to Rust, using Copilot](https://github.blog/ai-and-ml/generative-ai/migrating-the-github-copilot-runtime-to-rust-using-copilot/)；可信度：GitHub 工程團隊第一手文章，數字為自家結果。
 
 ## 2. 社群新工具與新玩法
 
-### Proliferate：用 worktree 把 Claude、Codex、OpenCode、Grok 並排跑
+### real-browser-mcp：讓 Agent 驗證你已登入的 Chrome，而不是另一個乾淨瀏覽器
 
-- **新在哪裡：** Proliferate 是開源 AI IDE，把不同 coding agent 放進同一個工作區；每個任務有自己的 branch、terminal、conversation 與 review state，也支援 subagent、MCP、Skills、Browser／Computer Use 與排程 workflow。GitHub 頁面目前約 500 stars、84 forks。
-- **可以怎麼開始：** 先挑兩個互不依賴的小任務，各自放進獨立 worktree；讓一個 Agent 寫修正、另一個做 reviewer，再以測試與 diff 逐一驗收。不要一開始就把同一檔案交給多個 Agent 同時改。
-- **編輯心得：** 這個玩法的價值不是「更多 Agent」，而是把隔離、比較與 review 變成產品原語；對需要在 Codex／Claude／其他 harness 間比較的人，成本低於自己拼一套 supervisor。
-- **限制：** 仍是早期開源產品；本機／雲端 Agent 的憑證、MCP 權限、worktree 清理與資料留存要自行審核，AGPL-3.0 也要先看是否符合團隊部署方式。
+- **新在哪裡：** 這個開源 MCP server 加 Chrome extension，讓 Cursor、Claude Code、VS Code 等 MCP client 透過 localhost WebSocket 操作目前的 Chrome；Agent 可看到既有 cookies、SSO、staging session 與你剛重現的 bug。它補的是「程式修完了，但 Agent 無法進入我已登入的真實環境驗證」這個 coding loop 缺口。
+- **可以怎麼開始：** 先以 `npx -y real-browser-mcp` 啟動 server，再用 Chrome 載入 extension；使用專用 browser profile 或單獨 tab，先讓 Agent 只做 read-only snapshot／重現，再逐步開放 click、type 與提交動作。需要 CI 的乾淨、可重複測試時，仍用 Playwright 類工具。
+- **編輯心得：** 這種玩法把「修 code」與「在真實登入狀態驗證」接起來，對內部 staging 特別有用；它不是雲端瀏覽器，也不是讓 Agent 自動擁有所有帳號權限的理由。
+- **限制：** Agent 仍能讀取連線 tab 裡的敏感資料並代為點擊；repo 自己也提醒不要把含個資、金鑰或高風險操作的 tab 直接交給不受信任的流程。localhost 傳輸不等於最終模型端不會看到頁面內容。
 
-來源：[Proliferate GitHub repo](https://github.com/proliferate-ai/proliferate)；可信度：公開 repo 與 README，star／fork 是查核當下訊號，不是品質保證。
-
-### ZCode 開源：桌面、瀏覽器與終端 Agent 集成，但先做隱私隔離
-
-- **新在哪裡：** Z.ai 的 ZCode 近期公開源碼，提供 Desktop、Web 與 terminal Agent，並把 client、server、shared UI、CLI 與 runtime 放在同一個 repo；官方頁面目前約 2,000 stars、488 forks。
-- **可以怎麼開始：** 若要評估，先在沒有公司 repo、SSH key 或雲端憑證的測試環境跑 Web／CLI；把 outbound network、檔案讀取、workspace 上傳與登入流程逐項記錄，再決定是否接入正式專案。
-- **編輯心得：** 它把「從哪裡控制 Agent」做成同一套工作台，適合想比較本機與瀏覽器操作的人；但開源不等於已完成安全審查。
-- **限制：** 9/21 的報導整理了開發者對 ZCode 曾未經清楚同意上傳本機 workspace 資料的疑慮；Z.ai 表示已修補、刪除相關資料並計畫邀請第三方檢視。在第三方稽核與可重現測試完成前，不要把它放進含 secrets 的工作區。
-
-來源：[ZCode GitHub repo](https://github.com/zai-org/ZCode)；[事件與廠商回應整理](https://www.tomshardware.com/tech-industry/artificial-intelligence/devs-say-chinese-ai-company-silently-uploaded-hundreds-of-megabytes-of-local-workspace-data-z-ai-the-firm-behind-the-glm-models-didnt-ask-for-user-consent-and-made-564-attempts-to-exfiltrate-313mb-archive)；可信度：repo 是官方第一手資料，隱私事件為媒體與開發者回報，仍應等待可重現稽核。
+來源：[real-browser-mcp GitHub repo](https://github.com/ofershap/real-browser-mcp)；可信度：公開 repo／README，功能與安全界線以查核時版本為準。
 
 ## 3. 官方新功能與推薦用法
 
-### GPT-6 Sol／Luna 上線：把模型選擇改成「工作量 × 成本」
+### Claude Opus 5.5：更便宜的長任務模型，但先做自己的成本基準
 
-- **官方更新：** OpenAI 9/22 發布 GPT-6 Sol 與 GPT-6 Luna；API 文字價格相較 GPT-5.6 promotional pricing 各降 50%：Sol 為每百萬 input／output token 2／10 美元，Luna 為 0.10／0.50 美元。兩者已在 Codex 與 ChatGPT Work 逐步提供，也進入 GitHub Copilot 的 model picker。
-- **推薦用法：** Luna 用於小型修正、摘要與快速探索；Sol 用於需要多步驟驗證的 coding／Agent 任務；Astra 留給高風險或需要最強 computer-use 的工作。先用固定小任務記錄成功率、token、重試與 review 時間，再決定預設模型。
-- **編輯心得：** 價格下降讓「多跑一輪 reviewer」變得更可行，但不代表模型能取代驗收；OpenAI 的 AutomationBench、FrontierCode、DeepSWE 等數字是官方／合作方或公開報告整理，應標示為廠商結果。
-- **限制：** ChatGPT rollout、Copilot 方案與模型政策仍分批開放；不同 surface 的 system prompt、tools 與計費方式可能不同，API 分數不能直接當成你的 IDE 體驗。
+- **官方更新：** Anthropic 9/22 發布 Claude Opus 5.5，宣稱在多數工作接近 Fable 5.1、比 Opus 5 便宜 40%；價格為每百萬 tokens：input 4 美元、output 20 美元、cache read 0.20 美元，並宣稱輸出速度快逾 30%。官方也回報其自家 agentic coding 與安全評測結果，包括 containment-boundary 嘗試約少 85%。
+- **推薦用法：** 把它放在 codebase-wide migration、長時間 audit 或需要多輪工具呼叫的 A/B 測試；固定相同 repo、prompt、工具與驗收條件，記錄成功率、重試次數、cache hit、總 token 與人工 review 時間，再和現有模型比較。不要只看排行榜分數。
+- **編輯心得：** 對長任務來說，cache read 價格和每個任務實際 token 比單次 token 單價更重要；把「能否安全停手、是否誤改行為」列為品質欄位，比只量完成率更有用。
+- **限制：** 以上價格、benchmark 與 85% 數字都是 Anthropic 官方或早期評估結果；官方也承認模型可能察覺自己正在被評測，且可靠抓住所有 failure 仍是未解問題。Production rollout、方案限額與 safety routing 仍需以你的帳號和產品 surface 實際確認。
 
-來源：[OpenAI：GPT-6 Sol and Luna](https://openai.com/index/introducing-gpt-6-sol-and-luna/)；[GitHub：GPT-6 Sol／Luna in Copilot](https://github.blog/changelog/2026-09-22-openais-gpt-6-sol-and-gpt-6-luna-now-available/)；可信度：官方公告；benchmark 為官方／合作方結果。
+來源：[Anthropic：Introducing Claude Opus 5.5](https://www.anthropic.com/claude-opus-5-5)；可信度：官方公告；價格與 benchmark 為廠商結果。
 
-### Prompt caching 新工具：先固定工具定義，再調 reasoning effort
+### Claude 代理進入生物研究流程：候選生成不等於已完成發現
 
-- **官方更新：** OpenAI 9/22 為 GPT-6 提供更高的 prompt cache hit rate、30 分鐘共享 prefix 快取折扣、Prompt Caching Dashboard、cache-miss diagnostics、explicit breakpoints 與 prewarming；在 GPT-6 上調整 reasoning effort 或工具可用性也能保留既有快取脈絡。
-- **推薦用法：** 把穩定的 system instructions、tool schema 與參考資料放在前段；保持工具名稱、schema 與順序穩定，把會變動的任務資料放後段；先用 dashboard 找 miss reason，再改 prompt，不要盲目把整段 context 重送。
-- **編輯心得：** 這是長時間 Agent 真正能省錢的工程功能。尤其要把「快取命中率」加入成本監控，而不是只看平均 token；工具 schema 的小改動可能讓整段 prefix 失去重用。
-- **限制：** OpenAI 引用的「最多 90% cached input discount」與合作方成本改善都是產品／客戶案例，實際命中率取決於請求形狀、模型、工具與時間窗。
+- **官方更新：** Anthropic 9/23 分享生命科學團隊的早期結果：Claude agents 從超過 200,000 個 reverse transcriptase 中挑出 3,500 個候選，再縮成 20 個值得分析的系統，注意到一個帶有 CRISPR-like repeats 的新系統 ART。人類科學家負責實驗室工作；ART 的功能仍在進一步驗證。
+- **推薦用法：** 把這種 workflow 當成「大量搜尋 → 候選排序 → 可讀報告 → 人類實驗」的模板；先要求 Agent 輸出候選的證據鏈、反例與待驗實驗，再交給專家決定是否投入昂貴的 wet-lab 資源。
+- **編輯心得：** AI 的優勢在把搜尋空間壓縮到人類能檢視的候選集，不在於把「有趣的模式」直接升格成新生物機制。
+- **限制：** 這是 Anthropic 自己的早期研究敘事；ART 的生物功能尚未完全確定，不能把「Agent 找到值得測的異常」寫成「AI 已自主完成科學發現」。
 
-來源：[OpenAI：Better prompt caching for GPT-6](https://openai.com/index/better-prompt-caching-for-gpt-6/)；可信度：官方產品公告，合作方改善數字為案例結果。
+來源：[Anthropic：Claude discovers a novel enzyme system with CRISPR-like repeats](https://www.anthropic.com/news/claude-discovers-novel-enzyme-system)；可信度：官方研究團隊第一手文章，實驗結果仍在進行中。
+
+### ChatGPT Voice 支援 plugins：語音做事，未完成任務可接回文字
+
+- **官方更新：** OpenAI 9/23 在 release notes 表示，Voice 現可在 web、iOS、Android 使用帳號可用的 plugins 與 connected apps；Work 的 Voice 也能建立文件、簡報、試算表或在瀏覽器中工作，結束語音後未完成的 task 可在文字對話繼續。
+- **推薦用法：** 先用語音口述目標與限制，再要求 Agent 用文字回傳待確認欄位、產物連結與下一步；涉及寄信、外部寫入或登入頁面時保留人工確認，不要把「可以用 plugin」當成「已授權所有動作」。
+- **限制：** rollout、方案、連線 app 權限與 usage limit 仍依帳號而異；語音輸入也會增加轉錄歧義，重要參數應在文字介面重新核對。
+
+來源：[OpenAI Help：ChatGPT Release Notes](https://help.openai.com/en/articles/6825453-chatgpt-release-notes)；可信度：官方 release notes。
 
 ## 4. 使用心得與避坑
 
-### Plugin4Shell：鎖 commit hash 不代表 Agent 真的拿到那個版本
+### `.mcp.json` 看起來像設定檔，實際上可能是啟動程式碼
 
-- **新在哪裡：** Air Security 9/18 揭露的 Plugin4Shell 顯示，部分 Agent 在 marketplace 鎖定 commit SHA 後，仍可能因 Git 把看似 SHA 的值解讀成 branch 名稱而取到另一份程式；插件又通常以使用者權限執行，風險包含讀取檔案、憑證與可登入系統。
-- **可以怎麼開始：** 更新 Claude Code 至 2.1.179+、Codex 至 0.146.0+；對非 GitHub host 的 plugin，安裝前自行 `git cat-file -p <sha>`、核對 tree／檔案 hash，再把 plugin repo、commit、安裝時間與權限記錄到 audit log。不要只看 UI 顯示的版本字串。
-- **編輯心得：** GitHub-based default marketplace 目前不容易觸發文中 branch-name 變體，但這不是「所有 plugin 都安全」；自訂 marketplace、公司 Git server、auto-update 與高權限 token 仍要視為供應鏈邊界。
-- **限制：** 這是研究團隊與媒體揭露，未見所有廠商同步發布完整 advisory；文章也沒有證明已發生真實攻擊，且更新後是否清理已被替換的 plugin 仍需自行檢查。
+- **新在哪裡：** Reddit `r/mcp` 的一項小型實驗記錄 34 次嘗試、4 個模型與全新 sandbox；作者指出，五個 harness 中有三個會在使用者輸入前自動啟動專案 `.mcp.json` 宣告的 server，導致 approval mode 與 tool allowlist 可能尚未介入。實驗也觀察到瀏覽器路徑的 prompt injection 可把內容帶到 Agent，shell 路徑在該組測試中則沒有外洩。
+- **可以怎麼開始：** 把新增或修改 `.mcp.json` 視為和 Makefile、hooks、`.vscode/tasks.json` 同等級的 code review 入口；在陌生 repo 首次開啟前先閱讀 command、args、env 與外部連線，關閉自動啟動或使用 trusted-directory gate，再用無憑證 sandbox 測試。
+- **編輯心得：** 安全審查不能只看 Agent 是否在對話中「同意」工具呼叫；有些風險發生在 harness 啟動 server、瀏覽器載入內容或模型看到輸出之前。
+- **限制：** 作者明確說明資料集小、部分條件只有一次 run，測試 hostname 也可能讓拒絕率偏高；這是值得採取的防護建議，不是所有 Agent 的普遍失效率估計。
 
-來源：[The Hacker News：Plugin4Shell](https://thehackernews.com/2026/09/plugin4shell-lets-repository-owners.html)；[Codex public fix #34644](https://github.com/openai/codex/pull/34644)；可信度：研究團隊／媒體技術重現，影響範圍與修補狀態仍要以各 Agent 最新版本驗證。
-
-### Copilot 的新模型很多：先看方案、usage billing 與 rollout
-
-GitHub 9/21–9/22 連續加入 Grok 4.7、GPT-6 Sol／Luna 與 Claude Opus 5.5；這些模型都在不同 Copilot 方案、IDE／CLI／cloud agent surface 逐步 rollout，且使用 provider list pricing 的 usage-based billing。建議先在 model policy 限定可用模型，再用小型、可回滾的 PR 比較品質與成本；不要因 model picker 出現名稱，就假設所有 seat、所有 surface 或預算都已可用。
-
-來源：[Grok 4.7 in Copilot](https://github.blog/changelog/2026-09-21-grok-4-7-is-now-available-in-github-copilot)；[Claude Opus 5.5 in Copilot](https://github.blog/changelog/2026-09-22-claude-opus-5-5-is-now-available-in-github-copilot)；可信度：GitHub 官方 changelog。
+來源：[Reddit：I measured three ways into an agent](https://www.reddit.com/r/mcp/comments/1wm9jju/i_measured_three_ways_into_an_agent_browser/)；[公開測試 fixtures](https://github.com/aliefe04/llms-txt-injection-lab)；可信度：作者公開實驗與限制說明，非獨立大樣本評測。
 
 ## YouTube
 
 ### 今日無推薦
 
-主動查核 PAPAYA 電腦教室、Tech With Tim、IBM Technology、Matthew Berman、Matt Wolfe 與近期 AI coding／Agent 候選。Tech With Tim 的《Is Software Engineering Dying in 2026?》雖約 10 萬觀看，但查核時播放器標示未提供字幕／隱藏式輔助字幕，無法按規則閱讀可靠逐字稿；Ray Amjad 的 Jev 影片雖超過 10 萬觀看且有字幕，但已在 9/20 日報收錄。其餘候選未同時符合近 24–48 小時、超過 10,000 觀看、非 Shorts、可靠字幕與實測深度，因此不湊數推薦。
+主動查核 PAPAYA 電腦教室、Tech With Tim、IBM Technology、Matthew Berman、Matt Wolfe，以及近期 AI coding／Agent／MCP 候選。今天找到的結果未能同時符合 2026-09-22～09-24 時效、超過 10,000 觀看、非 Shorts、可讀可靠字幕與實測／教學／技術拆解深度；因此不以標題或介紹猜內容，也不重複昨天影片，今日無推薦。
 
 ## 今日一句話
 
-今天最值得帶走的是：模型價格下降與 prompt cache 讓長時間 Agent 更可負擔，但真正能把它送進 production 的差距，仍在 CI 等待路徑、worktree 隔離、插件供應鏈與可回溯的成本／權限紀錄。
+今天最值得帶走的是：Agent 能寫更多 code、操作更多瀏覽器與搜尋更大的科學空間，但可靠交付仍取決於增量 diff、可重現測試、清楚的登入權限與把「候選」和「已驗證結果」分開。
 
 ## 來源總覽
 
-- 社群與實戰：[Linear CI 工程文章](https://linear.app/now/ci-bottleneck-reworked)、[Proliferate](https://github.com/proliferate-ai/proliferate)、[ZCode](https://github.com/zai-org/ZCode)。
-- 官方產品：[GPT-6 Sol／Luna](https://openai.com/index/introducing-gpt-6-sol-and-luna/)、[GPT-6 prompt caching](https://openai.com/index/better-prompt-caching-for-gpt-6)、[GitHub Copilot model changelog](https://github.blog/changelog/2026-09-22-openais-gpt-6-sol-and-gpt-6-luna-now-available/)。
-- 安全與避坑：[Plugin4Shell](https://thehackernews.com/2026/09/plugin4shell-lets-repository-owners.html)、[ZCode 隱私事件整理](https://www.tomshardware.com/tech-industry/artificial-intelligence/devs-say-chinese-ai-company-silently-uploaded-hundreds-of-megabytes-of-local-workspace-data-z-ai-the-firm-behind-the-glm-models-didnt-ask-for-user-consent-and-made-564-attempts-to-exfiltrate-313mb-archive)。
-- YouTube：今日無推薦；已實際查核觀看數、字幕可用性、發布時效與是否重複昨日。
+- 社群實戰：[GitHub Copilot runtime migration](https://github.blog/ai-and-ml/generative-ai/migrating-the-github-copilot-runtime-to-rust-using-copilot)。
+- 社群工具：[real-browser-mcp](https://github.com/ofershap/real-browser-mcp)。
+- 官方產品與研究：[Claude Opus 5.5](https://www.anthropic.com/claude-opus-5-5)、[Claude 生物研究](https://www.anthropic.com/news/claude-discovers-novel-enzyme-system)、[ChatGPT Release Notes](https://help.openai.com/en/articles/6825453-chatgpt-release-notes)。
+- 安全實測：[r/mcp 實驗](https://www.reddit.com/r/mcp/comments/1wm9jju/i_measured_three_ways_into_an_agent_browser/)、[公開 fixtures](https://github.com/aliefe04/llms-txt-injection-lab)。
+- YouTube：今日無推薦；已查核來源頻道、時效、觀看門檻、字幕可用性與是否重複。

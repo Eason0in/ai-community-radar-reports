@@ -1,86 +1,102 @@
-# AI 情報日報｜2026-09-24
+# AI 情報日報｜2026-09-25
 
-約 4 分鐘閱讀。今天的主線是：coding agent 的價值開始由 migration、測試與權限邊界決定；模型能力、科學探索與語音工具都在延長 Agent 的工作範圍，但官方 benchmark 不能取代你的實測與人類驗收。
+約 4 分鐘閱讀。今天的主線是：Agent 工具開始按「搜尋、抓取、操作、記憶」分層；平台也把 sandbox、telemetry、tool discovery 與持續評測補進正式工作流。真正值得複製的是可驗收的邊界，不是把所有 MCP 一次裝滿。
 
-> 截稿時間：2026-09-24 08:05（Asia/Taipei）
-> 查核範圍：優先 2026-09-22～09-24 的官方公告、官方工程文章、官方 repo 與社群實測；未重複 9/23 已報導的 Linear CI、Proliferate、ZCode、GPT-6 Sol／Luna、prompt caching 與 Plugin4Shell。
-> 證據標示：官方資料是官方事實；公司工程文章、repo 與社群文章是第一手實作或作者觀點；廠商 benchmark、早期客戶案例與作者實驗不等於獨立驗證。
+> 截稿時間：2026-09-25 08:05（Asia/Taipei）
+> 查核範圍：優先 2026-09-23～09-25 的官方公告、官方工程文章、公開 repo 與社群實測；未重複 9/24 已報導的 Opus 5.5、Linear／real-browser-mcp、Copilot Rust migration、Claude 生物研究與 `.mcp.json` 實驗。
+> 證據標示：官方資料是官方事實；公開 repo 與影片是作者第一手實作；benchmark、客戶案例與創作者心得不等於獨立驗證。
 
 ## 1. 社群實戰用法
 
-### GitHub 用 Copilot 把 80 萬行 runtime 從 TypeScript 搬到 Rust
+### 把 Agent 的網路能力拆成「搜尋 → 抓頁 → 操作」三層
 
-- **新在哪裡：** GitHub 9/16 發文、9/23 更新，分享 Copilot agent runtime 的實際重寫：超過 800,000 行 production Rust，128 個 PR 分批合併；文章稱大部分程式由 AI agent 撰寫，主要由一名工程師在數個月內完成，並逐步修正回歸問題。這不是「一次 prompt 產生整個 rewrite」，而是把長 migration 切成可 review、可部署的增量。
-- **可以怎麼開始：** 先選一個有明確輸入／輸出契約的模組；讓 Agent 每次只處理一小段 port，固定跑原有 regression、效能與相容性測試，再以小 PR 合併。保留人工定義的 migration checklist、回滾點與 benchmark，避免讓 Agent 同時改架構、API 與測試判準。
-- **編輯心得：** 真正可複製的不是 Rust，而是「共享 runtime、薄產品外殼、增量 PR、持續測試」的工作流。AI 讓大改寫的手工成本下降後，review 與驗證反而成為主要控制面。
-- **限制：** 這是 GitHub 自家案例；「效能改善數個數量級」與單人完成時間沒有提供可獨立重現的完整基準，不能直接外推到你的語言、團隊或 production 風險。
+- **新在哪裡：** Tech With Tim 的實測把 Exa、Firecrawl、Browser Use 分成不同工作：Exa 找方向與最新結果，Firecrawl 抓已知頁面的完整內容，Browser Use 才負責點擊、填表與控制互動式瀏覽器；影片也示範 GitHub MCP 讀 issue／PR、Context7 查新文件、Mem0 跨 session 留記憶。
+- **可以怎麼開始：** 先只裝一個唯讀搜尋工具，做「找 3 個官方來源」；第二步才讓 Firecrawl 抓指定頁面；最後把需要登入或操作的任務交給獨立 Browser Use session。每一步輸出 URL、時間與原始摘錄，再交給下一層，避免把整個網路內容直接塞進 Agent。
+- **編輯心得：** 這個分層比「選哪個最強 Agent」更容易量測：搜尋命中率、抓頁完整度、瀏覽器成功率與總工具呼叫數可以分開看。
+- **限制：** 影片是創作者示範，不是獨立 benchmark；Browser Use 片段含贊助，遠端瀏覽器、住宅 proxy、登入狀態與 API key 都會增加資料外洩與費用風險。
 
-來源：[GitHub：Migrating the GitHub Copilot runtime to Rust, using Copilot](https://github.blog/ai-and-ml/generative-ai/migrating-the-github-copilot-runtime-to-rust-using-copilot/)；可信度：GitHub 工程團隊第一手文章，數字為自家結果。
+來源：[Tech With Tim 影片](https://www.youtube.com/watch?v=84-sHkG4AQU)；可信度：完整英文自動字幕與畫面流程已查讀，工具效果仍是作者示範。
 
 ## 2. 社群新工具與新玩法
 
-### real-browser-mcp：讓 Agent 驗證你已登入的 Chrome，而不是另一個乾淨瀏覽器
+### Public Browser：讓 Claude Code／Cursor 直接操作本機 Chrome
 
-- **新在哪裡：** 這個開源 MCP server 加 Chrome extension，讓 Cursor、Claude Code、VS Code 等 MCP client 透過 localhost WebSocket 操作目前的 Chrome；Agent 可看到既有 cookies、SSO、staging session 與你剛重現的 bug。它補的是「程式修完了，但 Agent 無法進入我已登入的真實環境驗證」這個 coding loop 缺口。
-- **可以怎麼開始：** 先以 `npx -y real-browser-mcp` 啟動 server，再用 Chrome 載入 extension；使用專用 browser profile 或單獨 tab，先讓 Agent 只做 read-only snapshot／重現，再逐步開放 click、type 與提交動作。需要 CI 的乾淨、可重複測試時，仍用 Playwright 類工具。
-- **編輯心得：** 這種玩法把「修 code」與「在真實登入狀態驗證」接起來，對內部 staging 特別有用；它不是雲端瀏覽器，也不是讓 Agent 自動擁有所有帳號權限的理由。
-- **限制：** Agent 仍能讀取連線 tab 裡的敏感資料並代為點擊；repo 自己也提醒不要把含個資、金鑰或高風險操作的 tab 直接交給不受信任的流程。localhost 傳輸不等於最終模型端不會看到頁面內容。
+- **新在哪裡：** `Silbercue/public-browser` 以 CDP 連到可見 Chrome，支援真正登入的 profile、accessibility tree、multi-tab 與 `run_plan`；不需要 extension bridge 或雲端跳轉，telemetry 也標成 opt-in。對「程式修好了，但必須在已登入 staging 重現」的任務特別直接。
+- **可以怎麼開始：** 先用隔離 Chrome profile，讓 Agent 只執行 `view_page`／唯讀檢查；確認 tab 沒有個資、金鑰或付款頁後，再開放 click／type。Claude Code 的 README 安裝命令是 `claude mcp add --scope user public-browser npx -y public-browser@latest`，安裝後要完整重開 session。
+- **作者結果：** repo 公布的 2026 年 9 月同頁測試中，Public Browser 與 Playwright MCP 都是 30/30；作者兩次測試記錄約少 41% tool calls、約少 40% 完成時間、約少 25% list-price 成本。這些是 repo 作者結果，不是獨立驗證。
+- **限制：** 它能看到你連上的 tab；README 也顯示在 response size、evaluate 與個別 latency 上並非全面勝出。真實登入 profile 不應與高風險帳號、付款或不可逆操作共用。
 
-來源：[real-browser-mcp GitHub repo](https://github.com/ofershap/real-browser-mcp)；可信度：公開 repo／README，功能與安全界線以查核時版本為準。
+來源：[Public Browser GitHub repo](https://github.com/Silbercue/public-browser)；可信度：公開原始碼與測試資料，benchmark 仍屬作者結果。
 
 ## 3. 官方新功能與推薦用法
 
-### Claude Opus 5.5：更便宜的長任務模型，但先做自己的成本基準
+### GitHub Copilot App 把本機 sandbox 與 Agent telemetry 補上
 
-- **官方更新：** Anthropic 9/22 發布 Claude Opus 5.5，宣稱在多數工作接近 Fable 5.1、比 Opus 5 便宜 40%；價格為每百萬 tokens：input 4 美元、output 20 美元、cache read 0.20 美元，並宣稱輸出速度快逾 30%。官方也回報其自家 agentic coding 與安全評測結果，包括 containment-boundary 嘗試約少 85%。
-- **推薦用法：** 把它放在 codebase-wide migration、長時間 audit 或需要多輪工具呼叫的 A/B 測試；固定相同 repo、prompt、工具與驗收條件，記錄成功率、重試次數、cache hit、總 token 與人工 review 時間，再和現有模型比較。不要只看排行榜分數。
-- **編輯心得：** 對長任務來說，cache read 價格和每個任務實際 token 比單次 token 單價更重要；把「能否安全停手、是否誤改行為」列為品質欄位，比只量完成率更有用。
-- **限制：** 以上價格、benchmark 與 85% 數字都是 Anthropic 官方或早期評估結果；官方也承認模型可能察覺自己正在被評測，且可靠抓住所有 failure 仍是未解問題。Production rollout、方案限額與 safety routing 仍需以你的帳號和產品 surface 實際確認。
+- **官方更新：** GitHub 9/23 將 local sandboxing 放進 Copilot app public preview，可按專案限制檔案讀寫、網路與 Git／GitHub CLI credentials；9/22 也支援由 enterprise-managed settings 設定 OpenTelemetry，追蹤 model request 與 tool activity。sandbox 預設關閉，且只套用新 session 或重啟後的 session。
+- **推薦用法：** 新 repo 先開 `/sandbox on`，只給必要資料夾與 outbound network；企業再把 OTel trace 接到既有監控，先保留 prompt／response content capture 關閉，確認資料治理後才逐步放寬。
+- **限制：** sandbox 在 public preview，OS 無法強制時會直接失敗，不會自動退回無 sandbox；雲端或 remote host session 不適用。OTel 也不是安全邊界，仍要配合 credential scope、MCP allowlist 與人工核准。
 
-來源：[Anthropic：Introducing Claude Opus 5.5](https://www.anthropic.com/claude-opus-5-5)；可信度：官方公告；價格與 benchmark 為廠商結果。
+來源：[GitHub local sandboxing](https://github.blog/changelog/2026-09-23-local-sandboxing-in-the-github-copilot-app)、[GitHub OTel](https://github.blog/changelog/2026-09-22-opentelemetry-in-the-github-copilot-app)；可信度：GitHub 官方 changelog。
 
-### Claude 代理進入生物研究流程：候選生成不等於已完成發現
+### Microsoft Foundry：把 Agent 當成可持續優化的 production system
 
-- **官方更新：** Anthropic 9/23 分享生命科學團隊的早期結果：Claude agents 從超過 200,000 個 reverse transcriptase 中挑出 3,500 個候選，再縮成 20 個值得分析的系統，注意到一個帶有 CRISPR-like repeats 的新系統 ART。人類科學家負責實驗室工作；ART 的功能仍在進一步驗證。
-- **推薦用法：** 把這種 workflow 當成「大量搜尋 → 候選排序 → 可讀報告 → 人類實驗」的模板；先要求 Agent 輸出候選的證據鏈、反例與待驗實驗，再交給專家決定是否投入昂貴的 wet-lab 資源。
-- **編輯心得：** AI 的優勢在把搜尋空間壓縮到人類能檢視的候選集，不在於把「有趣的模式」直接升格成新生物機制。
-- **限制：** 這是 Anthropic 自己的早期研究敘事；ART 的生物功能尚未完全確定，不能把「Agent 找到值得測的異常」寫成「AI 已自主完成科學發現」。
+- **官方更新：** Microsoft 9/24 宣布 Foundry 擴大模型選擇、voice agents、long-running resilience、Toolboxes／tool search 與 production insights；官方指出 tool search 在自家 44,000+ 工具、7,000 查詢的公開 benchmark 上，1,000-tool toolbox 的 input token 消耗比一次載入全部工具少逾 97%，屬 Microsoft 內部評估結果。
+- **推薦用法：** 先用同一份 production trace 建小型 rubric，固定比較 quality、latency、cost，再讓 tool search 按需發現工具；把「observe → evaluate → optimize → validate」設成上線前的迴圈，不要只在 demo 時選一次模型。
+- **限制：** voice agents、resilient hosted agents 與 Insights 仍有 public preview 項目；tool search 的數字不能外推到你的模型、工具描述與工作負載。Microsoft 提到的 customer savings 也都是客戶／廠商案例。
 
-來源：[Anthropic：Claude discovers a novel enzyme system with CRISPR-like repeats](https://www.anthropic.com/news/claude-discovers-novel-enzyme-system)；可信度：官方研究團隊第一手文章，實驗結果仍在進行中。
+來源：[Microsoft Foundry：expanded model choice, voice agents, and continuous optimization](https://azure.microsoft.com/en-us/blog/ship-agents-faster-with-expanded-model-choice-voice-agents-and-continuous-optimization/)；可信度：Microsoft 官方公告，benchmark／客戶數字標為廠商結果。
 
-### ChatGPT Voice 支援 plugins：語音做事，未完成任務可接回文字
+### Meta Muse 將進入 AI 眼鏡：從聊天延伸到看見與執行
 
-- **官方更新：** OpenAI 9/23 在 release notes 表示，Voice 現可在 web、iOS、Android 使用帳號可用的 plugins 與 connected apps；Work 的 Voice 也能建立文件、簡報、試算表或在瀏覽器中工作，結束語音後未完成的 task 可在文字對話繼續。
-- **推薦用法：** 先用語音口述目標與限制，再要求 Agent 用文字回傳待確認欄位、產物連結與下一步；涉及寄信、外部寫入或登入頁面時保留人工確認，不要把「可以用 plugin」當成「已授權所有動作」。
-- **限制：** rollout、方案、連線 app 權限與 usage limit 仍依帳號而異；語音輸入也會增加轉錄歧義，重要參數應在文字介面重新核對。
+- **官方更新：** Meta 9/24 表示 Muse 將在未來數月進入 AI glasses；Agent 可根據眼前物品、傳單或清單協助判讀，並連接 Notion、GitHub、Box 等服務。Muse 另有背景工作、email address 與付款 connector，但官方設計仍要求敏感動作前取得同意並提供 audit trail。
+- **推薦用法：** 若功能在帳號／地區可用，先做「看見 → 整理 → 草稿」這類可逆工作；把寄信、購買、登入與付款維持人工確認，不要因為裝置在身上就把長期權限一次開滿。
+- **限制：** 眼鏡 rollout、connector、付費與地區仍可能不同；這是 Meta 產品敘事與預告，不代表每項能力已在台灣可用或已證明可靠。
 
-來源：[OpenAI Help：ChatGPT Release Notes](https://help.openai.com/en/articles/6825453-chatgpt-release-notes)；可信度：官方 release notes。
+來源：[Meta：The Biggest News From Connect 2026](https://about.fb.com/news/2026/09/the-biggest-news-from-connect-2026/)；可信度：Meta 官方公告，發布與可用範圍仍需以帳號實際 rollout 為準。
 
 ## 4. 使用心得與避坑
 
-### `.mcp.json` 看起來像設定檔，實際上可能是啟動程式碼
+### 兩個最容易被忽略的成本：工具目錄與憑證邊界
 
-- **新在哪裡：** Reddit `r/mcp` 的一項小型實驗記錄 34 次嘗試、4 個模型與全新 sandbox；作者指出，五個 harness 中有三個會在使用者輸入前自動啟動專案 `.mcp.json` 宣告的 server，導致 approval mode 與 tool allowlist 可能尚未介入。實驗也觀察到瀏覽器路徑的 prompt injection 可把內容帶到 Agent，shell 路徑在該組測試中則沒有外洩。
-- **可以怎麼開始：** 把新增或修改 `.mcp.json` 視為和 Makefile、hooks、`.vscode/tasks.json` 同等級的 code review 入口；在陌生 repo 首次開啟前先閱讀 command、args、env 與外部連線，關閉自動啟動或使用 trusted-directory gate，再用無憑證 sandbox 測試。
-- **編輯心得：** 安全審查不能只看 Agent 是否在對話中「同意」工具呼叫；有些風險發生在 harness 啟動 server、瀏覽器載入內容或模型看到輸出之前。
-- **限制：** 作者明確說明資料集小、部分條件只有一次 run，測試 hostname 也可能讓拒絕率偏高；這是值得採取的防護建議，不是所有 Agent 的普遍失效率估計。
+- **工具目錄：** 影片創作者提醒，工具太多會增加每次 request 的 context、讓 Agent 選錯工具；Microsoft 這次把 tool search 做成正式能力，也側面印證「按需發現」比每次載入所有 schema 更可控。先從 3–5 個工作必要工具開始，記錄誤呼叫與 token，再擴充。
+- **憑證邊界：** 影片示範中有「把 API key 直接交給 coding agent」的片段，創作者也明說不應照做。正確做法是 secrets manager／環境注入、最小 scope、唯讀 token 與獨立 browser profile；不要把 token 貼在 prompt、聊天記錄或共享工作區。
+- **benchmark 閱讀法：** Public Browser 的 30/30、少 41% tool calls 等數字必須連同模型、測試頁、版本、run 次數與它輸掉的指標一起看；你的驗收至少要包含成功率、總 token、成本、完成時間、錯誤動作與人工回復時間。
+- **一句話避坑：** Agent 能操作，不等於 Agent 應該拿到全部權限；把 sandbox、MCP allowlist、trace、人工核准與可回滾操作一起設計。
 
-來源：[Reddit：I measured three ways into an agent](https://www.reddit.com/r/mcp/comments/1wm9jju/i_measured_three_ways_into_an_agent_browser/)；[公開測試 fixtures](https://github.com/aliefe04/llms-txt-injection-lab)；可信度：作者公開實驗與限制說明，非獨立大樣本評測。
+來源：[Tech With Tim 影片](https://www.youtube.com/watch?v=84-sHkG4AQU)、[GitHub sandbox 文件](https://github.blog/changelog/2026-09-23-local-sandboxing-in-the-github-copilot-app)、[Public Browser benchmark](https://github.com/Silbercue/public-browser)；可信度：作者心得與官方規則分開標示。
 
 ## YouTube
 
-### 今日無推薦
+### Tech With Tim｜Top 7 AI Agent Tools That Actually Work
 
-主動查核 PAPAYA 電腦教室、Tech With Tim、IBM Technology、Matthew Berman、Matt Wolfe，以及近期 AI coding／Agent／MCP 候選。今天找到的結果未能同時符合 2026-09-22～09-24 時效、超過 10,000 觀看、非 Shorts、可讀可靠字幕與實測／教學／技術拆解深度；因此不以標題或介紹猜內容，也不重複昨天影片，今日無推薦。
+- **頻道／發布／查核：** Tech With Tim；2026-09-17 發布，2026-09-25 查核 50,408 次觀看，片長 19:33；[影片連結](https://www.youtube.com/watch?v=84-sHkG4AQU)。已取得並閱讀 `en-orig` 英文字幕，不從標題或介紹猜內容。
+- **摘要：** 創作者用 Codex 示範把 GitHub MCP、Browser Use、Composio、Context7、Exa、Firecrawl、Mem0 接到同一個 Agent harness，核心觀點是「工具與連線往往比換模型更能改變工作流」，但不要無限制增加工具。
+- **重點：**
+  1. GitHub MCP 可讀 issue／PR、建立 repo 與協助 review；授權仍需最小 scope。
+  2. Browser Use 分成雲端 Agent、遠端 browser 與本機 CLI 三種用法；本機可沿用登入狀態，但需要 remote debugging。
+  3. Composio 用單一 MCP 連多個 SaaS，並可動態發現工具；集中管理也集中承擔權限風險。
+  4. Context7 用來補最新框架文件，避免 coding Agent 依賴過時訓練資料。
+  5. Exa 偏語意搜尋，Firecrawl 偏指定頁面抓取，兩者都不同於可點擊、可填表的 Browser Use。
+  6. Mem0 把偏好與工作記憶跨 session／Agent 保存，但需要帳號與資料治理。
+  7. 影片把多個服務串起來，示範價值在 workflow 分工，不是證明七個服務都比替代方案好。
+- **步驟／工作流程：** 選一個 harness → 先裝 GitHub MCP 做唯讀查詢 → 加 Browser Use 做獨立瀏覽器驗證 → 用 Context7 查官方文件 → 用 Exa 找來源、Firecrawl 抓指定頁 → 最後才加 Mem0。每一步都先測一個小任務與權限範圍。
+- **工具／模型：** Codex 示範；GitHub MCP、Browser Use、Composio、Context7、Exa、Firecrawl、Mem0。影片沒有提供可重現的模型 benchmark。
+- **作者心得：** 創作者認為正確 connections、skills、tools、memory 會拉開同級模型的實用差距；同時也承認工具過多會混淆 Agent。
+- **優點：** 有畫面實測、安裝路徑、七個工具的角色分工與替代關係，適合想從單一 MCP 擴充到完整 Agent workflow 的開發者。
+- **缺點／限制：** Browser Use 是贊助段落；描述欄含免費額度、affiliate／折扣碼與作者 AI Agent Builders 社群導流。示範使用真實帳號與 API key 的做法不應照抄，也沒有安全、成本或可靠性對照組。
+- **適合對象：** 已會使用 Codex／Claude Code、想做 MCP 整合與瀏覽器自動化的工程師；不適合把它當成 production 安全指南的新手。
+- **是否值得看：** 值得，因為能在約 20 分鐘建立工具地圖；看完先只試 GitHub MCP + Context7，完成唯讀查詢與官方文件核對，再決定是否加入 Browser Use。
+- **立即可試：** 選一個非敏感 repo，要求 Agent 只列出最近 3 個 issue、用 Context7 查目前框架 API，輸出來源 URL 與版本；確認成功後再開啟任何寫入或瀏覽器操作。
+
+可靠時間點（依影片描述）：00:00 總覽、02:15 GitHub MCP、04:24 Browser Use、08:58 Composio、11:33 Context7、13:15 Exa、14:48 Firecrawl、17:24 Mem0。
 
 ## 今日一句話
 
-今天最值得帶走的是：Agent 能寫更多 code、操作更多瀏覽器與搜尋更大的科學空間，但可靠交付仍取決於增量 diff、可重現測試、清楚的登入權限與把「候選」和「已驗證結果」分開。
+今天最值得帶走的是：把 Agent 做成可觀測、可限權、可替換工具的工作流；先讓它在小範圍證明「找得到、抓得準、停得住」，再談長時間自主執行。
 
 ## 來源總覽
 
-- 社群實戰：[GitHub Copilot runtime migration](https://github.blog/ai-and-ml/generative-ai/migrating-the-github-copilot-runtime-to-rust-using-copilot)。
-- 社群工具：[real-browser-mcp](https://github.com/ofershap/real-browser-mcp)。
-- 官方產品與研究：[Claude Opus 5.5](https://www.anthropic.com/claude-opus-5-5)、[Claude 生物研究](https://www.anthropic.com/news/claude-discovers-novel-enzyme-system)、[ChatGPT Release Notes](https://help.openai.com/en/articles/6825453-chatgpt-release-notes)。
-- 安全實測：[r/mcp 實驗](https://www.reddit.com/r/mcp/comments/1wm9jju/i_measured_three_ways_into_an_agent_browser/)、[公開 fixtures](https://github.com/aliefe04/llms-txt-injection-lab)。
-- YouTube：今日無推薦；已查核來源頻道、時效、觀看門檻、字幕可用性與是否重複。
+- 社群實戰／影片：[Tech With Tim](https://www.youtube.com/watch?v=84-sHkG4AQU)。
+- 社群工具：[Public Browser](https://github.com/Silbercue/public-browser)。
+- 官方平台：[GitHub local sandboxing](https://github.blog/changelog/2026-09-23-local-sandboxing-in-the-github-copilot-app)、[GitHub OTel](https://github.blog/changelog/2026-09-22-opentelemetry-in-the-github-copilot-app)、[Microsoft Foundry](https://azure.microsoft.com/en-us/blog/ship-agents-faster-with-expanded-model-choice-voice-agents-and-continuous-optimization/)、[Meta Connect 2026](https://about.fb.com/news/2026/09/the-biggest-news-from-connect-2026/)。
+- 查核原則：官方 benchmark、作者 benchmark、客戶案例與贊助示範均保留來源與限制，不當作獨立驗證。

@@ -1,8 +1,8 @@
-# AI Community Radar - 2026-09-25
+# AI Community Radar - 2026-09-28
 
-> Generated: 2026-09-25T01:19:51.694Z
+> Generated: 2026-09-28T01:29:43.310Z
 > Timezone: Asia/Taipei
-> Active cutoff: updated since 2026-09-23; archived GitHub repos excluded; max stale age 2 days.
+> Active cutoff: updated since 2026-09-26; archived GitHub repos excluded; max stale age 2 days.
 
 ## 今日摘要
 
@@ -17,9 +17,9 @@
 
 | # | Repo | Stars | Forks | Language | Updated |
 | --- | --- | ---: | ---: | --- | --- |
-| 1 | [affaan-m/ECC](https://github.com/affaan-m/ECC) | 266,923 | 39,887 | JavaScript | 2026-09-24T16:52:48Z |
-| 2 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 248,729 | 52,648 | Python | 2026-09-25T01:18:28Z |
-| 3 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 200,295 | 77,255 | C++ | 2026-09-25T01:11:19Z |
+| 1 | [affaan-m/ECC](https://github.com/affaan-m/ECC) | 268,437 | 40,104 | JavaScript | 2026-09-28T00:38:57Z |
+| 2 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 249,512 | 53,064 | Python | 2026-09-28T01:28:50Z |
+| 3 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 200,572 | 77,782 | C++ | 2026-09-28T00:56:01Z |
 
 ### 1. [affaan-m/ECC](https://github.com/affaan-m/ECC)
 
@@ -77,12 +77,22 @@ An Open Source Machine Learning Framework for Everyone.
 | 指標 | 值 |
 | --- | --- |
 | Registry sample | 800 servers |
-| Active baseline since | 2026-09-23 |
+| Active baseline since | 2026-09-26 |
 | GitHub stale cutoff | 2 days |
 
 ### 可能還沒上官方 MCP Registry 的候選
 
-#### 1. [@launchdarkly/mcp-server](https://www.npmjs.com/package/@launchdarkly/mcp-server)
+#### 1. [@tanstack/ai-mcp](https://www.npmjs.com/package/@tanstack/ai-mcp)
+
+| 欄位 | 內容 |
+| --- | --- |
+| 類型 | npm-package |
+| 說明 | Host-side Model Context Protocol client for TanStack AI: discover and run MCP server tools, resources, and prompts in any adapter's chat() loop, with generated end-to-end types. |
+| 為什麼值得看 | npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。 |
+| 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
+| Repo | [https://github.com/TanStack/ai](https://github.com/TanStack/ai) |
+
+#### 2. [@launchdarkly/mcp-server](https://www.npmjs.com/package/@launchdarkly/mcp-server)
 
 | 欄位 | 內容 |
 | --- | --- |
@@ -92,7 +102,7 @@ An Open Source Machine Learning Framework for Everyone.
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/launchdarkly/mcp-server](https://github.com/launchdarkly/mcp-server) |
 
-#### 2. [@supabase/mcp-utils](https://www.npmjs.com/package/@supabase/mcp-utils)
+#### 3. [@supabase/mcp-utils](https://www.npmjs.com/package/@supabase/mcp-utils)
 
 | 欄位 | 內容 |
 | --- | --- |
@@ -102,7 +112,7 @@ An Open Source Machine Learning Framework for Everyone.
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/supabase/mcp](https://github.com/supabase/mcp) |
 
-#### 3. [@payloadcms/plugin-mcp](https://www.npmjs.com/package/@payloadcms/plugin-mcp)
+#### 4. [@payloadcms/plugin-mcp](https://www.npmjs.com/package/@payloadcms/plugin-mcp)
 
 | 欄位 | 內容 |
 | --- | --- |
@@ -112,7 +122,7 @@ An Open Source Machine Learning Framework for Everyone.
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/payloadcms/payload](https://github.com/payloadcms/payload) |
 
-#### 4. [@kubb/mcp](https://www.npmjs.com/package/@kubb/mcp)
+#### 5. [@kubb/mcp](https://www.npmjs.com/package/@kubb/mcp)
 
 | 欄位 | 內容 |
 | --- | --- |
@@ -122,40 +132,30 @@ An Open Source Machine Learning Framework for Everyone.
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/kubb-labs/kubb](https://github.com/kubb-labs/kubb) |
 
-#### 5. [@traceloop/instrumentation-mcp](https://www.npmjs.com/package/@traceloop/instrumentation-mcp)
-
-| 欄位 | 內容 |
-| --- | --- |
-| 類型 | npm-package |
-| 說明 | MCP (Model Context Protocol) Instrumentation |
-| 為什麼值得看 | npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。 |
-| 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
-| Repo | [https://github.com/traceloop/openllmetry-js](https://github.com/traceloop/openllmetry-js) |
-
-#### 6. [pipeworx-io/mcp-oeis](https://github.com/pipeworx-io/mcp-oeis)
+#### 6. [IHUI-INF-AI/IHUI-AI](https://github.com/IHUI-INF-AI/IHUI-AI)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | OEIS (On-Line Encyclopedia of Integer Sequences) MCP. |
+| 說明 | Eight-platform full-stack AI operating system - unifies 176 LLMs via LangGraph + MCP + A2A. Multi-tenant RLS over 340 tables, RAG knowledge base, agent marketplace. Web/API/CLI/Desktop/Extension/Mobile/Miniapp. Apache 2.0. |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 7. [cbuntingde/cline-mcp-skill](https://github.com/cbuntingde/cline-mcp-skill)
+#### 7. [EXboys/agent-doctor](https://github.com/EXboys/agent-doctor)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Cline skill for using, creating, and installing MCP servers. |
+| 說明 | Diagnose, back up, and repair local AI agent runtimes |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 8. [MCPJam/inspector](https://github.com/MCPJam/inspector)
+#### 8. [sceneview/sceneview](https://github.com/sceneview/sceneview)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Testing and evaluation platform to chat, inspect, and debug MCP servers, MCP apps, and ChatGPT apps. |
+| 說明 | 3D & AR SDK for Android (Jetpack Compose + Filament), Apple (SwiftUI + RealityKit), Web, Flutter and React Native. Opens glTF/GLB, 3MF, STL, OBJ and PLY on Android and USDZ on Apple, at real size in AR. Assistant-ready: in-repo MCP server, AGENTS.md and llms.txt — no assistant-specific setup. |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 

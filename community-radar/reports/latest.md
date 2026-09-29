@@ -1,8 +1,8 @@
-# AI Community Radar - 2026-09-28
+# AI Community Radar - 2026-09-29
 
-> Generated: 2026-09-28T01:29:43.310Z
+> Generated: 2026-09-29T02:32:02.278Z
 > Timezone: Asia/Taipei
-> Active cutoff: updated since 2026-09-26; archived GitHub repos excluded; max stale age 2 days.
+> Active cutoff: updated since 2026-09-27; archived GitHub repos excluded; max stale age 2 days.
 
 ## 今日摘要
 
@@ -17,9 +17,9 @@
 
 | # | Repo | Stars | Forks | Language | Updated |
 | --- | --- | ---: | ---: | --- | --- |
-| 1 | [affaan-m/ECC](https://github.com/affaan-m/ECC) | 268,437 | 40,104 | JavaScript | 2026-09-28T00:38:57Z |
-| 2 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 249,512 | 53,064 | Python | 2026-09-28T01:28:50Z |
-| 3 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 200,572 | 77,782 | C++ | 2026-09-28T00:56:01Z |
+| 1 | [affaan-m/ECC](https://github.com/affaan-m/ECC) | 269,048 | 40,203 | JavaScript | 2026-09-28T11:26:13Z |
+| 2 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 249,820 | 53,237 | Python | 2026-09-29T02:31:30Z |
+| 3 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 200,595 | 77,860 | C++ | 2026-09-29T02:31:34Z |
 
 ### 1. [affaan-m/ECC](https://github.com/affaan-m/ECC)
 
@@ -77,7 +77,7 @@ An Open Source Machine Learning Framework for Everyone.
 | 指標 | 值 |
 | --- | --- |
 | Registry sample | 800 servers |
-| Active baseline since | 2026-09-26 |
+| Active baseline since | 2026-09-27 |
 | GitHub stale cutoff | 2 days |
 
 ### 可能還沒上官方 MCP Registry 的候選
@@ -132,30 +132,30 @@ An Open Source Machine Learning Framework for Everyone.
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/kubb-labs/kubb](https://github.com/kubb-labs/kubb) |
 
-#### 6. [IHUI-INF-AI/IHUI-AI](https://github.com/IHUI-INF-AI/IHUI-AI)
+#### 6. [sandraschi/devices-mcp](https://github.com/sandraschi/devices-mcp)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Eight-platform full-stack AI operating system - unifies 176 LLMs via LangGraph + MCP + A2A. Multi-tenant RLS over 340 tables, RAG knowledge base, agent marketplace. Web/API/CLI/Desktop/Extension/Mobile/Miniapp. Apache 2.0. |
+| 說明 | MCP server + web dashboard + Windows Tauri app for home LAN devices (Tapo, Hue, Ring, Nest, Shelly). |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 7. [EXboys/agent-doctor](https://github.com/EXboys/agent-doctor)
+#### 7. [andronaft/health-os](https://github.com/andronaft/health-os)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Diagnose, back up, and repair local AI agent runtimes |
+| 說明 | Local-first personal health record exposed over MCP. Labs, meds, diagnoses, wearables and food log in your own Postgres, with deterministic safety checks. Works with any MCP client. |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 8. [sceneview/sceneview](https://github.com/sceneview/sceneview)
+#### 8. [Aroon9806/ai-music-esp32](https://github.com/Aroon9806/ai-music-esp32)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | 3D & AR SDK for Android (Jetpack Compose + Filament), Apple (SwiftUI + RealityKit), Web, Flutter and React Native. Opens glTF/GLB, 3MF, STL, OBJ and PLY on Android and USDZ on Apple, at real size in AR. Assistant-ready: in-repo MCP server, AGENTS.md and llms.txt — no assistant-specific setup. |
+| 說明 | Stream generative music from your Mac to an ESP32 speaker using local AI models for voice-controlled composition and real-time audio updates. |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 

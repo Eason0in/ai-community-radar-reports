@@ -1,8 +1,8 @@
-# AI Community Radar - 2026-09-29
+# AI Community Radar - 2026-09-30
 
-> Generated: 2026-09-29T02:32:02.278Z
+> Generated: 2026-09-30T01:55:53.076Z
 > Timezone: Asia/Taipei
-> Active cutoff: updated since 2026-09-27; archived GitHub repos excluded; max stale age 2 days.
+> Active cutoff: updated since 2026-09-28; archived GitHub repos excluded; max stale age 2 days.
 
 ## 今日摘要
 
@@ -17,9 +17,9 @@
 
 | # | Repo | Stars | Forks | Language | Updated |
 | --- | --- | ---: | ---: | --- | --- |
-| 1 | [affaan-m/ECC](https://github.com/affaan-m/ECC) | 269,048 | 40,203 | JavaScript | 2026-09-28T11:26:13Z |
-| 2 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 249,820 | 53,237 | Python | 2026-09-29T02:31:30Z |
-| 3 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 200,595 | 77,860 | C++ | 2026-09-29T02:31:34Z |
+| 1 | [affaan-m/ECC](https://github.com/affaan-m/ECC) | 269,673 | 40,293 | JavaScript | 2026-09-30T01:24:05Z |
+| 2 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 250,094 | 53,387 | Python | 2026-09-30T01:55:18Z |
+| 3 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 200,623 | 77,967 | C++ | 2026-09-30T01:50:14Z |
 
 ### 1. [affaan-m/ECC](https://github.com/affaan-m/ECC)
 
@@ -77,7 +77,7 @@ An Open Source Machine Learning Framework for Everyone.
 | 指標 | 值 |
 | --- | --- |
 | Registry sample | 800 servers |
-| Active baseline since | 2026-09-27 |
+| Active baseline since | 2026-09-28 |
 | GitHub stale cutoff | 2 days |
 
 ### 可能還沒上官方 MCP Registry 的候選
@@ -132,30 +132,30 @@ An Open Source Machine Learning Framework for Everyone.
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/kubb-labs/kubb](https://github.com/kubb-labs/kubb) |
 
-#### 6. [sandraschi/devices-mcp](https://github.com/sandraschi/devices-mcp)
+#### 6. [robotlearning123/gpt2agent](https://github.com/robotlearning123/gpt2agent)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | MCP server + web dashboard + Windows Tauri app for home LAN devices (Tapo, Hue, Ring, Nest, Shelly). |
+| 說明 | Your codex login → a full ChatGPT Plus/Pro account (every model, deep research, image gen, code exec) inside Claude Code, Codex & any MCP client. One-line install. |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 7. [andronaft/health-os](https://github.com/andronaft/health-os)
+#### 7. [buildd-ai/buildd](https://github.com/buildd-ai/buildd)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Local-first personal health record exposed over MCP. Labs, meds, diagnoses, wearables and food log in your own Postgres, with deterministic safety checks. Works with any MCP client. |
+| 說明 | Task coordination for AI coding agents. Create or schedule tasks; agents claim them, branch, code, and open PRs. Missions, roles, shared memory, and MCP-native. |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 8. [Aroon9806/ai-music-esp32](https://github.com/Aroon9806/ai-music-esp32)
+#### 8. [Alberto-Codes/judgevet](https://github.com/Alberto-Codes/judgevet)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Stream generative music from your Mac to an ESP32 speaker using local AI models for voice-controlled composition and real-time audio updates. |
+| 說明 | Typed client, CLI and MCP server for TypeSafe's Jev (System One) judgment model |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 

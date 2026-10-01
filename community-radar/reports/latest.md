@@ -1,8 +1,8 @@
-# AI Community Radar - 2026-09-30
+# AI Community Radar - 2026-10-01
 
-> Generated: 2026-09-30T01:55:53.076Z
+> Generated: 2026-10-01T01:56:35.731Z
 > Timezone: Asia/Taipei
-> Active cutoff: updated since 2026-09-28; archived GitHub repos excluded; max stale age 2 days.
+> Active cutoff: updated since 2026-09-29; archived GitHub repos excluded; max stale age 2 days.
 
 ## 今日摘要
 
@@ -17,9 +17,9 @@
 
 | # | Repo | Stars | Forks | Language | Updated |
 | --- | --- | ---: | ---: | --- | --- |
-| 1 | [affaan-m/ECC](https://github.com/affaan-m/ECC) | 269,673 | 40,293 | JavaScript | 2026-09-30T01:24:05Z |
-| 2 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 250,094 | 53,387 | Python | 2026-09-30T01:55:18Z |
-| 3 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 200,623 | 77,967 | C++ | 2026-09-30T01:50:14Z |
+| 1 | [affaan-m/ECC](https://github.com/affaan-m/ECC) | 270,231 | 40,390 | JavaScript | 2026-09-30T18:45:04Z |
+| 2 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 250,363 | 53,497 | Python | 2026-10-01T01:36:20Z |
+| 3 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 200,645 | 77,989 | C++ | 2026-10-01T01:29:15Z |
 
 ### 1. [affaan-m/ECC](https://github.com/affaan-m/ECC)
 
@@ -77,7 +77,7 @@ An Open Source Machine Learning Framework for Everyone.
 | 指標 | 值 |
 | --- | --- |
 | Registry sample | 800 servers |
-| Active baseline since | 2026-09-28 |
+| Active baseline since | 2026-09-29 |
 | GitHub stale cutoff | 2 days |
 
 ### 可能還沒上官方 MCP Registry 的候選
@@ -102,17 +102,7 @@ An Open Source Machine Learning Framework for Everyone.
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/launchdarkly/mcp-server](https://github.com/launchdarkly/mcp-server) |
 
-#### 3. [@supabase/mcp-utils](https://www.npmjs.com/package/@supabase/mcp-utils)
-
-| 欄位 | 內容 |
-| --- | --- |
-| 類型 | npm-package |
-| 說明 | MCP utilities |
-| 為什麼值得看 | npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。 |
-| 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
-| Repo | [https://github.com/supabase/mcp](https://github.com/supabase/mcp) |
-
-#### 4. [@payloadcms/plugin-mcp](https://www.npmjs.com/package/@payloadcms/plugin-mcp)
+#### 3. [@payloadcms/plugin-mcp](https://www.npmjs.com/package/@payloadcms/plugin-mcp)
 
 | 欄位 | 內容 |
 | --- | --- |
@@ -121,6 +111,16 @@ An Open Source Machine Learning Framework for Everyone.
 | 為什麼值得看 | npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。 |
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/payloadcms/payload](https://github.com/payloadcms/payload) |
+
+#### 4. [@supabase/mcp-utils](https://www.npmjs.com/package/@supabase/mcp-utils)
+
+| 欄位 | 內容 |
+| --- | --- |
+| 類型 | npm-package |
+| 說明 | MCP utilities |
+| 為什麼值得看 | npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。 |
+| 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
+| Repo | [https://github.com/supabase/mcp](https://github.com/supabase/mcp) |
 
 #### 5. [@kubb/mcp](https://www.npmjs.com/package/@kubb/mcp)
 
@@ -132,30 +132,30 @@ An Open Source Machine Learning Framework for Everyone.
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/kubb-labs/kubb](https://github.com/kubb-labs/kubb) |
 
-#### 6. [robotlearning123/gpt2agent](https://github.com/robotlearning123/gpt2agent)
+#### 6. [Lory97/tag-per-track-mcp](https://github.com/Lory97/tag-per-track-mcp)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Your codex login → a full ChatGPT Plus/Pro account (every model, deep research, image gen, code exec) inside Claude Code, Codex & any MCP client. One-line install. |
+| 說明 | Model Context Protocol (MCP) server enabling AI agents to perform musical audio analysis, lyrics transcription, and Spotify A&R tracking via x402 USDC micropayments on Base. |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 7. [buildd-ai/buildd](https://github.com/buildd-ai/buildd)
+#### 7. [D10100111001/dawat-plugin](https://github.com/D10100111001/dawat-plugin)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Task coordination for AI coding agents. Create or schedule tasks; agents claim them, branch, code, and open PRs. Missions, roles, shared memory, and MCP-native. |
+| 說明 | Create beautiful digital invitations by talking to Claude — envelope-reveal cards, party pages, guest lists and live RSVPs. MCP server + Claude Code plugin for dawat.events |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 8. [Alberto-Codes/judgevet](https://github.com/Alberto-Codes/judgevet)
+#### 8. [luisprimecore/chorus-field-mcp](https://github.com/luisprimecore/chorus-field-mcp)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Typed client, CLI and MCP server for TypeSafe's Jev (System One) judgment model |
+| 說明 | LuisCore Chorus Field MCP — inference-scale runtime substrate for multi-step agents at LLM labs |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 

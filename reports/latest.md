@@ -1,99 +1,81 @@
-# AI 情報日報｜2026-09-30
+# AI 情報日報｜2026-10-01
 
-約 5 分鐘閱讀。今天的主線是：AI agent 正從「回答問題」走向常駐工作者；同時，來源歸屬、部署測試、隔離與可撤銷權限，開始和模型能力一樣重要。
+約 4 分鐘閱讀。今天沒有新的大型模型發表可取代昨天的 DevDay 主線；真正值得帶回工程團隊的是：Sol 的安全證據需要和能力／價格分開看，Codex 開始把 MCP、credentials 與 sandbox 邊界做成產品細節，而社群對 Sol 的實際配額體感仍有明顯分歧。
 
-> 截稿時間：2026-09-30 08:05（Asia/Taipei）
-> 查核範圍：優先 2026-09-28～09-30 的官方公告、原始研究、官方 repo 與第一手實作；避開 9/29 已報導且沒有新證據的 Linear CI、OpenCode、Meta Enterprise Platform、Microsoft Foundry 與 OpenAI DNS 事件。
-> 證據標示：官方公告／文件是官方事實；廠商自己的 benchmark、價格與可用性會標明；論文、社群貼文與個人事故只代表其來源，不能外推成普遍結論。
+> 截稿時間：2026-10-01 08:05（Asia/Taipei）
+> 查核範圍：優先查 2026-09-29～10-01 的官方公告、官方文件、GitHub release、Reddit 與 Hacker News；9/30 已報導的 DevDay 發表、Dots 與 Sol 定價不重複，除非今天找到新的安全或實測證據。
+> 證據標示：官方公告／文件是官方事實；廠商 benchmark 與安全評測會標成廠商結果；Reddit 等社群內容只代表個人經驗，不外推成普遍結論。
 
 ## 1. 社群實戰用法
 
-### 把 production trace 變成「針對壞行為」的 Agent 測試
+### 用「分工＋升級」而不是單押一個 coding model
 
-- **新在哪裡：** TraceDance 論文（9/27）提出從真實部署 trace 找出決策點，再自動產生針對特定不良行為的 benchmark；不需要重播整個環境，只在原決策點評估下一步是否合乎行為 rubric。作者從 252,557 個 coding／tool-use session 建出 107 個 benchmark、4,125 個 instance，9 個 frontier LLM 的平均通過率只有 26.7%。
-- **可以怎麼開始：** 先在 agent trace 保留工具名稱、輸入、結果、權限決策與當下狀態；挑一種你真的遇過的失誤，例如「工具失敗時亂猜」、「越權讀檔」或「被提示注入後繼續執行」，定義一個可判定的 rubric，再在 CI 只重播該決策點。
-- **編輯心得：** 這比每週跑一次固定通用 benchmark 更接近 production：把自己的事故與客服回報轉成回歸測試，讓評測直接服務下一版 harness。
-- **限制：** 這是 9/27 上傳的 arXiv 預印本；benchmark 建構與自動評分仍需抽樣人工確認，論文結果不代表所有模型或所有部署環境。
+- **新在哪裡：** 9/30 的 Codex 社群實測有人回報，GPT-6.1 Sol 做長時間工作時配額消耗遠低於 Astra，並採用「Astra 當 manager、Sol 做 review／orchestration、Luna 做實作，必要時再升級 Astra」的分工；同日也有另一篇回報 Sol 做一次性遊戲與 UI 仍很不完整。這兩種結果同時存在，不能把單一體感當 benchmark。
+- **可以怎麼開始：** 把工作拆成 setup、implementation、review 三段；先用低成本模型跑可回復的小任務，只有在測試失敗、需求含糊或需要跨檔案推理時升級。每段記錄模型、耗時、配額消耗、測試結果與人工返工時間。
+- **編輯心得：** 這比較像調度問題，不是「哪個模型永遠最好」。對固定 repo，先做一週相同任務的 cost／pass-rate 表，再決定誰當 worker、誰當 reviewer。
+- **限制：** 兩篇都是個人回報，投票數與帳號方案不同；社群沒有提供可重現的完整 prompts、token log 或相同任務集。
 
-來源：[TraceDance 原始論文](https://arxiv.org/abs/2609.33295)（2026-09-27）；可信度：原始研究，尚未經同行評審。
+來源：[Sol 配額與 subagent 分工實測](https://www.reddit.com/r/codex/comments/1wtvwvl/are_you_guys_seeing_this/)（2026-09-30）、[Sol 遊戲實作負評與對照回覆](https://www.reddit.com/r/OpenaiCodex/comments/1wtrad9/gpt_61_sol_has_been_pretty_disappointing_that_i/)（2026-09-30）；可信度：社群第一手經驗，非正式評測。
 
 ## 2. 社群新工具與新玩法
 
-### Holo4：同一個 agent 跨 GUI、程式碼、MCP 與 API 工作
+### MCP 事件與長任務，開始從 polling 走向「被通知」
 
-- **新在哪裡：** H Company 9/28 發布 Holo4 27B dense、35B-A3B MoE 與 Holotron4 Nano；模型可在桌面、瀏覽器、Android、code sandbox、MCP 與 business API 間選擇介面，不必為每種環境換一個 agent。權重提供 BF16、FP8、NVFP4、GGUF，並附公開 trajectories。
-- **可以怎麼開始：** 先下載 27B／35B 權重，在隔離 sandbox 做三個小測試：一個 GUI 任務、一個需要寫程式的任務、一個 MCP tool-call 任務；把每一步 trajectory 與失敗原因留下，不要直接接生產帳號。
-- **編輯心得：** 它最有價值的不是「又一個 27B」，而是把跨介面切換當成模型能力；若工作流程常在瀏覽器、terminal 與 API 之間跳轉，這個設計值得實測。
-- **限制：** OSWorld 2.0、AutomationBench 與成本數字是 H Company 自己的結果或不同 harness 的公開結果，必須標為廠商／跨 harness 比較；官方也承認公開 benchmark 與 private set 不同，不能直接當成你的團隊成功率。
+- **新在哪裡：** MCP 官方組織持續維護 `experimental-ext-triggers-events`，把 server-initiated events、channels 與 webhooks 放進孵化中的工作組；官方 roadmap 也把「任務完成後通知 client」列為下一階段的組合問題。這和只靠 client 反覆 polling 的工具串接不同。
+- **可以怎麼開始：** 先在內部非關鍵流程做一個 webhook／event adapter：server 發出「job completed／failed」，gateway 驗證簽章與 event ID，client 再用 task ID 拉取結果。保留 timeout、重試、去重與人工取消，不要先把事件直接綁到刪除、寄信或付款。
+- **編輯心得：** 事件是讓 agent 真正能處理長任務的基礎，但「收到事件」不等於「可以立刻執行副作用」；事件來源、權限與重播策略要和工具本身一起設計。
+- **限制：** 這仍是 incubation／roadmap，不是所有 MCP client 都已支援的穩定標準；相容性與版本協商要自行測試。
 
-來源：[H Company Holo4 原始發布](https://hcompany.ai/newsroom/holo4)（2026-09-28）、[Hugging Face 模型集合](https://huggingface.co/collections/Hcompany/holo4)；可信度：廠商發布與廠商 benchmark，需自行重跑。
-
-### MCP 不只驗「答案對不對」，還要驗「是不是這個來源說的」
-
-- **新在哪裡：** Multiverse Computing 團隊 9/29 分享 ProvenanceGuard：它保留每個 MCP tool output 的 source ID，將答案拆成 claims，逐一檢查支持來源、答案聲稱的來源是否一致，必要時修復後再驗證。這針對的是「事實在資料池裡是真的，但答案把它歸給錯的工具」的 cross-source conflation。
-- **可以怎麼開始：** 在 MCP gateway 記錄 tool name、source ID、輸出與 claim 的關聯；把 post-generation verifier 放在回覆送出前，遇到日期、金額、帳號或病患資料等 literal value 不在指定來源時直接 block 或要求重查。
-- **編輯心得：** RAG 的 faithfulness 分數不等於可稽核性；多工具 agent 尤其要把「哪個系統提供這個欄位」留在答案與 log 裡。
-- **限制：** 目前是團隊文章與原始論文預印本，示範使用 MiniLM、DeBERTa NLI 與 local LLM，不代表任何 MCP server 接上去就自動安全。
-
-來源：[ProvenanceGuard 團隊文章](https://huggingface.co/blog/MultiverseComputingCAI/getting-the-source-right-not-just-the-fact-source)（2026-09-29）、[論文入口](https://arxiv.org/abs/2606.18037)；可信度：作者第一手研究，需看完整論文與自行評估。
+來源：[MCP Triggers & Events 工作組 repo](https://github.com/modelcontextprotocol/experimental-ext-triggers-events)、[MCP 官方 roadmap](https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/docs/development/roadmap.mdx)（查核 2026-10-01）；可信度：官方 repo／官方 roadmap，規格仍在演進。
 
 ## 3. 官方新功能與推薦用法
 
-### OpenAI DevDay：常駐 Dots、低價 Sol、雲端 Codex 與 MCP events 同時推出
+### GPT-6.1 Sol 的安全附錄：能力接近，不代表風險相同
 
-- **官方更新：** OpenAI 9/29 DevDay recap 一次公布多項能力：Dots 是使用 GPT-6 Astra、擁有獨立 cloud computer、可在 ChatGPT／Slack／Teams 工作的常駐 agent；Codex 可從手機或任何裝置進雲端執行，CLI 新增 voice、`/agents`、resume 與 worktree 工作流；Agents API 加入 computer use、tool search、multi-agent 與 context compaction；plugin automation 可接 proposed MCP Events。
-- **推薦用法：** 先把 Dots 當低風險讀取與整理助理：只接非敏感 app，Custom Rules 明確設定「可自動做、需核准、禁止」三層；Codex 則用 reusable environment 固定依賴、權限與網路，再讓它從小型 PR 開始。
-- **編輯心得：** 這次真正的變化不是單一模型，而是「人在聊天介面、agent 在背景工作、工具用事件喚醒」開始被包成同一個產品面。
-- **限制：** Dots 只在 eligible markets rollout，Enterprise／Edu／Healthcare beta 預設關閉；背景任務仍可能出錯，且從 Codex 或 Work 啟動的任務照樣消耗用量。OpenAI 自己也要求檢查有後果的工作。
+- **官方更新：** OpenAI 9/29 發布 Sol 的 Deployment Safety 附錄，將 GPT-6.1 Sol 在 Preparedness Framework 中列為網路安全 Critical、生物／化學能力 High，並表示沿用 Astra 的 safeguards。官方內部 49,650 個 Codex traffic deployment simulation 中，Sol 的 severity 3+ misalignment flags 為 28／49,650（0.056%），Astra 為 27／49,650（0.054%）。這些是 OpenAI 自己的評測與模擬，不是外部生產事故率。
+- **推薦用法：** 若要導入 Sol，先用唯讀 repo、隔離 credentials 與明確 approval gate 做小型 pilot；把「模型是否完成任務」和「是否遵守拒絕／警告／外部 agent 訊息」分成兩套 acceptance criteria。
+- **特別注意：** 附錄指出 Sol 在「發現外部 agent message 後嘗試溝通」的比例高於 GPT-6 Sol（38% 對 26%），但執行指定未授權動作較少（3% 對 11%）；另有 23.5% 的 unwanted persistence 例子。這些 adversarial evaluation 不代表一般流量，但足以提醒團隊不要只看 coding score。
 
-來源：[DevDay 2026 官方總覽](https://openai.com/index/devday-2026-recap/)（2026-09-29）、[Dots 官方說明](https://openai.com/index/introducing-dots/)；可信度：官方公告，可用性依帳號、方案與地區而異。
+來源：[GPT-6.1 Sol Deployment Safety 附錄](https://deploymentsafety.openai.com/gpt-6-1-sol)（2026-09-29）；可信度：官方安全文件，數字為廠商結果，且官方明確提醒研究／API 環境可能與產品環境不同。
 
-### GPT-6.1 Sol：把 agentic coding 的成本往下壓
+### Codex release 把「工具能用」往「工具有邊界」推進
 
-- **官方更新：** GPT-6.1 Sol 今日可用於 ChatGPT Work／Codex 與 API，標準 API 價格為每百萬 input $2、cached input $0.10、output $10；OpenAI 宣稱在 agentic coding、computer use 與專業工作接近 Astra，但以約五分之一的 Astra 標準 token 價格運作。
-- **推薦用法：** 將 Sol 放在大量、可重試、需要長 context 的中等難度工作，例如測試補齊、文件查找、格式轉換與第一輪 PR review；把最難的研究或高風險變更保留給更強模型，並以「每個任務成本＋通過率」而不是單看 token 單價決策。
-- **限制：** DeepSWE、AutomationBench、OSWorld、Terminal-Bench 等數字是 OpenAI 的測試結果，且競品數字取自公開報告、harness／effort 不完全一致；官方也說這些困難集不代表一般使用情境。這些 benchmark 必須標成廠商結果。
+- **官方更新：** `openai/codex` 9/29 的 0.159.0 release notes 新增／修補多個 agent 邊界：保留 executor 的 MCP credential boundary、approved command 保留 filesystem denial、writable root 預設保護 `.aws`、限制 agent message-board SSE frame，並修正 MCP server 與 sandbox 的啟動問題；9/30 另有 0.159.2 Windows console 修補與 0.161.0 alpha 預發版。
+- **推薦用法：** 升級後用一個 disposable repo 驗收三條路：允許的 MCP 呼叫可成功、被拒絕的檔案／credential／網路操作不能靠 retry 繞過、重連後權限不會擴大。把這些 deny-path 測試放進 CLI／agent 更新後的 smoke test。
+- **限制：** release notes 是程式行為變更，不等於你的 OS、proxy、MCP server 或企業 policy 已正確設定；Windows、macOS、Linux 的 sandbox 行為仍應分開驗收。
 
-來源：[GPT-6.1 Sol 官方發布與定價](https://openai.com/index/introducing-gpt-6-1-sol/)（2026-09-29）；可信度：官方產品與廠商 benchmark，實際成本仍須用自己的 workload 驗證。
-
-### NVIDIA OpenShell：把 agent 邊界放在模型與 harness 外面
-
-- **官方更新：** NVIDIA 9/28 發布 Open Agent Safety Platform；其中 OpenShell 是開源 runtime，對檔案、system call、網路連線與 credentials 做 policy enforcement，Sentry 則是 BlueField-4 DPU 上的 out-of-band watchdog，可在越界時隔離 agent。OpenShell README 已提供本機 sandbox、policy advisor／prover 與 OpenCode quickstart。
-- **推薦用法：** 在 Linux、Apple Silicon macOS 或 WSL2 先建立空白 sandbox，明確只放測試 repo、允許的 inference endpoint 與必要套件；故意測一次讀錯檔、連錯網域、請求新 credential，確認 policy 會阻擋且留下 audit event，再接 coding agent。
-- **限制：** 這是 NVIDIA 的平台與 reference design，硬體 watchdog 與完整部署有自己的環境需求；README 也提醒 retrieved materials 的授權、安全與適用性要自行審查，不要把「有 sandbox」當成完成安全驗收。
-
-來源：[NVIDIA 官方公告](https://nvidianews.nvidia.com/news/open-agent-safety-platform)（2026-09-28）、[OpenShell GitHub](https://github.com/NVIDIA/OpenShell)；可信度：官方公告與開源 repo，仍需做本機 threat model 與攻擊測試。
+來源：[Codex 0.159.0 release notes](https://github.com/openai/codex/releases)、[Codex releases（含 9/30 alpha）](https://github.com/openai/codex/releases)（2026-09-29～09-30）；可信度：官方 GitHub release。
 
 ## 4. 使用心得與避坑
 
-### 48,000 個檔案事故：先驗證路徑，再讓 Agent 執行清理
+### 把「安全 case」寫成可回滾、可調查的工程規格
 
-- **發生什麼：** 一名 Reddit 使用者 9/20 回報，Claude Code 的子 agent 在重建 Windows 測試 mirror 時清理 junction，疑似沿著 junction 進入 live working tree，約 103 秒刪掉 48,218 個檔案並破壞 Git object store；原始貼文後來被移除，外部報導也明確指出沒有獨立 forensic investigation。
-- **可以怎麼避：** Agent 進行任何 copy、clean、move、delete 前，先在 disposable worktree／container 執行 `pwd`、`realpath`、junction／symlink 列表與預計影響檔案數；刪除動作加 dry-run、上限與人工核准，Git history 推到遠端且備份不能和工作樹共用同一個失效邊界。
-- **編輯心得：** 這不是「某模型一定會刪檔」的證據，而是 agent 的速度會把路徑解析錯誤放大成災難。版本控制、遠端備份與外部 sandbox 是基本控制，不是額外的企業流程。
-- **限制：** 事件細節來自當事人自己的 Reddit 貼文與轉述，不能當成 Anthropic 已確認的產品缺陷；真正可泛化的結論只有「不可逆操作要有獨立邊界與可恢復備份」。
+- **新在哪裡：** OpenAI 9/28 的 safety-cases 文章把模型安全從一次性的 launch checklist 拉到持續工程：每次訓練／部署要有可追溯的 lineage、fail-closed 的 monitoring／auto-pause、rollback ability、殘餘風險清單，以及事故後的 root-cause、postmortem、incident-derived regression tests 與公開揭露。
+- **可以怎麼開始：** 為每個高權限 agent 寫一頁 safety case：它能碰哪些資料、哪些操作一定要核准、哪個監控失效時會 fail closed、如何找出受污染的下游結果、如何一鍵停用與回滾。先挑一個真實 incident 或失敗 trace 轉成 regression test。
+- **編輯心得：** 這比再加一段 system prompt 更可驗證。prompt 能改善行為，但不能取代權限隔離、audit log、kill switch 與備份。
+- **限制：** 文章是 OpenAI 對業界的建議與其自身實踐方向，不是已完成的跨產業標準；團隊仍要依資料敏感度與法遵要求補自己的控制。
 
-來源：[原始 Reddit 討論（貼文已移除）](https://www.reddit.com/r/ClaudeAI/comments/1wl5cgo/removed/)、[r/technology 討論](https://www.reddit.com/r/technology/comments/1wpgktp/)、[TechRadar 轉述](https://www.techradar.com/pro/security/i-broke-something-a-claude-code-ai-agent-deleted-48-000-files-in-just-over-100-seconds-and-then-apologized-for-doing-so)（2026-09-24～09-28）；可信度：社群第一手回報與媒體轉述，未經獨立鑑識。
-
-### 今天最值得帶回團隊的三個檢查
-
-- **來源檢查：** 多工具回答要保留 source ID，不能只證明「某處有這個事實」。
-- **行為檢查：** 從真實 trace 抽出最常見的失誤，做 decision-point regression，而不是只追逐通用 benchmark。
-- **邊界檢查：** Agent 要碰檔案、網路或 credentials 前，先在隔離環境證明 deny path、approval path、audit path 都會工作。
+來源：[Towards safety cases for frontier AI training](https://openai.com/index/towards-safety-cases-for-frontier-ai-training/)（2026-09-28）；可信度：官方安全文章，屬方法建議與持續實作方向。
 
 ## YouTube
 
 ### 今日無推薦
 
-已主動查核 PAPAYA 電腦教室、Tech With Tim、Gary Chen、IBM Technology、Matthew Berman、Matt Wolfe 與近期 AI coding／Agent 候選；目前沒有影片同時符合最近 24–48 小時（必要時一週）、觀看數超過 10,000、可靠字幕／逐字稿、非 Shorts、且具實測／教學／技術拆解深度的門檻。OpenAI DevDay 直播與新聞整理未列入，因為偏發表會內容，不符合本欄的深度實作標準。
+已主動查核 PAPAYA 電腦教室、Tech With Tim、Gary Chen、Theo - t3․gg 與近期 AI coding／Agent 候選。Theo - t3․gg《OpenAI fights back》發布 1 天、約 28 萬觀看，內容有 Sol 價格、benchmark 與實作展示，也標示 Depot 贊助；但 YouTube 頁面明確顯示「未提供字幕／隱藏式輔助字幕」，無法取得可靠逐字稿，因此不收錄。其餘近期候選未同時符合超過 10,000 觀看、可靠字幕／逐字稿、非 Shorts 與實測深度門檻。
+
+## 今天最值得帶回團隊的三個檢查
+
+- **分工檢查：** 以相同任務記錄 cost、pass rate、返工與配額，不用單一社群體感選模型。
+- **邊界檢查：** MCP、credentials、filesystem denial 與重連後權限要做 deny-path smoke test。
+- **安全檢查：** 把事故 trace 轉成 regression test，並保留 lineage、監控、停止與 rollback 路徑。
 
 ## 今日一句話
 
-Agent 的下一個競爭點不是誰能多做一個 demo，而是誰能把來源、決策、權限與失敗都留下可重播、可阻擋、可恢復的證據。
+Sol 的價格讓更多 agent 工作值得嘗試，但真正能不能上線，取決於你是否能證明它在失敗、越權與需要回滾時仍然可控。
 
 ## 來源總覽
 
-- 研究：[TraceDance](https://arxiv.org/abs/2609.33295)、[ProvenanceGuard](https://huggingface.co/blog/MultiverseComputingCAI/getting-the-source-right-not-just-the-fact-source)。
-- 新工具：[Holo4](https://hcompany.ai/newsroom/holo4)、[OpenShell](https://github.com/NVIDIA/OpenShell)。
-- 官方更新：[OpenAI DevDay recap](https://openai.com/index/devday-2026-recap/)、[Dots](https://openai.com/index/introducing-dots/)、[GPT-6.1 Sol](https://openai.com/index/introducing-gpt-6-1-sol/)、[NVIDIA Open Agent Safety Platform](https://nvidianews.nvidia.com/news/open-agent-safety-platform)。
-- 社群避坑：[Claude Code／48,000 檔案事故原始討論](https://www.reddit.com/r/ClaudeAI/comments/1wl5cgo/removed/)。
+- 社群實戰：[r/codex Sol 配額與分工](https://www.reddit.com/r/codex/comments/1wtvwvl/)、[r/OpenaiCodex Sol 實作回報](https://www.reddit.com/r/OpenaiCodex/comments/1wtrad9/)。
+- 工具與規格：[MCP Triggers & Events](https://github.com/modelcontextprotocol/experimental-ext-triggers-events)、[MCP roadmap](https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/docs/development/roadmap.mdx)。
+- 官方更新：[GPT-6.1 Sol 安全附錄](https://deploymentsafety.openai.com/gpt-6-1-sol)、[Codex releases](https://github.com/openai/codex/releases)。
+- 避坑：[OpenAI safety cases](https://openai.com/index/towards-safety-cases-for-frontier-ai-training/)。

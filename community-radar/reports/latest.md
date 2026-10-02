@@ -1,8 +1,8 @@
-# AI Community Radar - 2026-10-01
+# AI Community Radar - 2026-10-02
 
-> Generated: 2026-10-01T01:56:35.731Z
+> Generated: 2026-10-02T02:05:31.629Z
 > Timezone: Asia/Taipei
-> Active cutoff: updated since 2026-09-29; archived GitHub repos excluded; max stale age 2 days.
+> Active cutoff: updated since 2026-09-30; archived GitHub repos excluded; max stale age 2 days.
 
 ## 今日摘要
 
@@ -17,9 +17,9 @@
 
 | # | Repo | Stars | Forks | Language | Updated |
 | --- | --- | ---: | ---: | --- | --- |
-| 1 | [affaan-m/ECC](https://github.com/affaan-m/ECC) | 270,231 | 40,390 | JavaScript | 2026-09-30T18:45:04Z |
-| 2 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 250,363 | 53,497 | Python | 2026-10-01T01:36:20Z |
-| 3 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 200,645 | 77,989 | C++ | 2026-10-01T01:29:15Z |
+| 1 | [affaan-m/ECC](https://github.com/affaan-m/ECC) | 270,729 | 40,469 | JavaScript | 2026-10-02T02:01:14Z |
+| 2 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 250,618 | 53,646 | Python | 2026-10-02T02:00:01Z |
+| 3 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 200,659 | 77,995 | C++ | 2026-10-02T01:58:10Z |
 
 ### 1. [affaan-m/ECC](https://github.com/affaan-m/ECC)
 
@@ -77,7 +77,7 @@ An Open Source Machine Learning Framework for Everyone.
 | 指標 | 值 |
 | --- | --- |
 | Registry sample | 800 servers |
-| Active baseline since | 2026-09-29 |
+| Active baseline since | 2026-09-30 |
 | GitHub stale cutoff | 2 days |
 
 ### 可能還沒上官方 MCP Registry 的候選
@@ -132,30 +132,30 @@ An Open Source Machine Learning Framework for Everyone.
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/kubb-labs/kubb](https://github.com/kubb-labs/kubb) |
 
-#### 6. [Lory97/tag-per-track-mcp](https://github.com/Lory97/tag-per-track-mcp)
+#### 6. [furkankoykiran/.claude](https://github.com/furkankoykiran/.claude)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Model Context Protocol (MCP) server enabling AI agents to perform musical audio analysis, lyrics transcription, and Spotify A&R tracking via x402 USDC micropayments on Base. |
+| 說明 | Claude Code Toolkit — reproducible skills, agents and hooks for Claude Code, with a security-gated catalog, automated upstream updates and verifiable cross-platform releases (Linux, macOS, Windows, WSL). |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 7. [D10100111001/dawat-plugin](https://github.com/D10100111001/dawat-plugin)
+#### 7. [hproxy-com/free-proxy-list](https://github.com/hproxy-com/free-proxy-list)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Create beautiful digital invitations by talking to Claude — envelope-reveal cards, party pages, guest lists and live RSVPs. MCP server + Claude Code plugin for dawat.events |
+| 說明 | Free proxy list, verified around the clock: HTTP, HTTPS, SOCKS4 and SOCKS5 proxies with country, anonymity, latency and uptime on every row, updated several times a day. Live list, proxy checker, keyless API and MCP server at hproxy.com. |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 8. [luisprimecore/chorus-field-mcp](https://github.com/luisprimecore/chorus-field-mcp)
+#### 8. [pyrlyn/rtok](https://github.com/pyrlyn/rtok)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | LuisCore Chorus Field MCP — inference-scale runtime substrate for multi-step agents at LLM labs |
+| 說明 | Token-reduction CLI for AI coding agents: hooks, MCP server and API proxy with pluggable methods |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 

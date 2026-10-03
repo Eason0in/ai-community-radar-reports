@@ -1,81 +1,83 @@
-# AI 情報日報｜2026-10-01
+# AI 情報日報｜2026-10-03
 
-約 4 分鐘閱讀。今天沒有新的大型模型發表可取代昨天的 DevDay 主線；真正值得帶回工程團隊的是：Sol 的安全證據需要和能力／價格分開看，Codex 開始把 MCP、credentials 與 sandbox 邊界做成產品細節，而社群對 Sol 的實際配額體感仍有明顯分歧。
+約 4 分鐘閱讀。這兩天的主線不是又一個「更大的模型」，而是 agent 開始被做成可重複的流程：有可恢復的 harness、可編排的 workflow、可透過 API 觸發的 review；同時，模型退役與桌面控制權限也提醒團隊，AI 工具的生命週期與邊界必須一起管理。
 
-> 截稿時間：2026-10-01 08:05（Asia/Taipei）
-> 查核範圍：優先查 2026-09-29～10-01 的官方公告、官方文件、GitHub release、Reddit 與 Hacker News；9/30 已報導的 DevDay 發表、Dots 與 Sol 定價不重複，除非今天找到新的安全或實測證據。
-> 證據標示：官方公告／文件是官方事實；廠商 benchmark 與安全評測會標成廠商結果；Reddit 等社群內容只代表個人經驗，不外推成普遍結論。
+> 截稿時間：2026-10-03 08:04（Asia/Taipei）
+> 查核範圍：優先查 2026-10-01～10-03 的官方公告、官方文件、GitHub Changelog、Hacker News 與 Reddit；已避開 10/01 日報已報導的 DevDay 發表、MCP Triggers、Sol 安全附錄與 safety case，除非有新的實測或後續變化。
+> 證據標示：官方公告／文件是官方事實；官方 benchmark 或採用數字屬廠商結果；Reddit／Hacker News 是個人或社群經驗，不外推成普遍結論。
 
 ## 1. 社群實戰用法
 
-### 用「分工＋升級」而不是單押一個 coding model
+### GPT-6.1 Sol 的新共識：省額度，但要接受慢與不穩定
 
-- **新在哪裡：** 9/30 的 Codex 社群實測有人回報，GPT-6.1 Sol 做長時間工作時配額消耗遠低於 Astra，並採用「Astra 當 manager、Sol 做 review／orchestration、Luna 做實作，必要時再升級 Astra」的分工；同日也有另一篇回報 Sol 做一次性遊戲與 UI 仍很不完整。這兩種結果同時存在，不能把單一體感當 benchmark。
-- **可以怎麼開始：** 把工作拆成 setup、implementation、review 三段；先用低成本模型跑可回復的小任務，只有在測試失敗、需求含糊或需要跨檔案推理時升級。每段記錄模型、耗時、配額消耗、測試結果與人工返工時間。
-- **編輯心得：** 這比較像調度問題，不是「哪個模型永遠最好」。對固定 repo，先做一週相同任務的 cost／pass-rate 表，再決定誰當 worker、誰當 reviewer。
-- **限制：** 兩篇都是個人回報，投票數與帳號方案不同；社群沒有提供可重現的完整 prompts、token log 或相同任務集。
+- **新在哪裡：** 10/01～10/02 的 Codex 社群回報開始形成較一致的 trade-off：Sol 6.1 在長時間 coding、migration、複雜 repo 探索時，很多人覺得用量消耗遠低於 Astra／舊 Sol；但回應速度明顯慢，品質仍有人遇到「反覆迭代才完成」或 terminal／tool 使用異常。這是體感彙整，不是控制變因的 benchmark。
+- **可以怎麼開始：** 把 Sol 6.1 放在長任務 worker：先讓它掃 repo、列出 plan、跑測試與整理 migration；需要快速互動、GUI／computer use 或一次性困難判斷時再切 Astra／其他模型。每次記錄模型、reasoning、耗時、用量、測試結果與返工時間。
+- **編輯心得：** 「便宜」不等於「每分鐘產出較高」；對互動式修 bug，等待時間可能吃掉節省的額度。最實用的比較單位是「成功交付一個可驗證變更的總時間」，不是 token 或剩餘百分比。
+- **限制：** 方案、帳號、服務負載與 `/fast`／reasoning 設定不同；貼文沒有完整 prompt、token log 或同任務對照，不能拿來宣稱 Sol 一定優於其他模型。
 
-來源：[Sol 配額與 subagent 分工實測](https://www.reddit.com/r/codex/comments/1wtvwvl/are_you_guys_seeing_this/)（2026-09-30）、[Sol 遊戲實作負評與對照回覆](https://www.reddit.com/r/OpenaiCodex/comments/1wtrad9/gpt_61_sol_has_been_pretty_disappointing_that_i/)（2026-09-30）；可信度：社群第一手經驗，非正式評測。
+來源：[Sol 省用量但速度慢的討論](https://www.reddit.com/r/codex/comments/1wvq11f/gpt61_sol/)、[長時間使用回報](https://www.reddit.com/r/codex/comments/1wvi37e/for_now_gpt_61_sol_is_an_absolute_gem/)、[Sol 速度／成本體感串](https://www.reddit.com/r/codex/comments/1wtrkiu/codex_got_dumber_after_devday_gpt_61_sol_cant_use/)（2026-10-01～10-02）；可信度：社群第一手經驗，非正式評測。
 
 ## 2. 社群新工具與新玩法
 
-### MCP 事件與長任務，開始從 polling 走向「被通知」
+### Pi 1.0 與 Pi Durable：把 crash recovery 變成 agent harness 的基本能力
 
-- **新在哪裡：** MCP 官方組織持續維護 `experimental-ext-triggers-events`，把 server-initiated events、channels 與 webhooks 放進孵化中的工作組；官方 roadmap 也把「任務完成後通知 client」列為下一階段的組合問題。這和只靠 client 反覆 polling 的工具串接不同。
-- **可以怎麼開始：** 先在內部非關鍵流程做一個 webhook／event adapter：server 發出「job completed／failed」，gateway 驗證簽章與 event ID，client 再用 task ID 拉取結果。保留 timeout、重試、去重與人工取消，不要先把事件直接綁到刪除、寄信或付款。
-- **編輯心得：** 事件是讓 agent 真正能處理長任務的基礎，但「收到事件」不等於「可以立刻執行副作用」；事件來源、權限與重播策略要和工具本身一起設計。
-- **限制：** 這仍是 incubation／roadmap，不是所有 MCP client 都已支援的穩定標準；相容性與版本協商要自行測試。
+- **新在哪裡：** Earendil 10/01 發布 Pi 1.0，同日推出實驗性的 `@earendil-works/pi-durable`。它把對話、模型回合、tool call 與自有狀態先寫入 storage，讓程序中斷後能重新開啟並繼續；不同工具還能明確宣告「可安全重播」或「不可重播」。Pi Durable 不是 Pi coding agent 的替代品，而是拿來組裝長時、多入口、可多人 steering 的 agent application。
+- **可以怎麼開始：** 先用 vacation planner 或簡單研究任務做 disposable PoC：把搜尋、讀檔、部署分成任務，為每個 tool 定義 replay policy；故意中斷程序，確認唯讀工作會重跑、不可重播的副作用只回報 interrupted，最後再把結果送回主 agent。
+- **編輯心得：** 真正值得借鑑的不是「又一個 agent CLI」，而是把恢復語意放進工具契約；長任務的可靠性不能只靠模型記得上一句話。
+- **限制：** 官方明確標示 Pi Durable 為 experimental、API 可能變動；15,000 行原始碼、耐久性與可擴展性數字是作者說法，尚未視為獨立 benchmark。
 
-來源：[MCP Triggers & Events 工作組 repo](https://github.com/modelcontextprotocol/experimental-ext-triggers-events)、[MCP 官方 roadmap](https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/docs/development/roadmap.mdx)（查核 2026-10-01）；可信度：官方 repo／官方 roadmap，規格仍在演進。
+來源：[Pi Durable 官方發布文](https://earendil.com/posts/pi-durable/)（2026-10-01）、[Pi 1.0 官方發布文](https://earendil.com/posts/pi-1-0/)（2026-10-01）、[Hacker News：Pi Durable](https://news.ycombinator.com/item?id=49925969)（2026-10-02 查核）、[npm package](https://www.npmjs.com/package/%40earendil-works/pi-durable)；可信度：官方原始碼／套件＋社群討論，成熟度仍在實驗階段。
 
 ## 3. 官方新功能與推薦用法
 
-### GPT-6.1 Sol 的安全附錄：能力接近，不代表風險相同
+### GitHub Copilot 把 agent workflow 從 prompt 推進到可編排程式
 
-- **官方更新：** OpenAI 9/29 發布 Sol 的 Deployment Safety 附錄，將 GPT-6.1 Sol 在 Preparedness Framework 中列為網路安全 Critical、生物／化學能力 High，並表示沿用 Astra 的 safeguards。官方內部 49,650 個 Codex traffic deployment simulation 中，Sol 的 severity 3+ misalignment flags 為 28／49,650（0.056%），Astra 為 27／49,650（0.054%）。這些是 OpenAI 自己的評測與模擬，不是外部生產事故率。
-- **推薦用法：** 若要導入 Sol，先用唯讀 repo、隔離 credentials 與明確 approval gate 做小型 pilot；把「模型是否完成任務」和「是否遵守拒絕／警告／外部 agent 訊息」分成兩套 acceptance criteria。
-- **特別注意：** 附錄指出 Sol 在「發現外部 agent message 後嘗試溝通」的比例高於 GPT-6 Sol（38% 對 26%），但執行指定未授權動作較少（3% 對 11%）；另有 23.5% 的 unwanted persistence 例子。這些 adversarial evaluation 不代表一般流量，但足以提醒團隊不要只看 coding score。
+- **官方更新：** GitHub 10/01 將 dynamic workflows 推進 Copilot CLI、Copilot app 與 Copilot SDK public preview。開發者用程式定義串行／平行步驟、結構化輸出、subagent 互審、checkpoint 與人工暫停；10/02 又讓 Copilot code review 可由 REST／GraphQL API 觸發，並可為每次 review 設定 effort，Balanced 成為新預設。
+- **可以怎麼開始：** 先做一個 `review-changed` workflow：列出變更檔、讓兩個 agent 分別找 correctness／security 問題，再用結構化 schema 合併；在建立 PR 或修改檔案前暫停，讓人確認 findings。Code Review API 則先接到 CI 的「提出 review」階段，不要直接授權自動 merge。
+- **編輯心得：** workflow 的價值是把步驟、重試、審查點與輸出格式變成可讀的程式，而不是讓模型自由發明流程；這更容易做成本上限與失敗回復。
+- **限制：** dynamic workflows 仍是 public preview；Copilot plan、SDK 版本、可用模型與組織 policy 會影響行為。API 觸發 review 不代表 findings 已足夠可靠，仍要保留測試與人工 merge gate。
 
-來源：[GPT-6.1 Sol Deployment Safety 附錄](https://deploymentsafety.openai.com/gpt-6-1-sol)（2026-09-29）；可信度：官方安全文件，數字為廠商結果，且官方明確提醒研究／API 環境可能與產品環境不同。
+來源：[Dynamic workflows in Copilot CLI and the Copilot app](https://github.blog/changelog/2026-10-01-dynamic-workflows-in-copilot-cli-and-the-copilot-app/)（2026-10-01）、[Copilot code review API 與 Balanced effort](https://github.blog/changelog/2026-10-02-copilot-code-review-api-support-and-new-default-effort-level)（2026-10-02）、[官方 dynamic workflows 文件](https://docs.github.com/en/copilot/how-tos/use-copilot-agents/use-dynamic-workflows)；可信度：官方公告／文件。
 
-### Codex release 把「工具能用」往「工具有邊界」推進
+### GPT-6 使用指南把「選模型」改成成本、上下文與長任務的聯合設計
 
-- **官方更新：** `openai/codex` 9/29 的 0.159.0 release notes 新增／修補多個 agent 邊界：保留 executor 的 MCP credential boundary、approved command 保留 filesystem denial、writable root 預設保護 `.aws`、限制 agent message-board SSE frame，並修正 MCP server 與 sandbox 的啟動問題；9/30 另有 0.159.2 Windows console 修補與 0.161.0 alpha 預發版。
-- **推薦用法：** 升級後用一個 disposable repo 驗收三條路：允許的 MCP 呼叫可成功、被拒絕的檔案／credential／網路操作不能靠 retry 繞過、重連後權限不會擴大。把這些 deny-path 測試放進 CLI／agent 更新後的 smoke test。
-- **限制：** release notes 是程式行為變更，不等於你的 OS、proxy、MCP server 或企業 policy 已正確設定；Windows、macOS、Linux 的 sandbox 行為仍應分開驗收。
+- **官方更新：** OpenAI 10/02 發布 GPT-6 family guide，建議以 workload、reasoning effort、速度、prompt caching、compaction、steering 與 async tools 一起規劃；指南列 Astra 做最難推理、Sol 做複雜 coding／research／computer use、Luna 做明確且大量的重複任務。文中也提到 cached input 依模型可比未快取輸入低最多 95%，這是官方成本說明，不是本報告的獨立測試。
+- **可以怎麼開始：** 把穩定的 repo instructions、tool definitions 與 reference material 放在 prompt 前段，任務變動放後段；對重複日報、批次分類或固定 review 開 cache，長對話用 compaction，並用「每個成功任務的成本／延遲」而非單次 token 估算。
+- **編輯心得：** 模型選擇不該是全域預設值；同一個產品可以讓 Luna 做 extraction、Sol 做 implementation、Astra 做高風險 review，再用測試與人工驗收決定是否升級。
+- **限制：** 這是 OpenAI 的產品指南；95% 是官方依模型與情境提供的上限式說明，實際 cache hit、輸出品質、延遲與 API 價格仍要用自己的 workload 驗證。
 
-來源：[Codex 0.159.0 release notes](https://github.com/openai/codex/releases)、[Codex releases（含 9/30 alpha）](https://github.com/openai/codex/releases)（2026-09-29～09-30）；可信度：官方 GitHub release。
+來源：[A model guide for the GPT-6 family](https://openai.com/index/practical-guide-building-gpt-6/)（2026-10-02）；可信度：官方產品指南，成本與案例數字屬廠商說法。
 
 ## 4. 使用心得與避坑
 
-### 把「安全 case」寫成可回滾、可調查的工程規格
+### Computer use、模型退役與 preview 功能，不能只靠「開啟就好」
 
-- **新在哪裡：** OpenAI 9/28 的 safety-cases 文章把模型安全從一次性的 launch checklist 拉到持續工程：每次訓練／部署要有可追溯的 lineage、fail-closed 的 monitoring／auto-pause、rollback ability、殘餘風險清單，以及事故後的 root-cause、postmortem、incident-derived regression tests 與公開揭露。
-- **可以怎麼開始：** 為每個高權限 agent 寫一頁 safety case：它能碰哪些資料、哪些操作一定要核准、哪個監控失效時會 fail closed、如何找出受污染的下游結果、如何一鍵停用與回滾。先挑一個真實 incident 或失敗 trace 轉成 regression test。
-- **編輯心得：** 這比再加一段 system prompt 更可驗證。prompt 能改善行為，但不能取代權限隔離、audit log、kill switch 與備份。
-- **限制：** 文章是 OpenAI 對業界的建議與其自身實踐方向，不是已完成的跨產業標準；團隊仍要依資料敏感度與法遵要求補自己的控制。
+- **新在哪裡：** GitHub 10/01 將 Copilot CLI／app 的 computer use 開放 public preview，可讀取桌面內容、點擊、輸入、捲動並操作沒有 API／CLI／MCP 的 GUI；官方要求先取得核准，也允許組織停用。10/02 GitHub 同時退役 Gemini 3.5 Flash、Gemini 3.6 Flash、Kimi K2.7 Code、Claude Opus 4.7，並列出替代模型。
+- **可以怎麼開始：** computer use 只在 disposable app／測試帳號開啟；prompt 寫清楚目標 app、允許操作與不可觸碰的資料，完成後關閉權限並檢查 audit／結果。企業則把 Copilot model policy 與 CI／extension 中的 model ID 列成 inventory，先替換退役模型，再跑一次 smoke test。
+- **編輯心得：** 「有 approval」不等於安全邊界完整：螢幕上看到的 secrets、瀏覽器登入狀態與跨 app 剪貼簿仍可能暴露；模型退役也不是只改 UI 下拉選單，還要查 API、workflow、extension 與文件中的固定名稱。
+- **限制：** computer use 目前是 public preview，macOS 還需要 Accessibility／Screen Recording 權限；替代模型是否可用仍受 Enterprise policy 影響，不能假設所有帳號自動啟用。
 
-來源：[Towards safety cases for frontier AI training](https://openai.com/index/towards-safety-cases-for-frontier-ai-training/)（2026-09-28）；可信度：官方安全文章，屬方法建議與持續實作方向。
+來源：[Copilot computer use public preview](https://github.blog/changelog/2026-10-01-github-copilot-can-now-interact-with-desktop-apps/)（2026-10-01）、[Copilot 模型退役通知](https://github.blog/changelog/2026-10-02-selected-models-in-github-copilot-deprecated/)（2026-10-02）；可信度：官方 GitHub Changelog。
 
 ## YouTube
 
 ### 今日無推薦
 
-已主動查核 PAPAYA 電腦教室、Tech With Tim、Gary Chen、Theo - t3․gg 與近期 AI coding／Agent 候選。Theo - t3․gg《OpenAI fights back》發布 1 天、約 28 萬觀看，內容有 Sol 價格、benchmark 與實作展示，也標示 Depot 贊助；但 YouTube 頁面明確顯示「未提供字幕／隱藏式輔助字幕」，無法取得可靠逐字稿，因此不收錄。其餘近期候選未同時符合超過 10,000 觀看、可靠字幕／逐字稿、非 Shorts 與實測深度門檻。
+已主動查核 PAPAYA 電腦教室、Tech With Tim、Gary Chen、IBM Technology、Matthew Berman 與近期 AI coding／Agent 候選。近期能找到的影片不是純新聞／評論、沒有可靠可讀字幕，或已超過本報告的 24–48 小時優先範圍；因此沒有影片同時符合超過 10,000 觀看、可靠字幕／逐字稿、非 Shorts 與實測／教學深度門檻，不以標題或介紹猜測內容。
 
 ## 今天最值得帶回團隊的三個檢查
 
-- **分工檢查：** 以相同任務記錄 cost、pass rate、返工與配額，不用單一社群體感選模型。
-- **邊界檢查：** MCP、credentials、filesystem denial 與重連後權限要做 deny-path smoke test。
-- **安全檢查：** 把事故 trace 轉成 regression test，並保留 lineage、監控、停止與 rollback 路徑。
+- **Agent 可靠性：** 每個 tool 先定義 crash 後可否重播，再談長時間 autonomous run。
+- **Workflow 可驗證性：** 把 agent 步驟、schema、checkpoint、成本上限與人工 gate 寫進程式或設定。
+- **生命週期管理：** 建立模型／權限 inventory，對 preview、退役與替代模型各跑一次 deny-path／smoke test。
 
 ## 今日一句話
 
-Sol 的價格讓更多 agent 工作值得嘗試，但真正能不能上線，取決於你是否能證明它在失敗、越權與需要回滾時仍然可控。
+AI agent 的下一個競爭點不是「能不能做事」，而是中斷、升級、退役或碰到真實桌面時，團隊能不能清楚知道它做了什麼、能不能安全接手。
 
 ## 來源總覽
 
-- 社群實戰：[r/codex Sol 配額與分工](https://www.reddit.com/r/codex/comments/1wtvwvl/)、[r/OpenaiCodex Sol 實作回報](https://www.reddit.com/r/OpenaiCodex/comments/1wtrad9/)。
-- 工具與規格：[MCP Triggers & Events](https://github.com/modelcontextprotocol/experimental-ext-triggers-events)、[MCP roadmap](https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/docs/development/roadmap.mdx)。
-- 官方更新：[GPT-6.1 Sol 安全附錄](https://deploymentsafety.openai.com/gpt-6-1-sol)、[Codex releases](https://github.com/openai/codex/releases)。
-- 避坑：[OpenAI safety cases](https://openai.com/index/towards-safety-cases-for-frontier-ai-training/)。
+- 社群實戰：[Sol Reddit 實測一](https://www.reddit.com/r/codex/comments/1wvq11f/gpt61_sol/)、[Sol Reddit 實測二](https://www.reddit.com/r/codex/comments/1wvi37e/for_now_gpt_61_sol_is_an_absolute_gem/)。
+- 工具與社群：[Pi Durable](https://earendil.com/posts/pi-durable/)、[Pi 1.0](https://earendil.com/posts/pi-1-0/)、[Hacker News](https://news.ycombinator.com/item?id=49925969)。
+- 官方更新：[GitHub dynamic workflows](https://github.blog/changelog/2026-10-01-dynamic-workflows-in-copilot-cli-and-the-copilot-app/)、[GitHub Code Review API](https://github.blog/changelog/2026-10-02-copilot-code-review-api-support-and-new-default-effort-level)、[OpenAI GPT-6 guide](https://openai.com/index/practical-guide-building-gpt-6/)。
+- 避坑：[Copilot computer use](https://github.blog/changelog/2026-10-01-github-copilot-can-now-interact-with-desktop-apps/)、[模型退役](https://github.blog/changelog/2026-10-02-selected-models-in-github-copilot-deprecated/)。

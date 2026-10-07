@@ -1,80 +1,80 @@
-# AI 情報日報｜2026-10-07
+# AI 情報日報｜2026-10-08
 
-約 4 分鐘閱讀。今天的共同主線是：模型能力再往「可操作」推進，但真正值得帶回團隊的變化，是把 agent 的權限、測試與成本變成可觀察、可驗證的工程介面。
+約 4 分鐘閱讀。今天的主線是：agent 開始把「決策、介面與跨裝置執行」拆成更小的元件，但成本、不可逆操作與安全評估仍要由產品流程兜底。
 
-> 截稿時間：2026-10-07 08:04（Asia/Taipei）。
-> 查核範圍：優先查 2026-10-05～10-07；必要時補充近一週仍有實作價值的進展。已避開 10/06 的 Pi sampling、Orca Stop、Clef、Agent Orca、Copilot dynamic workflows、Frontier Academy、ChatGPT Ads 與 ReviewBench，除非今天有不同角度或新增證據。
-> 證據標示：官方公告／文件是官方事實；模型卡、benchmark 與產品方數字是廠商或作者結果；Reddit／GitHub 是社群實作與自述，不外推成普遍結論。
+> 截稿時間：2026-10-08 07:56（Asia/Taipei）。
+> 查核範圍：優先 2026-10-06～10-08；已避開 10/07 已報導且沒有新增證據的 Receipts、Paveo、Agent Session Inspector、jcode、GPT-6 Astra 與 Anthropic Cyber Verification Program。
+> 證據標示：官方公告／文件是官方事實；廠商 benchmark、價格與客戶案例標為廠商／作者結果；社群文章與 Hacker News／Reddit 是實作訊號，不外推成普遍結論。
 
 ## 1. 社群實戰用法
 
-### Receipts：確認 agent 寫的測試真的抓得到 bug
+### Codemode：讓 agent 先寫小段程式，再批次處理工具結果
 
-- **新在哪裡：** 社群工具 [Receipts](https://github.com/syntaxixr/receipts) 會把變更後的測試跑兩次：一次保留修正，一次只把 source 還原到 base；若兩邊都綠，標成 `THEATER`，表示測試沒有證明這次修正。它支援 pytest、Vitest、Jest，也能作為 Claude Code skill、CLI 或 GitHub Action。
-- **可以怎麼開始：** 在有「修 bug＋測試」的分支執行 `npx github:syntaxixr/receipts check`；先看 `PROVEN`、`THEATER`、`WEAK`，再把結果放進 PR，而不是只看 CI 綠燈。
-- **編輯心得與限制：** repo 的研究頁面回報 100 個 coding-agent PR 中約 10% 的測試只因 import 了新名稱而在舊程式上失效，沒有真正跑到舊行為；這是作者研究，不是獨立大型 benchmark。它也可能被 editable install、環境變數或非支援的 runner 影響，仍要保留一般測試與人工 review。
+- **新在哪裡：** Armin Ronacher 在 10/06 的 [Codemode 實作筆記](https://lucumr.pocoo.org/2026/10/6/codemode/)示範：agent 不必把每個 MCP 工具暴露成大量 JSON schema，而是先用 JavaScript 組合查詢、`Promise.all` 批次執行，再把整理後的結果送回模型。這適合大量 issue、帳戶或 log 的分類與彙整。
+- **可以怎麼開始：** 先挑唯讀工作，要求 agent 產生「查詢 → 聚合 → 排序」的短程式；限制並行數、保留執行結果與原始來源，確認輸出後才允許寫入型工具。
+- **編輯心得與限制：** 這是作者的工作流，不是獨立 benchmark。作者也指出把 Codemode 疊在 MCP server 內會造成雙重 JSON escaping，較小模型容易混亂；執行程式碼的權限邊界仍比 prompt 更重要。
 
-### Paveo：把危險 shell 動作變成 fail-closed 的最後一道門
+### Agent token 的新瓶頸：不是只看 API 帳單
 
-- **新在哪裡：** r/ClaudeAI 的 [Project Showcase 討論](https://www.reddit.com/r/ClaudeAI/comments/1wwli7h/claude_project_showcase_discussion_hub_updated_on/) 分享 [Paveo](https://github.com/paveo-dev/paveo)：用 PreToolUse hook 在執行前攔截 `rm -rf`、force push、`git reset --hard`、`DROP TABLE`，連 agent 修改自己 policy／hook 的行為也列入防護；作者特別強調 hook 出錯時要拒絕執行。
-- **可以怎麼開始：** 先在測試 repo 執行 `pip install paveo`、`paveo init claude-code`，用 `paveo replay claude-code` 重播歷史 session，觀察攔截清單是否誤傷正常工作，再逐步加入部署、付款、寄信等高風險命令。
-- **編輯心得與限制：** 作者自述兩個月、8,176 次 tool call 中會攔下 117 次 `rm -rf`；這是單一使用者的 replay 結果，不代表通用防護率。hook 只能限制看得見的命令，無法取代最小權限 token、隔離工作區與遠端審核。
+- **新在哪裡：** [Tom’s Hardware 10/03 的整理](https://www.tomshardware.com/tech-industry/artificial-intelligence/futurum-ceo-says-agents-use-ai-5x-more-than-humans-number-will-eventually-hit-10x-but-agents-are-mostly-rereading-what-theyve-already-seen)引用 OpenRouter／a16z 的平台資料：2026 年 8 月 agents 約 7.3 兆 tokens、人類約 1.4 兆，超過 85% 是 cached prompts。這是單一平台、token 量而非支出，且分類方法是平台自己的 7 個訊號。
+- **可以怎麼開始：** 在 agent telemetry 同時記錄新輸入、cache read、重送的歷史 context、每步延遲與成功率；先找出「每輪都重讀整份 session」的工具結果，再做摘要、分層記憶或 context compaction。
+- **編輯心得與限制：** cache 能降低單次 token 價格，卻不會消除 KV cache 的記憶體與延遲成本。不要只用「每次請求多少錢」判斷 agent ROI。
 
 ## 2. 社群新工具與新玩法
 
-### Agent Session Inspector：先看 session 成本與失敗迴圈，再改 prompt
+### Strands Decider 2B：用小型決策模型攔截錯誤 tool call
 
-- **新在哪裡：** [Agent Session Inspector](https://github.com/kishanmundha/agent-session-inspector) 是本機 Web UI，讀取 Claude Code、Codex、GitHub Copilot、OpenCode、Hermes 的 session，提供 prompt／thinking／tool call 時間線、token、成本估算、重試迴圈、compaction 與健康度；repo 聲稱資料不離開本機。
-- **可以怎麼開始：** 用 `npx agent-session-inspector` 開啟，先挑一個最近失敗的 session，找出真正耗費 token 的工具結果、重複 retry 或過早 compaction，再只改一項規則重跑。
-- **限制：** 成本是依公開價格換算的估計，不是帳單；本機 JSONL 仍可能含 prompt、路徑或敏感資料，使用前要檢查檔案權限與是否會被其他本機服務讀取。專案目前仍是早期小型 repo，不能當成完整 observability 平台。
+- **新在哪裡：** AWS Strands 在 10/01 發布 [Strands Decider 2B](https://strandsagents.com/blog/introducing-strands-decider/)，它不是聊天模型，而是從固定選項中做選擇並給 confidence；官方表示可在 RTX 3090 約 115ms、M3 MacBook 小任務約 153ms 本機決策，模型、資料與訓練腳本也開放。效能與 JevBench 排名是官方引用的外部／作者結果，仍應自行重測。
+- **可以怎麼開始：** 用 `pip install strands-decider`，先做兩個 before-tool-call 問題：參數是否來自使用者明確提供的資料？現在是否需要先澄清？只在信心與規則都通過時 `Proceed`，否則 `Confirm` 或 `Guide`。
+- **編輯心得與限制：** 它適合路由、tool selection、guardrail、memory policy，不適合取代複雜推理或產生文字；固定選項設計錯了，低延遲只會更快地做錯決策。
 
-### jcode 0.91.0：把 coding agent 的外部操作做成明確工具與速度層
+### nanoMuse 0.1.41：跨手機、桌面與瀏覽器的可中斷個人 agent
 
-- **新在哪裡：** 開源 terminal agent [jcode](https://jcode.sh/) 在 10/06 的 `v0.91.0` 加入 Google Calendar 登入與內建日曆工具，可查看、建立、更新、刪除事件；同時以 `Standard`、`Fast`、`Ultrafast` 速度層切換，並新增 `/desktop` 開啟桌面工作階段。
-- **可以怎麼開始：** 從 [安裝指令](https://jcode.sh/) 開始，先只授權一個測試 Google 帳戶與最小 Calendar scope；把「查詢空檔」和「寫入事件」拆成兩個不同任務，寫入前保留人工確認。
-- **編輯心得與限制：** 這是工具整合與 UX 的進步，不等於 agent 能可靠理解你的日曆規則；刪改事件、時區、重複事件與 OAuth scope 都要在沙盒帳戶驗收，速度層也應用固定任務量測成本與完成時間。
+- **新在哪裡：** [nanoMuse GitHub](https://github.com/nano-muse/nanoMuse) 在 10/07 更新 0.1.41，主打同一個 agent 跨 Android、iOS／iPadOS、Windows、macOS、Linux 與瀏覽器工作；支援 shell、瀏覽器、MCP、skills，遇到刪除、寄送或付款等不可逆操作先詢問，記憶以可讀 Markdown 保存。
+- **可以怎麼開始：** 先用瀏覽器 demo 或測試帳號，把「手機下指令、桌面執行、手機核准」限定在非敏感工作；確認 relay、模型 key、Markdown 記憶與裝置權限後，再考慮自架 `bash scripts/self-host.sh --local`。
+- **編輯心得與限制：** 專案採 GPL-3.0-or-later，社群 relay 有免費額度，之後要自備 key；跨裝置同步意味著更多 token、瀏覽器 session 與個人記憶暴露面，不能把「先詢問」當成完整安全模型。
 
 ## 3. 官方新功能與推薦用法
 
-### GPT-6 Astra：電腦使用、Codex 長 session 與資安能力同步升級
+### OpenAI GPT‑6 Intelligent UI：答案變成可互動的介面
 
-- **官方更新：** OpenAI 的 [GPT-6 Astra 公告](https://openai.com/index/gpt-6-astra/)目前標示「today」開始限量 rollout，之後陸續提供 ChatGPT Plus／Pro／Business／Enterprise、API、Azure 與 Bedrock；API 名稱為 `gpt-6-astra`，標準價格是每百萬 input tokens 10 美元、output tokens 50 美元，Fast mode 最高 2 倍速度、價格也為 2 倍。
-- **推薦用法：** 先拿來做可回復的 frontend QA、表單填寫、資料整理或 Codex 長任務；Codex 的實驗性 context notes 能跨 context window 保存搜尋結果與測試狀態。高風險流程仍維持 dry-run、確認政策與終態檢查，不要把「能操作瀏覽器」直接等同「可代替人簽核」。
-- **能力與限制：** OpenAI 公布的 OSWorld、Terminal-Bench、ExploitBench 等數字都是廠商結果；同一份公告也承認 Astra 的書面 reasoning 較難監控，資安保護可能暫停或停止合法工作，API 任務遇到攔截會直接停止。企業 workspace 初始為關閉，應先設小範圍 pilot、記錄誤攔率、成本與人工接管率。
+- **官方更新：** OpenAI 於 10/07 發布 [GPT‑6 and Intelligent UI](https://openai.com/index/gpt-6-for-everyone/)。GPT‑6 可依問題組合文字、圖表、按鈕、表單與互動體驗，並以 streamable component library 與 compiler 漸進呈現；Plus／Pro／Business／Enterprise 先行，Free／Go 隔日擴大。官方明確說這次是 ChatGPT Chat 體驗，Work 與 Codex 使用的模型不變。
+- **推薦用法：** 先用在旅行規劃、教學拆解、比較表、計算器等「互動能減少理解成本」的任務；若要把結果拿進正式流程，仍要求匯出資料、驗證公式與保留人工確認，不要把臨時 UI 當成 production app。
+- **能力與限制：** 官方提到 web search 平均更早開始回答 44%，但這是 OpenAI 內部評測；介面設計判斷仍在改善，互動元件也可能讓錯誤看起來更像可靠的產品。
 
-### Anthropic CVP：把高能力 cyber model 依安全用途分級開放
+### Claude Haiku 5.5：把便宜模型放到高頻 subagent 與瀏覽器工作
 
-- **官方更新：** Anthropic 於 10/06 更新 [Project Glasswing](https://www.anthropic.com/glasswing)，推出擴充版 [Cyber Verification Program](https://www.anthropic.com/glasswing)；現在有三個 access tiers，合格資安團隊可依用途申請，現有 Glasswing 成員轉入 Specialized Access tier，並可使用 Claude Opus 5.5、Sonnet 5.5、Mythos 5.1 等模型。
-- **推薦用法：** 對防守團隊而言，先把漏洞掃描、修補建議、secure code review 與回歸測試放在明確 scope；每一級 access 都配專案、資產、網路與審計邊界，將「可找到問題」和「可產生 exploit」分開審批。
-- **限制：** 這是 Anthropic 的 access policy 與安全計畫，不是第三方證明模型安全；官方早先對 Mythos 的「找到數千個高嚴重度漏洞」也屬公司自身觀察。申請到高權限不代表團隊已有 incident response、隔離環境或漏洞揭露流程。
+- **官方更新：** Anthropic 於 10/07 發布 [Claude Haiku 5.5](https://www.anthropic.com/claude-haiku-5-5)：支援 1M context、可調 effort，API 每百萬 tokens 在 100K 以內為 input $0.10／output $0.50，並同步把 Sonnet 5.5 cache read 降半；Python／TypeScript SDK 新增 computer use 與 browser use beta。官方 benchmark 與客戶案例均為廠商／客戶早期結果。
+- **推薦用法：** 讓 Haiku 做分類、摘要、compaction、資料抽取、快取查詢或高量 subagent，複雜 coding 仍讓 Sonnet／Opus 主導；用 `effort` 和固定任務集量測延遲、成本、錯誤率，不要只看單次 demo。
+- **額外變化：** Max 5x、Max 20x 與 Team 本週陸續取得每月 API credits；適合拿來做小型試驗，但應先確認所連結的 Console organization、額度是否到期，以及是否會自動加值。
 
 ## 4. 使用心得與避坑
 
-### 先驗證「做過 agent」的定義，再比較工具與履歷
+### Haiku 5.5 的「單價便宜」不等於長 context 便宜
 
-- **社群訊號：** r/SoftwareEngineerJobs 的 [10/04 討論](https://www.reddit.com/r/SoftwareEngineerJobs/comments/1wx1t3w/everyone_is_an_ai_expert/)指出，現在很多人把「用過 Claude Code」或「寫過一個 Claude app」都稱為 agentic experience；原作者的實際疑問是：真正的 agent 設計、技能／規則、MCP 連接、權限、測試與 production 維護，是否被混在同一個名詞裡。
-- **可以怎麼用：** 團隊面試或內部分享不要只問用了哪個模型，改問一個完整案例：目標如何拆解、agent 能碰哪些系統、失敗如何重試或停止、如何測試副作用、誰批准最後寫入，以及怎麼量成本與品質。
-- **編輯心得與限制：** 這是社群討論，不是勞動市場統計；但它提醒我們，agent 經驗應以「可控流程＋可驗證結果」描述，而不是以工具名稱或 prompt 數量包裝能力。
+- **實測訊號：** Simon Willison 在 [10/07 的測試](https://simonwillison.net/2026/Oct/7/claude-haiku-5-5/)用 token counter 發現，同一份長 prompt 在 Haiku 5.5 約使用 Haiku 4.5 的 1.25 倍 tokens；100K 以上價格也跳到 input $0.50／output $2.50。他還示範 `llm -m claude-haiku-5.5 ... -o thinking_effort low`，並提醒月度 API credits 不 rollover。
+- **可以怎麼避坑：** 先用 10K、50K、100K、150K context 做成本曲線；對會長期跑的 agent 設 hard budget cap、關閉不需要的 auto-reload，並把超長歷史改成摘要或外部可查記憶。
+- **編輯心得與限制：** 這是個人實測，不是完整價格 benchmark；對短任務 Haiku 5.5 很有吸引力，但跨過 context 價格階梯後，便宜小模型可能不如另一家模型划算。
 
-### 不要把產品 demo、模型 benchmark 與 production SLA 混為一談
+### GPT‑6 的安全卡提醒：高 prompt-injection 分數不能代表所有風險都改善
 
-- Astra 的 benchmark、Anthropic 的資安能力描述、Paveo 的 replay、Receipts 的研究數字，各自回答不同問題：模型在特定測試的表現、工具作者觀察到的防護、測試是否命中修正、或單一環境的風險樣本。
-- 實際導入時至少分三層驗收：**模型層**看固定任務成功率與成本；**harness 層**看權限、停止、重試與 session 可觀察性；**產品層**看資料正確性、人工接管、回滾與 audit trail。缺任何一層，都不能把一次成功 demo 當成可交付能力。
-
-來源：[OpenAI GPT-6 Astra](https://openai.com/index/gpt-6-astra/)、[Anthropic Project Glasswing](https://www.anthropic.com/glasswing)、[Receipts](https://github.com/syntaxixr/receipts)、[Paveo 的社群分享](https://www.reddit.com/r/ClaudeAI/comments/1wwli7h/claude_project_showcase_discussion_hub_updated_on/)、[Agent Session Inspector](https://github.com/kishanmundha/agent-session-inspector)、[jcode changelog](https://jcode.sh/)、[AI agent 經驗討論](https://www.reddit.com/r/SoftwareEngineerJobs/comments/1wx1t3w/everyone_is_an_ai_expert/)。
+- **官方避坑：** [GPT‑6 Sol／Luna 10 月 system card](https://deploymentsafety.openai.com/gpt-6-october)記載，兩模型在 instruction-hierarchy prompt injection 評測達 99.99%／99.79%（官方評測），但同一份文件也列出相對 GPT‑5.6 在未成年人 age-restricted、sexual content、emotional reliance 等項目的統計回歸；文件並提醒困難案例不代表一般流量頻率。
+- **可以怎麼用：** 對 agent 上線前把 prompt injection、未成年人安全、敏感領域與人工接管分開測；不要用一個漂亮的 robustness 數字抵銷另一組回歸。高風險 tool 仍要在權限、網路、資料與終態層做獨立 deny／confirm。
 
 ## YouTube 深度整理
 
 ### 今日無推薦
 
-已主動查核 PAPAYA 電腦教室、Tech With Tim、Gary Chen、Matt Pocock、freeCodeCamp 等中英文 AI／工具／Agent／AI Coding 頻道；目前沒有一部同時符合「近 24–48 小時優先（必要時一週內）、觀看數超過 10,000、非 Shorts、具實測／教學／技術拆解、且有可靠字幕或逐字稿」的影片。早期高觀看但超過一週、偏新聞朗讀或缺少可靠字幕的候選均排除，避免從標題或介紹推測內容。
+已主動查核 PAPAYA 電腦教室、Tech With Tim、Gary Chen、Matt Pocock、freeCodeCamp 與近期 AI／Agent／AI Coding 候選。PAPAYA 10/03 的「找不到適合自己的 App？」有可讀內容摘要，但第三方查核約 7,700 次觀看，未達 10,000；其餘候選未同時符合近 24–48 小時優先、破萬觀看、非 Shorts、實測深度與可靠字幕／逐字稿門檻，因此不從標題或介紹推測內容。
 
 ## 今天最值得帶回團隊的三個檢查
 
-- **權限：** agent 能讀到哪些 token、工作區與外部服務？能不能在最小權限與測試帳戶中完成？
-- **證據：** 測試是否真的在「沒有修正」的基準上失敗？session、成本與 tool call 能否回放？
-- **終態：** Stop、拒絕、超時或 API 攔截後，程序、檔案、日曆事件與遠端資源是否都回到可驗證狀態？
+- **決策：** 能否用小模型先檢查 tool 參數是否有根據、是否該先澄清？
+- **成本：** 是否分開記錄 cache read、重送 context、context 長度與真正完成任務的成本？
+- **終態：** 互動 UI、跨裝置 agent 或 browser use 被中斷後，是否仍有權限撤銷、人工確認與可驗證結果？
 
 ## 今日一句話
 
-更強的 agent 不會自動帶來更可靠的產品；可靠性要靠可觀察的 session、最小權限與能證明修正有效的測試一起補上。
+Agent 的下一步不是把所有事情交給更大的模型，而是用小決策器、互動介面與可中斷的權限流程，把每一次自動化行動拆成能驗證的步驟。
+
+來源：[OpenAI GPT‑6 Intelligent UI](https://openai.com/index/gpt-6-for-everyone/)、[OpenAI GPT‑6 October system card](https://deploymentsafety.openai.com/gpt-6-october)、[Anthropic Claude Haiku 5.5](https://www.anthropic.com/claude-haiku-5-5)、[Strands Decider 2B](https://strandsagents.com/blog/introducing-strands-decider/)、[nanoMuse](https://github.com/nano-muse/nanoMuse)、[Codemode](https://lucumr.pocoo.org/2026/10/6/codemode/)、[Tom’s Hardware／OpenRouter token data](https://www.tomshardware.com/tech-industry/artificial-intelligence/futurum-ceo-says-agents-use-ai-5x-more-than-humans-number-will-eventually-hit-10x-but-agents-are-mostly-rereading-what-theyve-already-seen)、[Simon Willison 的 Haiku 5.5 實測](https://simonwillison.net/2026/Oct/7/claude-haiku-5-5/)。

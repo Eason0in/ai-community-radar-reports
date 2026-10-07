@@ -1,98 +1,80 @@
-# AI 情報日報｜2026-10-06
+# AI 情報日報｜2026-10-07
 
-約 4 分鐘閱讀。今天的共同主線是：agent 工具開始把流程、審查與停止條件寫進可重播的結構，但「可重播」不等於「結果必然正確」。
+約 4 分鐘閱讀。今天的共同主線是：模型能力再往「可操作」推進，但真正值得帶回團隊的變化，是把 agent 的權限、測試與成本變成可觀察、可驗證的工程介面。
 
-> 截稿時間：2026-10-06 08:18（Asia/Taipei）。
-> 查核範圍：優先查 2026-10-04～10-06；必要時補充近一週仍有實作價值的進展。已避開 10/05 的 ThinkingBox、AREX-2、OpenShell、GPT-6.1 Sol、Agents API、Dots 與 Tech With Tim harness 影片，除非本日有獨立新進展。
-> 證據標示：官方公告／文件是官方事實；模型卡、benchmark 與產品方數字是作者或廠商結果；社群 release 與影片是實作經驗，不外推成普遍結論。
+> 截稿時間：2026-10-07 08:04（Asia/Taipei）。
+> 查核範圍：優先查 2026-10-05～10-07；必要時補充近一週仍有實作價值的進展。已避開 10/06 的 Pi sampling、Orca Stop、Clef、Agent Orca、Copilot dynamic workflows、Frontier Academy、ChatGPT Ads 與 ReviewBench，除非今天有不同角度或新增證據。
+> 證據標示：官方公告／文件是官方事實；模型卡、benchmark 與產品方數字是廠商或作者結果；Reddit／GitHub 是社群實作與自述，不外推成普遍結論。
 
 ## 1. 社群實戰用法
 
-### Pi 1.0.2：依 thinking level 調整 sampling，而不是一組參數打天下
+### Receipts：確認 agent 寫的測試真的抓得到 bug
 
-- **新在哪裡：** Pi 10/04 的 [v1.0.2 release](https://github.com/earendil-works/pi/releases/tag/v1.0.2) 新增 `samplingParamsByThinkingLevel`，可在 `models.json` 依 thinking level 設 `temperature`、`top_p` 等 OpenAI-compatible 參數。
-- **可以怎麼開始：** 先只為低／中／高三個 level 設不同參數，固定同一批任務比較成功率、延遲與成本；把設定當 routing 實驗，不要直接假設高 temperature 會帶來更好的探索。
-- **編輯心得與限制：** 這是 harness 層的可控旋鈕，不是模型能力提升；release 只證明設定支援，最佳參數仍要用自己的任務驗證。
+- **新在哪裡：** 社群工具 [Receipts](https://github.com/syntaxixr/receipts) 會把變更後的測試跑兩次：一次保留修正，一次只把 source 還原到 base；若兩邊都綠，標成 `THEATER`，表示測試沒有證明這次修正。它支援 pytest、Vitest、Jest，也能作為 Claude Code skill、CLI 或 GitHub Action。
+- **可以怎麼開始：** 在有「修 bug＋測試」的分支執行 `npx github:syntaxixr/receipts check`；先看 `PROVEN`、`THEATER`、`WEAK`，再把結果放進 PR，而不是只看 CI 綠燈。
+- **編輯心得與限制：** repo 的研究頁面回報 100 個 coding-agent PR 中約 10% 的測試只因 import 了新名稱而在舊程式上失效，沒有真正跑到舊行為；這是作者研究，不是獨立大型 benchmark。它也可能被 editable install、環境變數或非支援的 runner 影響，仍要保留一般測試與人工 review。
 
-### Orca 1.4.220：Stop 應該真的停止背景程序
+### Paveo：把危險 shell 動作變成 fail-closed 的最後一道門
 
-- **新在哪裡：** Orca 10/04 的 [v1.4.220 release](https://github.com/stablyai/orca/releases/tag/v1.4.220) 修正 native chat 的 Stop，會結束 Claude process、背景命令與 subagents；同時改善 interrupted turn、Codex retry、SSH 與 workspace 狀態。
-- **可以怎麼開始：** 先在無 production secrets 的 repo 測試「執行中按 Stop → 檢查子程序、未送出的訊息、工作樹與檔案狀態」，把停止行為列入 agent 的驗收案例。
-- **限制：** release notes 不是獨立可靠性審計；Windows ARM、OpenCode 既有 pane、Codex managed home 等已列出已知問題，升級前要看自己的平台。
+- **新在哪裡：** r/ClaudeAI 的 [Project Showcase 討論](https://www.reddit.com/r/ClaudeAI/comments/1wwli7h/claude_project_showcase_discussion_hub_updated_on/) 分享 [Paveo](https://github.com/paveo-dev/paveo)：用 PreToolUse hook 在執行前攔截 `rm -rf`、force push、`git reset --hard`、`DROP TABLE`，連 agent 修改自己 policy／hook 的行為也列入防護；作者特別強調 hook 出錯時要拒絕執行。
+- **可以怎麼開始：** 先在測試 repo 執行 `pip install paveo`、`paveo init claude-code`，用 `paveo replay claude-code` 重播歷史 session，觀察攔截清單是否誤傷正常工作，再逐步加入部署、付款、寄信等高風險命令。
+- **編輯心得與限制：** 作者自述兩個月、8,176 次 tool call 中會攔下 117 次 `rm -rf`；這是單一使用者的 replay 結果，不代表通用防護率。hook 只能限制看得見的命令，無法取代最小權限 token、隔離工作區與遠端審核。
 
 ## 2. 社群新工具與新玩法
 
-### Cloudflare Clef：讓 agent 的路由決策回傳 typed probabilities
+### Agent Session Inspector：先看 session 成本與失敗迴圈，再改 prompt
 
-- **新在哪裡：** Cloudflare 10/01 開源 [Clef 與 Clef-flash](https://blog.cloudflare.com/clef-decision-models/)，不是生成長文，而是對輸入狀態與一組 typed questions 回傳各選項機率；可在 Workers AI 使用，也能從 [Hugging Face](https://huggingface.co/collections/cloudflare/clef) 下載 Apache 2.0 權重，另提供 Clef 的 RL fine-tuning 產品。
-- **可以怎麼開始：** 把「客服分流、是否升級人工、是否阻擋」這類有限選項先包成 decision step；設 confidence threshold，低於門檻就交給人，不要讓機率直接等同授權。
-- **編輯心得與限制：** 這種 bounded output 很適合放在 LLM 前後的路由層；Cloudflare 提到 64K context、vision encoder 與 latency benchmark，但那些是廠商結果，先用真實流量量 false positive、p95 latency 與人工接管率。
+- **新在哪裡：** [Agent Session Inspector](https://github.com/kishanmundha/agent-session-inspector) 是本機 Web UI，讀取 Claude Code、Codex、GitHub Copilot、OpenCode、Hermes 的 session，提供 prompt／thinking／tool call 時間線、token、成本估算、重試迴圈、compaction 與健康度；repo 聲稱資料不離開本機。
+- **可以怎麼開始：** 用 `npx agent-session-inspector` 開啟，先挑一個最近失敗的 session，找出真正耗費 token 的工具結果、重複 retry 或過早 compaction，再只改一項規則重跑。
+- **限制：** 成本是依公開價格換算的估計，不是帳單；本機 JSONL 仍可能含 prompt、路徑或敏感資料，使用前要檢查檔案權限與是否會被其他本機服務讀取。專案目前仍是早期小型 repo，不能當成完整 observability 平台。
 
-### Agent Orca：把 agent 變成 Kubernetes 資源來管理
+### jcode 0.91.0：把 coding agent 的外部操作做成明確工具與速度層
 
-- **新在哪裡：** 社群在 10/04 公開的 [agent-orca](https://github.com/heddles/agent-orca) 以 Kubernetes CRD 管理 `AgentRun`、長駐 `AgentDeployment` 與多步 `AgentWorkflow`，並把零信任網路、OAuth／OIDC、RAG、checkpoint、成本與 audit 放進平台層。
-- **可以怎麼開始：** 只在 kind／測試叢集建立一個 one-shot `AgentRun`，先限制 namespace、egress、模型 key 與預算，再測試失敗重試、取消、checkpoint 恢復與外部 API auth。
-- **限制：** 這是新社群專案，不代表已具備 production SLA；需要 Docker、Kubernetes、Redis／Postgres 等元件，部署複雜度遠高於單機 coding agent。
+- **新在哪裡：** 開源 terminal agent [jcode](https://jcode.sh/) 在 10/06 的 `v0.91.0` 加入 Google Calendar 登入與內建日曆工具，可查看、建立、更新、刪除事件；同時以 `Standard`、`Fast`、`Ultrafast` 速度層切換，並新增 `/desktop` 開啟桌面工作階段。
+- **可以怎麼開始：** 從 [安裝指令](https://jcode.sh/) 開始，先只授權一個測試 Google 帳戶與最小 Calendar scope；把「查詢空檔」和「寫入事件」拆成兩個不同任務，寫入前保留人工確認。
+- **編輯心得與限制：** 這是工具整合與 UX 的進步，不等於 agent 能可靠理解你的日曆規則；刪改事件、時區、重複事件與 OAuth scope 都要在沙盒帳戶驗收，速度層也應用固定任務量測成本與完成時間。
 
 ## 3. 官方新功能與推薦用法
 
-### GitHub Copilot dynamic workflows：把多 Agent 流程寫成程式
+### GPT-6 Astra：電腦使用、Codex 長 session 與資安能力同步升級
 
-- **官方更新：** GitHub 10/01 將 [dynamic workflows](https://github.blog/changelog/2026-10-01-dynamic-workflows-in-copilot-cli-and-the-copilot-app/) 帶到 Copilot CLI、Copilot app 與 SDK。你可以用程式固定順序、平行分工、結構化交接、checkpoint、pause／resume，而不是每次讓 agent 自己重新決定整張流程圖。
-- **推薦用法：** 從 release check、PR 多檔審查或 incident triage 開始：deterministic steps 收集資料，agent 只負責需要判斷的節點，最後用 schema 驗證與人工 checkpoint 收口。CLI 需 `--experimental` 或 `/experimental on`。
-- **限制：** 目前是 public preview；文件也明確說 agent 的內容仍可能不同，AI credit limit 是近似上限，已在途的工作可能讓實際用量超過設定。
+- **官方更新：** OpenAI 的 [GPT-6 Astra 公告](https://openai.com/index/gpt-6-astra/)目前標示「today」開始限量 rollout，之後陸續提供 ChatGPT Plus／Pro／Business／Enterprise、API、Azure 與 Bedrock；API 名稱為 `gpt-6-astra`，標準價格是每百萬 input tokens 10 美元、output tokens 50 美元，Fast mode 最高 2 倍速度、價格也為 2 倍。
+- **推薦用法：** 先拿來做可回復的 frontend QA、表單填寫、資料整理或 Codex 長任務；Codex 的實驗性 context notes 能跨 context window 保存搜尋結果與測試狀態。高風險流程仍維持 dry-run、確認政策與終態檢查，不要把「能操作瀏覽器」直接等同「可代替人簽核」。
+- **能力與限制：** OpenAI 公布的 OSWorld、Terminal-Bench、ExploitBench 等數字都是廠商結果；同一份公告也承認 Astra 的書面 reasoning 較難監控，資安保護可能暫停或停止合法工作，API 任務遇到攔截會直接停止。企業 workspace 初始為關閉，應先設小範圍 pilot、記錄誤攔率、成本與人工接管率。
 
-### Anthropic Frontier Academy：企業導入開始把「會用模型」改成可考核職能
+### Anthropic CVP：把高能力 cyber model 依安全用途分級開放
 
-- **官方更新：** Anthropic 10/02 宣布投入 1 億美元，目標在 2027 年底培訓 10,000 名 [Frontier Deployed Engineers](https://www.anthropic.com/news/claude-frontier-academy)。第一批由 Accenture、Bain、Capgemini、Deloitte、McKinsey、Morgan Stanley、Novo Nordisk 等企業提名，課程包含 simulated deployment、security review、handover、graded practical 與 12 週 residency。
-- **推薦用法：** 團隊內可仿照它的順序做小型能力矩陣：選題 → 威脅／資料界線 → 真實流程試作 → 驗收 → 交接；不要只用 prompt challenge 當 AI 能力證明。
-- **限制：** 目前是企業提名制，這是 Anthropic 的培訓與人才策略，不是公開認證普遍有效的證據；badge 也不能取代你們自己的 production 安全與效益指標。
-
-### ChatGPT 視覺廣告：先分清楚「測試」與「已全面上線」
-
-- **官方更新：** OpenAI 10/05 發布 [新的 ChatGPT Ads 視覺格式](https://openai.com/index/new-chatgpt-ads-format-and-measurement/)，預計本月底先在美國、對一小批廣告主測試；初期會出現在圖片生成流程旁，廣告會標示並與生成圖片分開。OpenAI 表示廣告不影響答案，並新增歸因、品牌適配與轉換資料整合。
-- **怎麼看：** 一般使用者目前不用把它當成已在所有帳號出現的 UI；產品團隊若要評估，應把 answer quality、廣告誤認、敏感情境排除與隱私邊界列成獨立測試。
-- **限制：** WeightWatchers、Dose、Portland Leather 等成效數字是合作夥伴／廣告方早期結果，不是獨立長期因果評估；正式 rollout、地區與體驗仍可能變動。
+- **官方更新：** Anthropic 於 10/06 更新 [Project Glasswing](https://www.anthropic.com/glasswing)，推出擴充版 [Cyber Verification Program](https://www.anthropic.com/glasswing)；現在有三個 access tiers，合格資安團隊可依用途申請，現有 Glasswing 成員轉入 Specialized Access tier，並可使用 Claude Opus 5.5、Sonnet 5.5、Mythos 5.1 等模型。
+- **推薦用法：** 對防守團隊而言，先把漏洞掃描、修補建議、secure code review 與回歸測試放在明確 scope；每一級 access 都配專案、資產、網路與審計邊界，將「可找到問題」和「可產生 exploit」分開審批。
+- **限制：** 這是 Anthropic 的 access policy 與安全計畫，不是第三方證明模型安全；官方早先對 Mythos 的「找到數千個高嚴重度漏洞」也屬公司自身觀察。申請到高權限不代表團隊已有 incident response、隔離環境或漏洞揭露流程。
 
 ## 4. 使用心得與避坑
 
-### ReviewBench：評估 code-review agent 不要只看一個總分
+### 先驗證「做過 agent」的定義，再比較工具與履歷
 
-- **新在哪裡：** GitHub 10/05 公開 [ReviewBench](https://github.blog/ai-and-ml/github-copilot/reviewbench-an-open-benchmark-for-ai-code-review/)，從 1.039 億個 PR 的分布抽出 219 個、涵蓋 19 種語言的公開 PR，以 human reviewers、frontier LLM 與 static analysis 建立 multi-source golden set，提供 grounded／augmented precision 與 recall。
-- **可以怎麼開始：** 把自己的 reviewer 跑在 25-PR test set，先分 severity、security、correctness、testing，再決定團隊要高 precision 少噪音，還是高 recall 多抓問題；最後一定要用真實 PR 的 addressed rate 與人工修改率回看。
-- **限制：** GitHub 報告的 96.6% expert agreement、離線分數與線上實驗同向，仍是 GitHub 建立與驗證的 benchmark 結果；219 個 PR 不代表你的語言、框架與風險分布，不能直接當 production SLA。
+- **社群訊號：** r/SoftwareEngineerJobs 的 [10/04 討論](https://www.reddit.com/r/SoftwareEngineerJobs/comments/1wx1t3w/everyone_is_an_ai_expert/)指出，現在很多人把「用過 Claude Code」或「寫過一個 Claude app」都稱為 agentic experience；原作者的實際疑問是：真正的 agent 設計、技能／規則、MCP 連接、權限、測試與 production 維護，是否被混在同一個名詞裡。
+- **可以怎麼用：** 團隊面試或內部分享不要只問用了哪個模型，改問一個完整案例：目標如何拆解、agent 能碰哪些系統、失敗如何重試或停止、如何測試副作用、誰批准最後寫入，以及怎麼量成本與品質。
+- **編輯心得與限制：** 這是社群討論，不是勞動市場統計；但它提醒我們，agent 經驗應以「可控流程＋可驗證結果」描述，而不是以工具名稱或 prompt 數量包裝能力。
 
-### 「流程寫死」仍不等於「結果寫死」
+### 不要把產品 demo、模型 benchmark 與 production SLA 混為一談
 
-- dynamic workflow、`implement spec` 與多 Agent orchestrator 都在把步驟固定化，但模型判斷、工具副作用與外部服務仍會變。建議每個階段留下結構化輸出、可重播輸入、timeout、取消、人工 checkpoint 與終態 assertion。
-- 高風險動作（刪除、付款、寄信、部署、修改權限）先用 dry-run／staging；把「停止後沒有背景程序」、「低 confidence 交人工」、「PR 仍通過 deterministic checks」寫成測試，而不是只看 agent 最後一句話。
+- Astra 的 benchmark、Anthropic 的資安能力描述、Paveo 的 replay、Receipts 的研究數字，各自回答不同問題：模型在特定測試的表現、工具作者觀察到的防護、測試是否命中修正、或單一環境的風險樣本。
+- 實際導入時至少分三層驗收：**模型層**看固定任務成功率與成本；**harness 層**看權限、停止、重試與 session 可觀察性；**產品層**看資料正確性、人工接管、回滾與 audit trail。缺任何一層，都不能把一次成功 demo 當成可交付能力。
 
-來源：[Pi v1.0.2](https://github.com/earendil-works/pi/releases/tag/v1.0.2)、[Orca v1.4.220](https://github.com/stablyai/orca/releases/tag/v1.4.220)、[Cloudflare Clef](https://blog.cloudflare.com/clef-decision-models/)、[Agent Orca](https://github.com/heddles/agent-orca)、[GitHub dynamic workflows](https://github.blog/changelog/2026-10-01-dynamic-workflows-in-copilot-cli-and-the-copilot-app/)、[Anthropic Frontier Academy](https://www.anthropic.com/news/claude-frontier-academy)、[OpenAI Ads](https://openai.com/index/new-chatgpt-ads-format-and-measurement/)、[ReviewBench](https://github.blog/ai-and-ml/github-copilot/reviewbench-an-open-benchmark-for-ai-code-review/)。
+來源：[OpenAI GPT-6 Astra](https://openai.com/index/gpt-6-astra/)、[Anthropic Project Glasswing](https://www.anthropic.com/glasswing)、[Receipts](https://github.com/syntaxixr/receipts)、[Paveo 的社群分享](https://www.reddit.com/r/ClaudeAI/comments/1wwli7h/claude_project_showcase_discussion_hub_updated_on/)、[Agent Session Inspector](https://github.com/kishanmundha/agent-session-inspector)、[jcode changelog](https://jcode.sh/)、[AI agent 經驗討論](https://www.reddit.com/r/SoftwareEngineerJobs/comments/1wx1t3w/everyone_is_an_ai_expert/)。
 
 ## YouTube 深度整理
 
-### Matt Pocock｜《New Skills! v1.3 brings /pr, /implement-spec, and /retro》
+### 今日無推薦
 
-- **頻道／發布／觀看：** Matt Pocock｜2026-10-05｜查核觀看數 116,314（數字會變動）｜[YouTube 原片](https://www.youtube.com/watch?v=BsJGo1wFTvQ)｜14:30。已取得並讀完 YouTube `en-orig` 英文自動字幕；影片介紹另連到 [skills repo](https://github.com/mattpocock/skills)。未見贊助段，但有 AI Hero 課程、newsletter 與 Discord 自我推廣。
-- **摘要：** 作者示範 skills v1.3 的 `implement-spec`、`pr`、`retro`：前者把 spec 拆成有 blocking relationship 的 task graph，後者把 PR 的 evidence、merge danger、blast radius 寫進 review body，retro 則回看 agent session 找出 context loss、缺測試、工具浪費與 steering 問題。
-- **3–7 個重點：**
-  1. 大功能不要一次塞給單一 coding agent；先有 spec，再用 tickets／task graph 拆開。
-  2. 能 deterministic loop 就優先用 script；`implement-spec` 是較容易上手的 AFK 中間方案，但不如固定腳本可預測。
-  3. PR 應提供 before／after evidence，而不只寫「測試通過」；也要說清楚可逆性與 blast radius。
-  4. `retro` 會檢查 code navigation、automated checks、agents.md、tool economy 與 context loss。
-  5. 作者特別提醒不要把 `retro` 的建議全自動套用，否則 false positives 可能讓 agent 連續改壞 repo。
-- **步驟／工作流程：** 先寫 spec → 拆 tickets 與 blocking edges → 讓 subagents 在 worktree 執行 → 合併到 integration branch → code review → 產生含證據的 PR；最後抽樣對近期 session 跑 retro，由人決定採納哪些修正。
-- **工具／模型：** Matt Pocock skills、coding agent、subagents、Git worktrees、TDD、PR template；影片沒有提供獨立模型 benchmark，品質提升是作者的工作流心得。
-- **作者心得、優缺點與限制：** 作者認為 `retro` 大幅提升 token efficiency 與工作品質，這是個人經驗；優點是把「可驗證、可回復、可審查」變成可重用模板，限制是 setup、ticket 拆分與 worktree 管理仍需要工程判斷，且影片的 skills 行為會隨 repo 更新。
-- **適合對象／是否值得看：** 適合正在用 Claude Code、Codex 或其他 coding agent、但常遇到 context 爆掉與 PR 難審的人；值得看，尤其是想把個人 agent 習慣整理成團隊流程的工程師。
-- **可立即嘗試：** 選一個中型 feature，先拆成 3–5 個有依賴關係的 tickets；每個 ticket 限定 worktree、測試與驗收，PR body 加上 before／after、merge danger、blast radius，最後只對一個失敗 session 做 retro，不要先全面自動修 repo。
+已主動查核 PAPAYA 電腦教室、Tech With Tim、Gary Chen、Matt Pocock、freeCodeCamp 等中英文 AI／工具／Agent／AI Coding 頻道；目前沒有一部同時符合「近 24–48 小時優先（必要時一週內）、觀看數超過 10,000、非 Shorts、具實測／教學／技術拆解、且有可靠字幕或逐字稿」的影片。早期高觀看但超過一週、偏新聞朗讀或缺少可靠字幕的候選均排除，避免從標題或介紹推測內容。
 
 ## 今天最值得帶回團隊的三個檢查
 
-- **流程：** 哪些步驟應寫死在 workflow／script，哪些節點才值得交給模型判斷？
-- **結果：** agent 停止、重試或完成後，外部系統與子程序的終態如何被測出來？
-- **評估：** 你要的是低噪音高 precision，還是高覆蓋高 recall？是否用自己的 PR 與線上行為驗證？
+- **權限：** agent 能讀到哪些 token、工作區與外部服務？能不能在最小權限與測試帳戶中完成？
+- **證據：** 測試是否真的在「沒有修正」的基準上失敗？session、成本與 tool call 能否回放？
+- **終態：** Stop、拒絕、超時或 API 攔截後，程序、檔案、日曆事件與遠端資源是否都回到可驗證狀態？
 
 ## 今日一句話
 
-Agent 的下一步不是再加一個更長的 prompt，而是把可重播流程、可停止執行與可驗證結果一起設計進產品。
+更強的 agent 不會自動帶來更可靠的產品；可靠性要靠可觀察的 session、最小權限與能證明修正有效的測試一起補上。

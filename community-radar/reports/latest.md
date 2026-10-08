@@ -1,8 +1,8 @@
-# AI Community Radar - 2026-10-07
+# AI Community Radar - 2026-10-08
 
-> Generated: 2026-10-07T02:11:43.099Z
+> Generated: 2026-10-08T02:37:16.280Z
 > Timezone: Asia/Taipei
-> Active cutoff: updated since 2026-10-05; archived GitHub repos excluded; max stale age 2 days.
+> Active cutoff: updated since 2026-10-06; archived GitHub repos excluded; max stale age 2 days.
 
 ## 今日摘要
 
@@ -17,28 +17,11 @@
 
 | # | Repo | Stars | Forks | Language | Updated |
 | --- | --- | ---: | ---: | --- | --- |
-| 1 | [affaan-m/ECC](https://github.com/affaan-m/ECC) | 274,326 | 40,931 | JavaScript | 2026-10-05T04:55:16Z |
-| 2 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 251,718 | 54,123 | Python | 2026-10-07T01:59:26Z |
-| 3 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 200,719 | 78,525 | C++ | 2026-10-07T02:11:27Z |
+| 1 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 251,967 | 54,257 | Python | 2026-10-08T02:20:57Z |
+| 2 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 200,735 | 78,561 | C++ | 2026-10-08T02:20:13Z |
+| 3 | [Significant-Gravitas/AutoGPT](https://github.com/Significant-Gravitas/AutoGPT) | 187,689 | 45,938 | Python | 2026-10-08T02:34:06Z |
 
-### 1. [affaan-m/ECC](https://github.com/affaan-m/ECC)
-
-**可以做什麼**
-
-The agent harness performance optimization system. Skills, instincts, memory, security, and research-first development for Claude Code, Codex, Opencode, Cursor and beyond.
-
-**解決什麼問題**
-
-降低建置 AI agent、工具調用、任務規劃或多步驟自動化的成本。
-
-**可貢獻切角**
-
-可先做 read-only MCP companion 或文件搜尋工具，若 repo 沒有官方 MCP integration，這會是低風險且有社群價值的切入點。
-
-**Topics**: `ai-agents`, `anthropic`, `claude`, `claude-code`, `developer-tools`, `llm`, `mcp`, `productivity`
-**Glama 交叉查詢**: https://glama.ai/mcp/servers?q=ECC
-
-### 2. [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent)
+### 1. [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent)
 
 **可以做什麼**
 
@@ -55,7 +38,7 @@ The agent that grows with you.
 **Topics**: `ai`, `ai-agent`, `ai-agents`, `anthropic`, `chatgpt`, `claude`, `claude-code`, `codex`
 **Glama 交叉查詢**: https://glama.ai/mcp/servers?q=hermes-agent
 
-### 3. [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow)
+### 2. [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow)
 
 **可以做什麼**
 
@@ -72,12 +55,29 @@ An Open Source Machine Learning Framework for Everyone.
 **Topics**: `deep-learning`, `deep-neural-networks`, `distributed`, `machine-learning`, `ml`, `neural-network`, `python`, `tensorflow`
 **Glama 交叉查詢**: https://glama.ai/mcp/servers?q=tensorflow
 
+### 3. [Significant-Gravitas/AutoGPT](https://github.com/Significant-Gravitas/AutoGPT)
+
+**可以做什麼**
+
+AutoGPT is the vision of accessible AI for everyone, to use and to build on. Our mission is to provide the tools, so that you can focus on what matters.
+
+**解決什麼問題**
+
+降低建置 AI agent、工具調用、任務規劃或多步驟自動化的成本。
+
+**可貢獻切角**
+
+可先做 read-only MCP companion 或文件搜尋工具，若 repo 沒有官方 MCP integration，這會是低風險且有社群價值的切入點。
+
+**Topics**: `agentic-ai`, `agents`, `ai`, `artificial-intelligence`, `autonomous-agents`, `claude`, `gpt`, `llama-api`
+**Glama 交叉查詢**: https://glama.ai/mcp/servers?q=AutoGPT
+
 ## MCP / Tool 社群機會
 
 | 指標 | 值 |
 | --- | --- |
 | Registry sample | 800 servers |
-| Active baseline since | 2026-10-05 |
+| Active baseline since | 2026-10-06 |
 | GitHub stale cutoff | 2 days |
 
 ### 可能還沒上官方 MCP Registry 的候選
@@ -92,17 +92,7 @@ An Open Source Machine Learning Framework for Everyone.
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/TanStack/ai](https://github.com/TanStack/ai) |
 
-#### 2. [@supabase/mcp-utils](https://www.npmjs.com/package/@supabase/mcp-utils)
-
-| 欄位 | 內容 |
-| --- | --- |
-| 類型 | npm-package |
-| 說明 | MCP utilities |
-| 為什麼值得看 | npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。 |
-| 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
-| Repo | [https://github.com/supabase/mcp](https://github.com/supabase/mcp) |
-
-#### 3. [@payloadcms/plugin-mcp](https://www.npmjs.com/package/@payloadcms/plugin-mcp)
+#### 2. [@payloadcms/plugin-mcp](https://www.npmjs.com/package/@payloadcms/plugin-mcp)
 
 | 欄位 | 內容 |
 | --- | --- |
@@ -112,17 +102,17 @@ An Open Source Machine Learning Framework for Everyone.
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/payloadcms/payload](https://github.com/payloadcms/payload) |
 
-#### 4. [@clerk/mcp-tools](https://www.npmjs.com/package/@clerk/mcp-tools)
+#### 3. [@supabase/mcp-utils](https://www.npmjs.com/package/@supabase/mcp-utils)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | npm-package |
-| 說明 | Tools for writing MCP clients and servers without pain |
+| 說明 | MCP utilities |
 | 為什麼值得看 | npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。 |
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
-| Repo | [https://github.com/clerk/mcp-tools](https://github.com/clerk/mcp-tools) |
+| Repo | [https://github.com/supabase/mcp](https://github.com/supabase/mcp) |
 
-#### 5. [@kubb/mcp](https://www.npmjs.com/package/@kubb/mcp)
+#### 4. [@kubb/mcp](https://www.npmjs.com/package/@kubb/mcp)
 
 | 欄位 | 內容 |
 | --- | --- |
@@ -132,50 +122,46 @@ An Open Source Machine Learning Framework for Everyone.
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/kubb-labs/kubb](https://github.com/kubb-labs/kubb) |
 
-#### 6. [mediajunkie/piper-morgan-product](https://github.com/mediajunkie/piper-morgan-product)
+#### 5. [@roychri/mcp-server-asana](https://www.npmjs.com/package/@roychri/mcp-server-asana)
+
+| 欄位 | 內容 |
+| --- | --- |
+| 類型 | npm-package |
+| 說明 | MCP Server for Asana |
+| 為什麼值得看 | npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。 |
+| 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
+| Repo | [https://github.com/roychri/mcp-server-asana](https://github.com/roychri/mcp-server-asana) |
+
+#### 6. [tensorgroup/trailmates-mcp](https://github.com/tensorgroup/trailmates-mcp)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Intelligent Product Management Assistant - v1.0 |
+| 說明 | Open-source MCP server for hike discovery and outing planning, on Cloudflare Workers + Vectorize |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 7. [ubermuda/loupe](https://github.com/ubermuda/loupe)
+#### 7. [db-lyon/ue-mcp](https://github.com/db-lyon/ue-mcp)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | A document- and site-review tool for humans working with AI agents. |
+| 說明 | Complete Unreal Engine development toolkit exposed as MCP tools. |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 8. [net9876/ai-collab-hub](https://github.com/net9876/ai-collab-hub)
+#### 8. [buildd-ai/buildd](https://github.com/buildd-ai/buildd)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Shared state hub for AI agents (Claude Code, Codex, Claude.ai, ChatGPT): remote MCP server on Azure with Entra ID auth |
+| 說明 | Task coordination for AI coding agents. Create or schedule tasks; agents claim them, branch, code, and open PRs. Missions, roles, shared memory, and MCP-native. |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
 ### 建議可以實作的工具
 
-#### 1. [affaan-m/ECC MCP companion](https://github.com/affaan-m/ECC)
-
-**可以做什麼**
-
-為 affaan-m/ECC 做一個 MCP companion，讓 agent 可以查詢專案能力、範例、設定檔、常見錯誤與 release note。
-
-**為什麼有人會用**
-
-熱門 AI repo 通常文件量大、設定組合多；MCP 化後可直接服務 Cursor、Claude Code、Codex、ChatGPT 等 agent 工作流。
-
-**MVP**
-
-先做 read-only tools：search_docs、list_examples、explain_config、troubleshoot_error；穩定後再補 scaffold 或 patch 類工具。
-
-#### 2. [NousResearch/hermes-agent MCP companion](https://github.com/NousResearch/hermes-agent)
+#### 1. [NousResearch/hermes-agent MCP companion](https://github.com/NousResearch/hermes-agent)
 
 **可以做什麼**
 
@@ -189,11 +175,25 @@ An Open Source Machine Learning Framework for Everyone.
 
 先做 read-only tools：search_docs、list_examples、explain_config、troubleshoot_error；穩定後再補 scaffold 或 patch 類工具。
 
-#### 3. [tensorflow/tensorflow MCP companion](https://github.com/tensorflow/tensorflow)
+#### 2. [tensorflow/tensorflow MCP companion](https://github.com/tensorflow/tensorflow)
 
 **可以做什麼**
 
 為 tensorflow/tensorflow 做一個 MCP companion，讓 agent 可以查詢專案能力、範例、設定檔、常見錯誤與 release note。
+
+**為什麼有人會用**
+
+熱門 AI repo 通常文件量大、設定組合多；MCP 化後可直接服務 Cursor、Claude Code、Codex、ChatGPT 等 agent 工作流。
+
+**MVP**
+
+先做 read-only tools：search_docs、list_examples、explain_config、troubleshoot_error；穩定後再補 scaffold 或 patch 類工具。
+
+#### 3. [Significant-Gravitas/AutoGPT MCP companion](https://github.com/Significant-Gravitas/AutoGPT)
+
+**可以做什麼**
+
+為 Significant-Gravitas/AutoGPT 做一個 MCP companion，讓 agent 可以查詢專案能力、範例、設定檔、常見錯誤與 release note。
 
 **為什麼有人會用**
 

@@ -1,8 +1,8 @@
-# AI Community Radar - 2026-10-08
+# AI Community Radar - 2026-10-09
 
-> Generated: 2026-10-08T02:37:16.280Z
+> Generated: 2026-10-09T02:52:11.079Z
 > Timezone: Asia/Taipei
-> Active cutoff: updated since 2026-10-06; archived GitHub repos excluded; max stale age 2 days.
+> Active cutoff: updated since 2026-10-07; archived GitHub repos excluded; max stale age 2 days.
 
 ## 今日摘要
 
@@ -17,9 +17,9 @@
 
 | # | Repo | Stars | Forks | Language | Updated |
 | --- | --- | ---: | ---: | --- | --- |
-| 1 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 251,967 | 54,257 | Python | 2026-10-08T02:20:57Z |
-| 2 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 200,735 | 78,561 | C++ | 2026-10-08T02:20:13Z |
-| 3 | [Significant-Gravitas/AutoGPT](https://github.com/Significant-Gravitas/AutoGPT) | 187,689 | 45,938 | Python | 2026-10-08T02:34:06Z |
+| 1 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 252,066 | 54,394 | Python | 2026-10-09T02:48:35Z |
+| 2 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 200,556 | 78,629 | C++ | 2026-10-09T02:41:33Z |
+| 3 | [Significant-Gravitas/AutoGPT](https://github.com/Significant-Gravitas/AutoGPT) | 187,487 | 45,935 | Python | 2026-10-08T23:59:01Z |
 
 ### 1. [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent)
 
@@ -77,7 +77,7 @@ AutoGPT is the vision of accessible AI for everyone, to use and to build on. Our
 | 指標 | 值 |
 | --- | --- |
 | Registry sample | 800 servers |
-| Active baseline since | 2026-10-06 |
+| Active baseline since | 2026-10-07 |
 | GitHub stale cutoff | 2 days |
 
 ### 可能還沒上官方 MCP Registry 的候選
@@ -92,17 +92,7 @@ AutoGPT is the vision of accessible AI for everyone, to use and to build on. Our
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/TanStack/ai](https://github.com/TanStack/ai) |
 
-#### 2. [@payloadcms/plugin-mcp](https://www.npmjs.com/package/@payloadcms/plugin-mcp)
-
-| 欄位 | 內容 |
-| --- | --- |
-| 類型 | npm-package |
-| 說明 | MCP (Model Context Protocol) capabilities with Payload |
-| 為什麼值得看 | npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。 |
-| 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
-| Repo | [https://github.com/payloadcms/payload](https://github.com/payloadcms/payload) |
-
-#### 3. [@supabase/mcp-utils](https://www.npmjs.com/package/@supabase/mcp-utils)
+#### 2. [@supabase/mcp-utils](https://www.npmjs.com/package/@supabase/mcp-utils)
 
 | 欄位 | 內容 |
 | --- | --- |
@@ -111,6 +101,16 @@ AutoGPT is the vision of accessible AI for everyone, to use and to build on. Our
 | 為什麼值得看 | npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。 |
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/supabase/mcp](https://github.com/supabase/mcp) |
+
+#### 3. [@payloadcms/plugin-mcp](https://www.npmjs.com/package/@payloadcms/plugin-mcp)
+
+| 欄位 | 內容 |
+| --- | --- |
+| 類型 | npm-package |
+| 說明 | MCP (Model Context Protocol) capabilities with Payload |
+| 為什麼值得看 | npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。 |
+| 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
+| Repo | [https://github.com/payloadcms/payload](https://github.com/payloadcms/payload) |
 
 #### 4. [@kubb/mcp](https://www.npmjs.com/package/@kubb/mcp)
 
@@ -122,40 +122,40 @@ AutoGPT is the vision of accessible AI for everyone, to use and to build on. Our
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/kubb-labs/kubb](https://github.com/kubb-labs/kubb) |
 
-#### 5. [@roychri/mcp-server-asana](https://www.npmjs.com/package/@roychri/mcp-server-asana)
+#### 5. [@clerk/mcp-tools](https://www.npmjs.com/package/@clerk/mcp-tools)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | npm-package |
-| 說明 | MCP Server for Asana |
+| 說明 | Tools for writing MCP clients and servers without pain |
 | 為什麼值得看 | npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。 |
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
-| Repo | [https://github.com/roychri/mcp-server-asana](https://github.com/roychri/mcp-server-asana) |
+| Repo | [https://github.com/clerk/mcp-tools](https://github.com/clerk/mcp-tools) |
 
-#### 6. [tensorgroup/trailmates-mcp](https://github.com/tensorgroup/trailmates-mcp)
+#### 6. [HarrisonCN/mcp-gateway](https://github.com/HarrisonCN/mcp-gateway)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Open-source MCP server for hike discovery and outing planning, on Cloudflare Workers + Vectorize |
+| 說明 | 🔀 A lightweight, open-source gateway for managing, routing, and monitoring multiple MCP (Model Context Protocol) servers. Auth · Rate-limit · Metrics · Tool discovery. |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 7. [db-lyon/ue-mcp](https://github.com/db-lyon/ue-mcp)
+#### 7. [BrainerVirus/workit](https://github.com/BrainerVirus/workit)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Complete Unreal Engine development toolkit exposed as MCP tools. |
+| 說明 | Workflow rails for agentic coding: one shared task and policy core with native OpenCode, Cursor, Codex, Pi, and CLI surfaces. |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 8. [buildd-ai/buildd](https://github.com/buildd-ai/buildd)
+#### 8. [keyline-dev/keyline](https://github.com/keyline-dev/keyline)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Task coordination for AI coding agents. Create or schedule tasks; agents claim them, branch, code, and open PRs. Missions, roles, shared memory, and MCP-native. |
+| 說明 | Design engine for AI agents: images and video at every size, no Chrome, 2× fewer tokens. One native binary, driven over MCP. |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 

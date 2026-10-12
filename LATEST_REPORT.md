@@ -1,95 +1,108 @@
-# AI 情報日報｜2026-10-12
+# AI 情報日報｜2026-10-13
 
-約 4 分鐘閱讀。今天的主線是：AI coding 正從「叫一個 agent 寫完」轉向「多 agent 分工、隔離執行、可觀察地驗證」；本機模型與工具沙箱開始成為產品級控制面，但「本機可跑」仍不等於「資料不出機」。
+約 4 分鐘閱讀。今天的主線是：agent 的能力往前走，但真正的差距逐漸落在記憶、執行環境、權限與 review 流程；「模型更強」不是「可以少驗證」的同義詞。
 
-> 截稿時間：2026-10-12 08:07（Asia/Taipei）。
-> 查核範圍：優先 2026-10-10～10-12；沒有重大新模型發布，因此補充 10/07～10/09 仍會影響實作的更新。已避開 10/11 已報導且沒有新證據的 The Pair、Agent Systems 研究、Anthropic unintended actions、Google Gemini agent 與 Copilot sandbox 初報。
-> 證據標示：官方公告／文件是官方事實；GitHub README、Reddit 與社群彙整是作者或使用者說法，不當成獨立 benchmark；廠商數字保留其來源身分。
+> 截稿時間：2026-10-13 08:00（Asia/Taipei）。
+> 查核範圍：優先 2026-10-11～10-13；補充最近一週仍有實作影響的研究與社群證據。已避開 10/12 已報導且沒有新證據的 Orchestrator.inc、OpenChamber、Microsoft Execution Containers、Anthropic OSS Scanner 與 Copilot 模型退役提醒。
+> 證據標示：官方公告／模型卡是官方事實；GitHub、Hacker News、影片與產品 README 是作者或使用者說法；廠商 benchmark 保留其來源身分；編輯建議與推論會明確標示。
 
 ## 1. 社群實戰用法
 
-### 把多 agent 當成「隔離的工程團隊」
+### 先讓 agent 找對上下文，再讓它寫 code
 
-- **新在哪裡：** 社群工具 Orchestrator.inc 將 Claude Code、Codex、Cursor、OpenCode、Aider、Copilot 等 harness 放進同一個工作流；每個 worker 有自己的任務、branch／worktree、瀏覽器預覽、PR、CI 與 review 狀態。GitHub 頁面在 10/10 仍有更新，約 13.1k stars 只代表採用熱度，不是可靠性證明。
-- **可以怎麼開始：** 選一個沒有 production secrets 的小 repo，先建立「規劃／實作／review」三個 worker；每個 worker 只拿需要的檔案與明確驗收條件，最後由人看 diff、測試與 CI，不要讓多個 agent 直接共用同一個 working tree。
-- **編輯心得與限制：** 這解決的是上下文與工作區碰撞，不會自動解決錯誤規格、錯誤測試或 token 成本；多 agent 的獨立性也要靠不同角色、不同上下文與可重現的驗收條件來建立。
-- 來源：[Orchestrator.inc GitHub](https://github.com/OrchestratorInc/agent-orchestrator)（2026-10-10 查核；社群工具／README）。
+- **新在哪裡：** 開源工具 Pensieve 把本機檔案、git repo、worktree 與 Claude Code／Codex 等 agent session 做語意與精確搜尋，透過 MCP 回傳較少但較相關的檔案片段；它也用 git blame 顯示誰熟悉某個區域、哪些地方有知識斷層。專案標示 Apple Silicon、macOS 14+、免費開源。
+- **可以怎麼開始：** 先只索引一個非敏感 repo，執行 `pensieve integrate recommended`，讓 agent 先用 `search` 找相關檔案，再回退到 grep；測一個真實 bug，記錄找到正確檔案的次數、tool calls 與 token，而不是直接接受作者的 benchmark。
+- **編輯心得與限制：** 作者以 4 個 repo、144 次 Claude Code lookup 自測，報告正確檔案 123/144→131/144、tool calls 3.44→1.97、成本約少 18%；這是作者 benchmark，不是獨立評測。它會索引 agent session 與本機資料，雖預設排除 `.env`／credential，仍應逐項選擇來源與 scope。
+- 來源：[Pensieve GitHub](https://github.com/TedHaley/pensieve)（2026-10-12 查核；社群工具／作者 benchmark）、[Pensieve 使用說明](https://tedhaley.ca/pensieve/)。
 
-### 本機模型先做大量小任務，前沿模型留給規劃與難題
+### 把 agent 的執行環境當成產品介面測，不只測模型
 
-- **社群觀察：** r/LocalLLaMA 的 10/10 討論中，有使用者回報 Qwen3.8 Flash 在本機已足以處理約九成程式工作，只在每天需要深度規劃時使用 Claude／OpenAI；也有人指出不同量化（Q3、Q4）與硬體會讓結果差很多。
-- **可以怎麼開始：** 先把格式化、搜尋、測試草稿、簡單修 bug 分給本機模型；遇到跨模組設計或難以驗證的變更才升級到雲端模型。每週記錄完成率、重試次數、延遲與電費／API 費，不要只用「感覺像 frontier」判斷。
-- **編輯心得與限制：** 這是單一討論串的個人心得，貼文後來被移除，不能視為可重現評測；本機模型仍可能卡迴圈、工具呼叫失敗或需要更多人工 review。
-- 來源：[r/LocalLLaMA：Qwen3.8 Flash 實跑討論](https://www.reddit.com/r/LocalLLaMA/comments/1x2nfg4/removed/)（2026-10-10；社群心得，已標示證據強度）。
+- **社群觀察：** AI Engineer 2026 的 AWS 分享整理出一個很實用的測試轉向：讓 coding agent 在雲端 sandbox 自己產生大量跨領域任務，再分辨是 MCP／介面層失敗，還是 sandbox 的記憶體、檔案權限、編碼與持久化限制。
+- **可以怎麼開始：** 建立 10 類任務的 fuzz corpus，至少涵蓋檔案讀寫、套件安裝、Python／Java build、瀏覽器多分頁與資料下載；每次失敗保留輸入、sandbox policy、資源使用量、最後狀態與可重現步驟。
+- **編輯心得與限制：** 分享者的「1,000 個任務」是探索性壓測，不是 coverage 保證；它更適合發現環境契約的缺口，不代表通過後 agent 就可靠。
+- 來源：[AWS session 說明](https://aws.amazon.com/events/ai-engineer-world-fair-2026/)（2026-07-01 session，2026-10-12 上片；第一手演講摘要）、[影片逐字整理](https://www.artofsm.art/t/1-000-agent-tasks-in-a-sandbox-what-breaks-when-llms-run-code-kevin-orellana-aws/25711)（字幕／社群整理）。
 
 ## 2. 社群新工具與新玩法
 
-### OpenChamber 2.2：同一任務讓多模型各跑一份再比較
+### Pensieve 把「搜尋」升級成 agent 的本機 context layer
 
-- **新在哪裡：** OpenChamber 的近期 release 加上 issue／PR board；目前 README 的核心玩法是 Session Goals（每輪檢查結果，持續到完成、阻塞或達到上限）、Multi-run（最多五個模型，各自 session，選配 worktree）與 Fusion，再用 Changes Walkthrough 逐步看大型 diff。10/10 仍有程式更新，v2.2.0 於 10/08 發布。
-- **可以怎麼開始：** 對同一個小型重構建立兩到三個獨立 run，固定 prompt、測試與 budget；比較實際 diff、測試輸出與人工修正量，再決定是否合併，而不是用模型自評的「完成」當勝負。
-- **編輯心得與限制：** 多 run 會放大成本與等待時間；Fusion 只是整合入口，不代表合併後的程式已經通過安全、效能或產品驗收。
-- 來源：[OpenChamber releases](https://github.com/openchamber/openchamber/releases/tag/v2.2.0)、[README：Session Goals／Multi-run／Walkthrough](https://github.com/openchamber/openchamber)（2026-10-08～10-10；社群工具）。
+- **新在哪裡：** 它不只做 semantic code search，也把過往 agent session、未提交修改、worktree 與團隊 ownership 放進同一個可 scope 的索引；MCP 可限制 agent 只看目前 repo，避免一次把整台 Mac 的內容塞進上下文。
+- **可以怎麼開始：** 先用 `kind:repo`、`kind:session` 與 `in:<repo>` 查詢；對高風險專案關掉不必要的 documents／sessions source，再把「search before you grep」當作 agent 規則。若要用雲端 Claude／Codex 做摘要，先確認哪些文字會離開本機。
+- **編輯心得與限制：** 這種 context layer 有機會減少重複讀檔，但也新增一個索引、MCP 與 scope 的治理面；不要因為搜尋在本機就推論 AI 摘要也一定在本機。README 明確列出內建 Qwen、LM Studio、Claude Code、Codex 等不同摘要路徑。
+- 來源：[Pensieve README：MCP、scope 與 AI 路徑](https://github.com/TedHaley/pensieve#readme)（2026-10-12 查核；社群工具）。
 
-### 把「agent fleet」接到既有 PR 流程，而不是另造一套聊天記錄
+### 「多 agent」的新玩法其實是可回收的執行環境
 
-- **新玩法：** Orchestrator.inc 和 OpenChamber 都把 agent 工作結果掛回 branch、worktree、diff、PR、CI 與 review；這比把多個聊天視窗並排更接近可稽核的工程流程。
-- **可以怎麼開始：** 每個任務先產生一張控制卡：輸入資料、可寫路徑、可用網路、credential、測試命令、停止條件與人工核准點；完成後只接受能對應到 commit／diff／CI 證據的輸出。
-- **編輯心得與限制：** 這是根據兩個社群專案功能整理出的編輯推論，不是正式標準；真正的瓶頸仍是權限設計、測試品質與人能否及時 review。
-- 來源：[Orchestrator.inc workflow](https://github.com/OrchestratorInc/agent-orchestrator#one-workflow-from-idea-to-merge)、[OpenChamber README](https://github.com/openchamber/openchamber)（2026-10-10 查核；編輯推論）。
+- **新在哪裡：** 近期社群分享把工作流拆成 local Docker、GitHub Actions、長駐 VM／Mac mini、Kubernetes 每 session 一個 pod 四種 isolation trade-off；重點不在同時開幾個聊天視窗，而是每個 agent 是否有自己的 repo、secret、網路、觸發器與停止條件。
+- **可以怎麼開始：** 小任務先用 ephemeral Docker；要接 PR／排程才移到 Actions；要接 Slack／DataDog webhook 再考慮 VM 或 Kubernetes。每種模式都先測「刪檔、錯誤 package、prompt injection、container escape」的失敗路徑。
+- **編輯心得與限制：** 這是根據 OpenHands CEO 的演講整理出的工程建議，不是 OpenHands 的獨立安全認證；sandbox 只能縮小 blast radius，不能消除 agent escape 或過時 container 的風險。
+- 來源：[AI Engineer：Sandboxes Aren’t Optional](https://www.youtube.com/watch?v=iH_wV8BbS24)（2026-10-12；社群實務分享）、[字幕逐字整理](https://ainotes.us/summary/sandboxes-aren-t-optional-4-ways-to-isolate-coding-agents-robert-brennan)（已讀取）。
 
 ## 3. 官方新功能與推薦用法
 
-### GitHub Copilot for JetBrains：預設模型與 MCP 啟動時機可治理
+### Meta Muse Wonder／Wonder Full：Active Memory + Active Focus 進入 API 與 coding agent
 
-- **官方更新：** GitHub 10/10 讓企業管理員用 managed settings 指定新對話的預設 agent model；同時新增關閉 Copilot／Claude MCP server 自動啟動的設定，也把診斷選單的 Fix 動作接到 inline chat。JetBrains IDE 2025.1 已停止支援，需 2025.2 以上。
-- **推薦用法：** 一般 repo 將預設模型設成成本可控的日常模型；高風險 repo 關閉 MCP auto-start，任務開始時只開必要 server，並把 server scope 與 approval 寫入 review checklist。
-- **限制：** 這些是控制面，不是 MCP server 的安全認證；模型仍可切換，server 的工具描述、憑證與外部服務權限仍需自行稽核。
-- 來源：[GitHub Changelog：Copilot for JetBrains](https://github.blog/changelog/2026-10-10-new-controls-and-chat-improvements-in-copilot-for-jetbrains/)（2026-10-10；官方公告）。
+- **官方更新：** Meta 於 10/12 發布 Muse Wonder 與 Muse Wonder Full；Wonder 已可透過 Meta Model API 與 Muse Code 使用，Wonder Full 提供給 Muse Code 訂閱者。官方主打跨對話的 Active Memory，以及遇到阻塞會換方法、恢復錯誤、要求澄清並在重要動作前確認的 Active Focus；模型卡列出 1M inference context，輸入含文字、圖片、影片、音訊。
+- **推薦用法：** 先拿不含個資的小型 coding／文件任務測「跨輪次記憶是否正確、失敗後是否真的重試、重要動作是否停下來問」；把每個外部寫入、付款、寄信或部署動作接上明確 approval。
+- **限制：** Meta 的 state-of-the-art 與 benchmark 數字屬廠商結果；模型卡也明說表現會受 prompt、工具、harness、serving configuration 影響，視覺／空間推理仍有限，且建議 agentic deployment 自行加 guardrail。不要把 Active Memory 當成永不遺忘，也不要把「Agentic Misalignment 0%」理解成真實世界零風險。
+- 來源：[Meta Newsroom](https://about.fb.com/news/2026/10/introducing-muse-wonder-models/)（2026-10-12；官方公告）、[Muse Wonder research blog](https://research.meta.ai/blog/muse-wonder)、[Muse Wonder Model Card](https://research.meta.ai/static/muse-wonder-model-card)（官方 benchmark／限制）。
 
-### Microsoft Execution Containers GA：把 agent 的檔案與網路權限做成執行時政策
+### OpenAI Agents API：把 computer use、多 agent、tool search 與 context compaction 組成平台能力
 
-- **官方更新：** Microsoft Execution Containers（MXC）在 Windows 11 一般可用，可在 runtime 限制 agent 能讀哪些檔案、連哪些網路；官方列出的整合包含 Codex、GitHub Copilot、OpenClaw、Replit、LM Studio、NVIDIA OpenShell 與 Unsloth。Microsoft 也宣布在 Windows 上以 HydraFusion 將本機模型納入路由，Copilot app／CLI／VS Code 的實驗預覽預計 10 月稍晚推出。
-- **推薦用法：** 先為「讀 repo＋跑測試」建立最小 policy，只開 repo 與必要套件 registry；拒絕家目錄、SSH 金鑰與 production endpoint，再逐項增加權限。
-- **限制：** Microsoft 的「frontier-class」與模型大小／速度描述是廠商說法；本機可執行不等於所有請求都留在本機，HydraFusion 仍可能依任務路由到雲端。
-- 來源：[Microsoft：Building Windows for hybrid intelligence](https://blogs.windows.com/windowsexperience/2026/10/07/building-windows-for-hybrid-intelligence/)（2026-10-07；官方公告）。
-
-### Anthropic OSS Scanner：免費定期掃描，但報告不保證人工審核
-
-- **官方更新：** Anthropic 在 10/08 的 Cyber Mission 中推出可選的 OSS Scanner，替開源專案定期掃描並提供 exploit proof of concept、說明與可能修補；報告由模型產生、直接送給 maintainer，沒有人工逐份審核。
-- **推薦用法：** 只在能快速 triage 的核心專案 opt in；把每個 finding 當候選輸入，先在隔離環境重現，再由人確認 severity、影響版本、修補與回歸測試，不能直接把模型建議自動 merge。
-- **限制：** Anthropic 自己預期 true-positive rate 超過 90%，這是廠商預估，不是獨立驗證；官方也明說可能出現錯誤嚴重度與不準確內容。
-- 來源：[Anthropic：Introducing the Cyber Mission](https://www.anthropic.com/news/anthropic-cyber-mission)（2026-10-08；官方公告／廠商預估）。
+- **官方更新：** OpenAI DevDay 2026 recap 說明 Agents API 已支援 computer use，並把 Codex 的 multi-agent、tool calling、tool search、context compaction 帶進應用；Decisions API 以有限答案處理分類／路由／下一步動作，目前是 limited preview。Plugin extensions 也能在 ChatGPT sidebar 提供互動面板與檔案 viewer。
+- **推薦用法：** 對固定流程先用 Decisions API 做 deterministic routing，再讓 agent 處理需要工具的步驟；把 context compaction 前後的摘要與關鍵決策寫入可檢查的 state，並將 computer-use 動作限制在測試帳號與可回復環境。
+- **限制：** availability 依方案與 preview 狀態不同；這些 API 能力不等於應用本身有完整權限、審計與 rollback。真正上線前仍要測 prompt injection、工具 scope、重試冪等性與人工作業接管。
+- 來源：[OpenAI DevDay 2026 Recap](https://openai.com/index/devday-2026-recap/)（2026-10-06；官方公告）。
 
 ## 4. 使用心得與避坑
 
-### 「本機」不是隱私結論，先看路由、工具與遙測
+### Codex CLI 的常駐 daemon：先確認「你啟動的 binary」是不是實際執行者
 
-- Windows 的 hybrid intelligence 同時包含本機模型、雲端模型與 intelligent routing；GitHub Copilot 的 `/model` 也只是讓你選 Ollama 模型，不代表 agent 工具、MCP、遙測或套件下載都變成離線。
-- 開始前逐項確認：模型請求去哪裡、code context 是否上傳、工具能否連網、MCP 是否自動啟動、credential 是否可見、日誌是否含 prompt／response。沒有證據就不要寫「完全離線」。
-- 最小可行測試是：拔掉網路跑一次不含 secrets 的任務，查看 agent 是否仍能完成；再重新開網路，確認哪些步驟才需要雲端。
-- 來源：[Microsoft hybrid intelligence](https://blogs.windows.com/windowsexperience/2026/10/07/building-windows-for-hybrid-intelligence)、[GitHub Copilot weekly releases](https://github.blog/changelog/2026-10-09-github-copilot-weekly-releases-october-5/)（2026-10-07～10-09；官方文件與編輯建議）。
+- **新證據：** OpenAI/codex GitHub issue #48195 的使用者回報，0.157.0 互動 session 可能啟動持久的 `app-server --managed-daemon`，複製約 374 MB 的套件到 `~/.codex/packages/app-server-daemon/`，並由背景 updater 每小時檢查更新；留言也回報 daemon 可能沿用第一個 session 的 proxy／環境變數。這是開放 issue 與社群回報，不是官方已確認的漏洞公告。
+- **可以怎麼開始：** 公司環境先盤點 CLI 版本、daemon 是否存在、binary digest、啟動 cwd、繼承的 proxy／token 與 updater 狀態；對不需要 remote／desktop daemon 的 CLI session，依官方 issue 中的 workaround 評估 `daemon_auto_start = false`，再在隔離測試機驗證 hooks、MCP 與更新流程。
+- **編輯心得與限制：** 不要直接把 issue 的「像 malware」留言當成事實，也不要只看前景 CLI 版本就推定後端版本相同；這是一個 provenance、環境隔離與可觀察性問題，應等待官方 release／config 文件與修補說明。
+- 來源：[openai/codex #48195](https://github.com/openai/codex/issues/48195)（2026-10-12 更新；開放 issue／社群證據）。
 
-### 10/19 前檢查 Copilot 模型名稱，不要讓整合在退役日才壞
+### AI coding 的瓶頸可能移到 review，不是消失
 
-- GitHub 已公告 10/19 退役 Gemini 3.7 Flash、GPT-5.5、GPT-5.4、GPT-5.4 mini、GPT-5 mini 與 Grok 4.5，並列出替代模型。直接寫死 model ID 的 CI、agent profile、內部文件與成本預估都應先盤點。
-- 建議做法：把模型名稱集中在設定檔，替代模型先以相同 acceptance tests 跑一輪，記錄輸出差異、延遲、token／費用與工具相容性；不要只因官方列為 suggested alternative 就假設行為等價。
-- 來源：[GitHub：mid-October model deprecation](https://github.blog/changelog/2026-09-18-upcoming-deprecation-of-selected-github-copilot-models-in-mid-october/)（2026-09-18 公告；2026-10-19 生效）。
+- **研究結果：** Harvard 的 Chen／Stratton 使用 Jellyfish 彙整 718 家公司、約 3 億 work events 至 2026-03；AI agents 讓 lines of code +30%、commits +20%、PR +23%，但平均 PR review time +49%、要求修改的 PR 比例接近翻倍、每個 PR comments +35%，Jira issue／epic 完成量沒有顯著增加。
+- **可以怎麼開始：** 衡量 agent 導入後不要只看 LOC、commit 或 PR 數；同步看 deployable issue、review lead time、rework rate、change-request ratio、escaped defects 與 reviewer capacity。對 agent 產生的 PR 設定小批次、可執行測試與風險分級。
+- **限制：** 這是以公司採用時點做 difference-in-differences 的研究，資料來自同意提供的 Jellyfish 客戶，研究者也指出程式碼品質與組織流程會影響結果；它不是所有團隊或所有模型的因果保證。
+- 來源：[研究論文 PDF](https://fion.ac/jellyfish.pdf)（2026-08-04 版本；原始研究）、[Ars Technica 摘要](https://arstechnica.com/ai/2026/10/ai-coding-agents-generate-more-code-but-not-more-software/)（2026-10-09；媒體整理）。
+
+### 社群治理也可能選擇「不收 AI 貢獻」
+
+- QGIS Enhancement Proposal 428 已於 10/07 merge，將該專案 AI policy 正式改為「NOT ALLOWED」。這不是 AI 不能寫好 code 的證明，而是 maintainer 選擇把 provenance、review 成本與社群規範放在產量之前；若你的團隊允許 agent，應先寫清楚 disclosure、責任歸屬、生成內容的 review 與可追溯要求。
+- 來源：[QGIS-Enhancement-Proposals PR #387](https://github.com/qgis/QGIS-Enhancement-Proposals/pull/387)（2026-10-07；社群治理決策）。
 
 ## YouTube 深度整理
 
-### 今日無推薦
+### AI Engineer｜Sandboxes Aren’t Optional: 4 Ways to Isolate Coding Agents — Robert Brennan（OpenHands）
 
-今天主動查核 PAPAYA 電腦教室、Tech With Tim、Gary Chen 與其他中英文 AI／工具／Agent／AI Coding 頻道。Tech With Tim 的《Build Your Own Agentic Harness in Python - Full Tutorial》約 6.3 萬觀看、YouTube 頁面顯示約 7 天前，但影片頁的字幕狀態顯示未提供字幕，因此不能依標題或介紹猜測內容；PAPAYA 近期破萬長片是 Power Query，近一週沒有合格的 AI 深度長片。沒有同時符合「超過 10,000 觀看、最近一週、非 Shorts、具實測／教學深度、且有可靠字幕或逐字稿」的候選，故不收錄。
+- **影片資訊：** 頻道：AI Engineer；發布：2026-10-12；查核觀看數：約 1.6 萬；長度：14:23；[YouTube 影片](https://www.youtube.com/watch?v=iH_wV8BbS24)。YouTube 搜尋頁顯示字幕，並已讀取以原始 YouTube captions 整理的完整逐字稿；非 Shorts。未見贊助段。
+- **摘要：** Brennan 從 local coding agent 走向 cloud agent 的演進，對比 laptop Docker、GitHub Actions、長駐 VM／Mac mini、Kubernetes 每 session 一個 pod；核心建議是 least privilege 與縮小 prompt injection／誤操作的 blast radius。
+- **3–7 個重點：**
+  1. `--dangerously-skip-permissions` 可能讓 agent 觸及整個檔案系統、環境變數 secrets、home directory 與 production 連線。
+  2. local Docker 具 ephemeral、可選擇 mount repo／port／secret 的優點，但規模與 event trigger 有限。
+  3. GitHub Actions 可用 secrets registry、schedule 與 PR event，但受 GitHub event 模型綁定。
+  4. 長駐 VM 有 persistence 與 webhook 能力，卻容易讓不同 agent 共用過多權限與互改記憶。
+  5. Kubernetes 每個 session 一個 pod，較容易做到隔離、回收與水平擴展，但仍不是萬無一失的 sandbox。
+  6. sandbox 也可能因 container escape、舊版 Docker 或錯誤 policy 而失效。
+- **步驟／工作流程：** 先列出 agent 任務需要的 repo、port、secret、MCP 與外部事件 → 選 local Docker／Actions／VM／Kubernetes → 每個 session 建立最小權限、可回收環境 → 以 prompt injection、刪檔、錯誤 package 與外連測試 blast radius → 將產出以 PR／artifact 回傳，不把環境本身當成可信來源。
+- **工具或模型：** OpenHands、Claude Code、Codex、Docker、GitHub Actions、VM／Mac mini、Kubernetes；影片不是模型 benchmark，也沒有宣稱某模型勝出。
+- **作者心得、優缺點：** 作者的立場是「sandboxing 是必要的第一步」，優點是把安全討論落到 runtime isolation 與 least privilege；缺點是案例偏 OpenHands／雲端 agent 運作，沒有提供完整成本、效能或 escape rate 對照。
+- **適合對象／是否值得看：** 適合要把 coding agent 從個人 laptop 推向 CI、webhook 或長時間背景工作的工程師；值得看，尤其是要決定 Docker、Actions、VM 或 Kubernetes 時。可立即嘗試：把下一個小 repo 放進 ephemeral container，只 mount 該 repo 與測試所需資料，記錄 agent 實際碰過的路徑，再逐項收緊 policy。
+- **限制與交叉查證：** 影片中的隔離比較是講者工程經驗；AWS 的另一部同日 sandbox 壓測片雖有逐字整理，但 YouTube 查核僅 1,877 觀看，未達 10,000 門檻，因此未收錄。
+- 來源：[字幕逐字整理](https://ainotes.us/summary/sandboxes-aren-t-optional-4-ways-to-isolate-coding-agents-robert-brennan)、[OpenHands Agent Canvas](https://openhands.dev/)（產品連結；作者示範）。
 
 ## 今天最值得帶回團隊的三個檢查
 
-- **隔離：** 每個 agent 是否有自己的 branch／worktree、檔案範圍、網路與 credential policy？
-- **比較：** 多 run 的勝負是否由 diff、測試與人工驗收決定，而不是模型自評？
-- **路由：** 你說「本機」時，是否真的知道模型、工具、MCP、遙測與套件流量各自去哪裡？
+- **上下文：** agent 讀到的是不是正確 repo、worktree、session 與最新未提交修改？
+- **環境：** 每個 agent 的檔案、secret、網路、MCP、daemon 與外部事件是否都有明確 scope？
+- **產出：** 是否同時量 review time、rework、deployable work 與 rollback，而不是只看 LOC／PR 數？
 
 ## 今日一句話
 
-Agent 的下一個生產力增量，不只來自更大的模型，而是把分工、隔離、路由與驗證做成可觀察、可停止、可重現的工程系統。
+當 agent 開始長時間工作，真正要工程化的不是「再加一個更大的模型」，而是讓上下文、權限、執行環境與人工驗收都可觀察、可回收、可追溯。
 
-來源：[Orchestrator.inc](https://github.com/OrchestratorInc/agent-orchestrator)、[OpenChamber](https://github.com/openchamber/openchamber)、[GitHub Copilot JetBrains](https://github.blog/changelog/2026-10-10-new-controls-and-chat-improvements-in-copilot-for-jetbrains/)、[Microsoft hybrid intelligence](https://blogs.windows.com/windowsexperience/2026/10/07/building-windows-for-hybrid-intelligence/)、[Anthropic Cyber Mission](https://www.anthropic.com/news/anthropic-cyber-mission)、[GitHub model deprecation](https://github.blog/changelog/2026-09-18-upcoming-deprecation-of-selected-github-copilot-models-in-mid-october/)。
+來源：[Meta Muse Wonder](https://about.fb.com/news/2026/10/introducing-muse-wonder-models/)、[Pensieve](https://github.com/TedHaley/pensieve)、[OpenAI DevDay 2026](https://openai.com/index/devday-2026-recap/)、[Codex daemon issue](https://github.com/openai/codex/issues/48195)、[Harvard study](https://fion.ac/jellyfish.pdf)、[QGIS AI policy](https://github.com/qgis/QGIS-Enhancement-Proposals/pull/387)。

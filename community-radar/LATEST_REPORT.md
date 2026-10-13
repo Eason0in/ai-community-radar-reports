@@ -1,8 +1,8 @@
-# AI Community Radar - 2026-10-12
+# AI Community Radar - 2026-10-13
 
-> Generated: 2026-10-12T02:12:27.042Z
+> Generated: 2026-10-13T03:26:35.788Z
 > Timezone: Asia/Taipei
-> Active cutoff: updated since 2026-10-10; archived GitHub repos excluded; max stale age 2 days.
+> Active cutoff: updated since 2026-10-11; archived GitHub repos excluded; max stale age 2 days.
 
 ## 今日摘要
 
@@ -17,9 +17,9 @@
 
 | # | Repo | Stars | Forks | Language | Updated |
 | --- | --- | ---: | ---: | --- | --- |
-| 1 | [affaan-m/ECC](https://github.com/affaan-m/ECC) | 277,278 | 41,356 | JavaScript | 2026-10-12T02:02:10Z |
-| 2 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 252,825 | 54,751 | Python | 2026-10-12T02:03:54Z |
-| 3 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 200,872 | 79,156 | C++ | 2026-10-12T02:12:26Z |
+| 1 | [affaan-m/ECC](https://github.com/affaan-m/ECC) | 277,987 | 41,440 | JavaScript | 2026-10-12T14:45:46Z |
+| 2 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 253,184 | 54,876 | Python | 2026-10-13T03:25:53Z |
+| 3 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 200,905 | 79,206 | C++ | 2026-10-13T03:20:24Z |
 
 ### 1. [affaan-m/ECC](https://github.com/affaan-m/ECC)
 
@@ -77,7 +77,7 @@ An Open Source Machine Learning Framework for Everyone.
 | 指標 | 值 |
 | --- | --- |
 | Registry sample | 800 servers |
-| Active baseline since | 2026-10-10 |
+| Active baseline since | 2026-10-11 |
 | GitHub stale cutoff | 2 days |
 
 ### 可能還沒上官方 MCP Registry 的候選
@@ -102,17 +102,7 @@ An Open Source Machine Learning Framework for Everyone.
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/supabase/mcp](https://github.com/supabase/mcp) |
 
-#### 3. [@payloadcms/plugin-mcp](https://www.npmjs.com/package/@payloadcms/plugin-mcp)
-
-| 欄位 | 內容 |
-| --- | --- |
-| 類型 | npm-package |
-| 說明 | MCP (Model Context Protocol) capabilities with Payload |
-| 為什麼值得看 | npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。 |
-| 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
-| Repo | [https://github.com/payloadcms/payload](https://github.com/payloadcms/payload) |
-
-#### 4. [@kubb/mcp](https://www.npmjs.com/package/@kubb/mcp)
+#### 3. [@kubb/mcp](https://www.npmjs.com/package/@kubb/mcp)
 
 | 欄位 | 內容 |
 | --- | --- |
@@ -122,40 +112,50 @@ An Open Source Machine Learning Framework for Everyone.
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/kubb-labs/kubb](https://github.com/kubb-labs/kubb) |
 
-#### 5. [@clerk/mcp-tools](https://www.npmjs.com/package/@clerk/mcp-tools)
+#### 4. [@payloadcms/plugin-mcp](https://www.npmjs.com/package/@payloadcms/plugin-mcp)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | npm-package |
-| 說明 | Tools for writing MCP clients and servers without pain |
+| 說明 | MCP (Model Context Protocol) capabilities with Payload |
 | 為什麼值得看 | npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。 |
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
-| Repo | [https://github.com/clerk/mcp-tools](https://github.com/clerk/mcp-tools) |
+| Repo | [https://github.com/payloadcms/payload](https://github.com/payloadcms/payload) |
 
-#### 6. [Fulcrum-Governance/Fulcrum-Boundary](https://github.com/Fulcrum-Governance/Fulcrum-Boundary)
+#### 5. [@copilotkit/mcp-apps-renderer](https://www.npmjs.com/package/@copilotkit/mcp-apps-renderer)
+
+| 欄位 | 內容 |
+| --- | --- |
+| 類型 | npm-package |
+| 說明 | Framework-agnostic MCP Apps host for CopilotKit - the app host protocol (ext-apps AppBridge), sandbox proxy, and shared renderer consumed by the React, Vue, and Angular frontends |
+| 為什麼值得看 | npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。 |
+| 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
+| Repo | [https://github.com/CopilotKit/CopilotKit](https://github.com/CopilotKit/CopilotKit) |
+
+#### 6. [homeassistant-ai/ha-mcp](https://github.com/homeassistant-ai/ha-mcp)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | The action boundary for routed agent tools. See what your AI tools can do; block what they should not. |
+| 說明 | The Unofficial and Awesome Home Assistant MCP Server |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 7. [Sidiora-Labs/Paxeer-X-Network](https://github.com/Sidiora-Labs/Paxeer-X-Network)
+#### 7. [rajangdavis/exec-mcp-server](https://github.com/rajangdavis/exec-mcp-server)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Paxeer X is a Distributed HyperState Machine for payments, code execution and intent routing. Designed for Machines and the Users operating them. |
+| 說明 | exec-mcp-server for working with the raj editor |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 8. [ebteq/claude-plugin-and-ebteqdesk-mcp-server](https://github.com/ebteq/claude-plugin-and-ebteqdesk-mcp-server)
+#### 8. [eizport/eizport](https://github.com/eizport/eizport)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | No description. |
+| 說明 | Move WordPress content with its media, settings and files: .wxrz bundles for the WordPress Importer, Playground zips, and abilities for AI agents. |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 

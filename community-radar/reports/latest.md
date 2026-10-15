@@ -1,8 +1,8 @@
-# AI Community Radar - 2026-10-14
+# AI Community Radar - 2026-10-15
 
-> Generated: 2026-10-14T01:44:18.893Z
+> Generated: 2026-10-15T01:20:48.678Z
 > Timezone: Asia/Taipei
-> Active cutoff: updated since 2026-10-12; archived GitHub repos excluded; max stale age 2 days.
+> Active cutoff: updated since 2026-10-13; archived GitHub repos excluded; max stale age 2 days.
 
 ## 今日摘要
 
@@ -17,28 +17,11 @@
 
 | # | Repo | Stars | Forks | Language | Updated |
 | --- | --- | ---: | ---: | --- | --- |
-| 1 | [affaan-m/ECC](https://github.com/affaan-m/ECC) | 278,632 | 41,500 | JavaScript | 2026-10-12T14:45:46Z |
-| 2 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 253,504 | 54,989 | Python | 2026-10-14T01:25:18Z |
-| 3 | [morluto/rea](https://github.com/morluto/rea) | 209,077 | 51,173 | TypeScript | 2026-10-14T01:42:05Z |
+| 1 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 253,808 | 55,066 | Python | 2026-10-15T00:51:56Z |
+| 2 | [morluto/rea](https://github.com/morluto/rea) | 242,848 | 60,537 | TypeScript | 2026-10-15T01:20:37Z |
+| 3 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 200,970 | 79,434 | C++ | 2026-10-15T00:54:22Z |
 
-### 1. [affaan-m/ECC](https://github.com/affaan-m/ECC)
-
-**可以做什麼**
-
-The agent harness performance optimization system. Skills, instincts, memory, security, and research-first development for Claude Code, Codex, Opencode, Cursor and beyond.
-
-**解決什麼問題**
-
-降低建置 AI agent、工具調用、任務規劃或多步驟自動化的成本。
-
-**可貢獻切角**
-
-可先做 read-only MCP companion 或文件搜尋工具，若 repo 沒有官方 MCP integration，這會是低風險且有社群價值的切入點。
-
-**Topics**: `ai-agents`, `anthropic`, `claude`, `claude-code`, `developer-tools`, `llm`, `mcp`, `productivity`
-**Glama 交叉查詢**: https://glama.ai/mcp/servers?q=ECC
-
-### 2. [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent)
+### 1. [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent)
 
 **可以做什麼**
 
@@ -55,7 +38,7 @@ The agent that grows with you.
 **Topics**: `ai`, `ai-agent`, `ai-agents`, `anthropic`, `chatgpt`, `claude`, `claude-code`, `codex`
 **Glama 交叉查詢**: https://glama.ai/mcp/servers?q=hermes-agent
 
-### 3. [morluto/rea](https://github.com/morluto/rea)
+### 2. [morluto/rea](https://github.com/morluto/rea)
 
 **可以做什麼**
 
@@ -69,15 +52,32 @@ Reverse engineer anything with agents, from app behavior down to native binaries
 
 可先做 read-only MCP companion 或文件搜尋工具，若 repo 沒有官方 MCP integration，這會是低風險且有社群價值的切入點。
 
-**Topics**: `agent-skills`, `ai-agents`, `binary-analysis`, `claude-code`, `cli`, `codex`, `cordis`, `ctf`
+**Topics**: `agent-skills`, `ai-agents`, `binary-analysis`, `claude-code`, `cli`, `codex`, `cordis`, `decompiler`
 **Glama 交叉查詢**: https://glama.ai/mcp/servers?q=rea
+
+### 3. [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow)
+
+**可以做什麼**
+
+An Open Source Machine Learning Framework for Everyone.
+
+**解決什麼問題**
+
+解決 AI 應用開發中重複整合、理解成本高或從 prototype 到可用工具落差大的問題。
+
+**可貢獻切角**
+
+可先做 read-only MCP companion 或文件搜尋工具，若 repo 沒有官方 MCP integration，這會是低風險且有社群價值的切入點。
+
+**Topics**: `deep-learning`, `deep-neural-networks`, `distributed`, `machine-learning`, `ml`, `neural-network`, `python`, `tensorflow`
+**Glama 交叉查詢**: https://glama.ai/mcp/servers?q=tensorflow
 
 ## MCP / Tool 社群機會
 
 | 指標 | 值 |
 | --- | --- |
 | Registry sample | 800 servers |
-| Active baseline since | 2026-10-12 |
+| Active baseline since | 2026-10-13 |
 | GitHub stale cutoff | 2 days |
 
 ### 可能還沒上官方 MCP Registry 的候選
@@ -92,7 +92,17 @@ Reverse engineer anything with agents, from app behavior down to native binaries
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/TanStack/ai](https://github.com/TanStack/ai) |
 
-#### 2. [@supabase/mcp-utils](https://www.npmjs.com/package/@supabase/mcp-utils)
+#### 2. [@payloadcms/plugin-mcp](https://www.npmjs.com/package/@payloadcms/plugin-mcp)
+
+| 欄位 | 內容 |
+| --- | --- |
+| 類型 | npm-package |
+| 說明 | MCP (Model Context Protocol) capabilities with Payload |
+| 為什麼值得看 | npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。 |
+| 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
+| Repo | [https://github.com/payloadcms/payload](https://github.com/payloadcms/payload) |
+
+#### 3. [@supabase/mcp-utils](https://www.npmjs.com/package/@supabase/mcp-utils)
 
 | 欄位 | 內容 |
 | --- | --- |
@@ -102,25 +112,15 @@ Reverse engineer anything with agents, from app behavior down to native binaries
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/supabase/mcp](https://github.com/supabase/mcp) |
 
-#### 3. [@clerk/mcp-tools](https://www.npmjs.com/package/@clerk/mcp-tools)
+#### 4. [@roychri/mcp-server-asana](https://www.npmjs.com/package/@roychri/mcp-server-asana)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | npm-package |
-| 說明 | Tools for writing MCP clients and servers without pain |
+| 說明 | MCP Server for Asana |
 | 為什麼值得看 | npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。 |
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
-| Repo | [https://github.com/clerk/mcp-tools](https://github.com/clerk/mcp-tools) |
-
-#### 4. [@utcp/mcp](https://www.npmjs.com/package/@utcp/mcp)
-
-| 欄位 | 內容 |
-| --- | --- |
-| 類型 | npm-package |
-| 說明 | Model Context Protocol integration for UTCP |
-| 為什麼值得看 | npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。 |
-| 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
-| Repo | [https://github.com/universal-tool-calling-protocol/typescript-utcp](https://github.com/universal-tool-calling-protocol/typescript-utcp) |
+| Repo | [https://github.com/roychri/mcp-server-asana](https://github.com/roychri/mcp-server-asana) |
 
 #### 5. [@kubb/mcp](https://www.npmjs.com/package/@kubb/mcp)
 
@@ -132,50 +132,36 @@ Reverse engineer anything with agents, from app behavior down to native binaries
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/kubb-labs/kubb](https://github.com/kubb-labs/kubb) |
 
-#### 6. [plimsollmark/plimsoll](https://github.com/plimsollmark/plimsoll)
+#### 6. [aye-lang/dweller](https://github.com/aye-lang/dweller)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | A sandbox service for running untrusted, agent-authored code that reports the isolation boundary each run executed behind. Lessons, no clone needed: https://plimsollmark.github.io/plimsoll/trainers/ |
+| 說明 | Dweller: a web browser for people and AI agents, written in Aye |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 7. [Xquik-dev/xquik-docs](https://github.com/Xquik-dev/xquik-docs)
+#### 7. [lm203688/aishield](https://github.com/lm203688/aishield)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Twitter API documentation & X API docs for tweet search, webhooks, MCP & SDKs. Not affiliated with X Corp. |
+| 說明 | 🛡️ Agent-native AI tool security scanner. Scan MCP/Skill/GPT/Prompt for security risks. 4-dimensional scoring. Certified badges. Guardrail MCP for auto-protection. |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 8. [buildd-ai/buildd](https://github.com/buildd-ai/buildd)
+#### 8. [morluto/rea](https://github.com/morluto/rea)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Task coordination for AI coding agents. Create or schedule tasks; agents claim them, branch, code, and open PRs. Missions, roles, shared memory, and MCP-native. |
+| 說明 | Reverse engineer anything with agents, from app behavior down to native binaries. |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
 ### 建議可以實作的工具
 
-#### 1. [affaan-m/ECC MCP companion](https://github.com/affaan-m/ECC)
-
-**可以做什麼**
-
-為 affaan-m/ECC 做一個 MCP companion，讓 agent 可以查詢專案能力、範例、設定檔、常見錯誤與 release note。
-
-**為什麼有人會用**
-
-熱門 AI repo 通常文件量大、設定組合多；MCP 化後可直接服務 Cursor、Claude Code、Codex、ChatGPT 等 agent 工作流。
-
-**MVP**
-
-先做 read-only tools：search_docs、list_examples、explain_config、troubleshoot_error；穩定後再補 scaffold 或 patch 類工具。
-
-#### 2. [NousResearch/hermes-agent MCP companion](https://github.com/NousResearch/hermes-agent)
+#### 1. [NousResearch/hermes-agent MCP companion](https://github.com/NousResearch/hermes-agent)
 
 **可以做什麼**
 
@@ -189,11 +175,25 @@ Reverse engineer anything with agents, from app behavior down to native binaries
 
 先做 read-only tools：search_docs、list_examples、explain_config、troubleshoot_error；穩定後再補 scaffold 或 patch 類工具。
 
-#### 3. [morluto/rea MCP companion](https://github.com/morluto/rea)
+#### 2. [morluto/rea MCP companion](https://github.com/morluto/rea)
 
 **可以做什麼**
 
 為 morluto/rea 做一個 MCP companion，讓 agent 可以查詢專案能力、範例、設定檔、常見錯誤與 release note。
+
+**為什麼有人會用**
+
+熱門 AI repo 通常文件量大、設定組合多；MCP 化後可直接服務 Cursor、Claude Code、Codex、ChatGPT 等 agent 工作流。
+
+**MVP**
+
+先做 read-only tools：search_docs、list_examples、explain_config、troubleshoot_error；穩定後再補 scaffold 或 patch 類工具。
+
+#### 3. [tensorflow/tensorflow MCP companion](https://github.com/tensorflow/tensorflow)
+
+**可以做什麼**
+
+為 tensorflow/tensorflow 做一個 MCP companion，讓 agent 可以查詢專案能力、範例、設定檔、常見錯誤與 release note。
 
 **為什麼有人會用**
 

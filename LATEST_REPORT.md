@@ -1,103 +1,101 @@
-# AI 情報日報｜2026-10-15
+# AI 情報日報｜2026-10-16
 
-約 4 分鐘閱讀。今天的主線是：AI agent 開始從「選一個最強模型」走向「把決策、驗證、成本與權限拆成可觀測的系統」；同時，agent 能在長時間與陌生硬體上做更多事，也讓安全邊界更不能靠直覺。
+約 4 分鐘閱讀。今天的主線是：開放權重模型開始把「長程 coding agent、原生多模態、桌面部署」綁在一起，但真正的可用性仍取決於硬體、工具邊界與可獨立驗證的安全評估。
 
-> 截稿時間：2026-10-15 08:00（Asia/Taipei）。
-> 查核範圍：優先 2026-10-13～10-15；已避開 10/14 已報導且沒有新證據的 Scion、Gemini 4 Argon、Copilot managed settings 與 anti-distillation。
-> 證據標示：官方公告／文件是官方事實；官方 benchmark、客戶案例與效能數字保留發布者身分；Reddit、GitHub 個人專案與作者測試是社群經驗，不當成獨立驗證。
+> 截稿時間：2026-10-16 08:00（Asia/Taipei）。
+> 查核範圍：優先 2026-10-14～10-16；已避開 10/15 已報導且沒有新證據的長 context 成本、HydraFusion、Deep Review、GPT-4 退役與 AI worm。
+> 證據標示：官方公告／文件是官方事實；模型分數與硬體數字保留發布者身分；GitHub、Reddit 與作者測試是社群經驗，不當成獨立驗證。
 
 ## 1. 社群實戰用法
 
-### 先量 context 成本，再決定何時 compact
+### 先讓 deterministic 工具縮小範圍，再讓 agent 寫程式
 
-- **新在哪裡：** r/ClaudeAI 使用者以自己的 Claude Code 記錄追蹤長 session：把自動 compact 門檻設為 200K 後，重讀 context 佔比從 56% 降到 28%，每個 prompt 約便宜 26%；但和前五天直接比較只有 7% 改善，且 47 次 compact 共等了 62 分鐘。這是單一使用者的實測，不是 Anthropic benchmark。
-- **可以怎麼開始：** 先用本地 log 工具統計「重讀比例、每次 prompt 成本、compact 次數、cache 過期後的回補成本」，再用小型專案比較 200K 與預設值；長任務在 compact 後附一份短 handoff，讓 agent 不必重新掃完整 repo。
-- **編輯心得與限制：** compact 不是免費午餐；它可能讓 agent 重新讀檔、增加呼叫次數，還可能把原本連續的推理切斷。不要只看單次 token 數，至少同時看「完成一項任務的總成本與時間」。
-- 來源：[r/ClaudeAI：200K compacting follow-up](https://www.reddit.com/r/ClaudeAI/comments/1x62hgo/followup_on_the_56_re-reading_post_a_week_of/)（2026-10-14；社群實測）、[optimAIzr](https://github.com/blendbunjaku/optimaizr)（作者工具）。
+- **新在哪裡：** r/AIcodingProfessionals 有工程師分享一個很實用的分工：先讓 deterministic Python classifier 掃大型 codebase，再讓高能力模型只處理被篩出的區塊，並把規則、測試與 CI gate 固化。這是單一社群回覆，不是正式 benchmark，但正好對應「agent 讀太多、改太廣」的日常痛點。
+- **可以怎麼開始：** 先選一種可機器判斷的問題，例如 deprecated API、危險權限或重複設定；寫一個只輸出檔名／行號／分類的腳本，交給 agent 做局部修正，最後以固定測試與 lint 驗收。
+- **編輯心得與限制：** classifier 也會漏報、誤報；它應該是縮小搜尋面積，不是自動准入。保留原始輸出與 false-positive 清單，下一輪才知道規則是否真的有用。
+- 來源：[r/AIcodingProfessionals：developer workflow discussion](https://www.reddit.com/r/AIcodingProfessionals/comments/1x6k9m3/im_curious_about_how_developers_are_adapting_to/)（2026-10-15；社群經驗）。
 
-### 把「agent 說完成」改成可被戳破的驗證
+### 把開放模型當「可替換的 harness 元件」，先測工具呼叫再談排行榜
 
-- **新在哪裡：** 社群專案 Aesop Kernel 把多 agent 工作拆成 durable state、Git／SQLite 紀錄與 fail-closed gate，並用 trap tests 專門測試假綠、漏測、`--no-verify`、測試污染與 CI 漂移。專案自己也揭露：因 Anthropic 近期變更，部分 fail-closed hooks 目前尚未完整運作。
-- **可以怎麼開始：** 不必照搬整個 kernel；先為每個 agent 任務定義「輸出檔、驗證命令、測試數量、失敗時停止條件」，讓驗證失敗只能回到人工或下一輪，而不能被成功訊息覆蓋。把驗證命令與結果存進 PR 或 session artifact。
-- **編輯心得與限制：** 這是低星數、快速演進中的個人開源專案，trap test 是設計主張與作者案例，還不是第三方評測。可複製的是「刻意測試 agent 如何假裝完成」，不是它的所有編排層。
-- 來源：[Aesop Kernel GitHub](https://github.com/matt82198/aesop)（2026-10-14～15 讀取；社群開源專案）。
+- **新在哪裡：** 社群開始用 XERJ 這類本地搜尋層，讓 coding agent 先查 definition、signature 與相近開源 repo，再決定讀哪些檔案；思路是把昂貴的 context 讀取變成可觀測的 retrieval，而不是只換更大的模型。
+- **可以怎麼開始：** 在非敏感的小 repo 試跑 `xerj autoindex`、`xerj search` 與 `xerj def`，記錄 agent 的讀檔數、輸出 token、修復輪數與測試結果；等流程穩定後，再接到 Claude Code／Cursor 的 MCP 或 skill。
+- **編輯心得與限制：** XERJ 的 2.7× token 減少與 16/16 solve rate 是作者自己的 controlled study；它的 `--insecure` 會關閉 TLS 與 API key，遠端 bind 等同把索引讀寫權交給能碰到 port 的人，不能直接照貼到團隊網路。
+- 來源：[XERJ GitHub](https://github.com/xerj-org/xerj)（2026-10-15 讀取；社群開源專案與作者數據）、[XERJ security model](https://github.com/xerj-org/xerj/blob/main/docs/SECURITY_MODEL.md)（安全邊界）。
 
 ## 2. 社群新工具與新玩法
 
-### optimAIzr：把 Claude Code／Codex 的浪費攤在桌面上
+### XERJ：以本地索引取代 agent 反覆 grep／讀整棵 repo
 
-- **新在哪裡：** optimAIzr 是本地優先 CLI，讀取 Claude Code 與 Codex 已產生的使用記錄，分析重讀 context、cache 命中與 session 成本，不上傳 prompt；作者在 Reddit 表示已支援兩者，並公開 `npm i -g optimaizr`。
-- **可以怎麼開始：** 先在隔離環境安裝，對最近 7～30 天 session 只做 read-only 報表；把最貴的三個 session 對照「是否超過 context 門檻、是否長時間閒置、是否反覆讀同一批檔案」，再改 compact 或 handoff 策略。
-- **編輯心得與限制：** 作者的「56%／$98.74／3k+ npm downloads」都是作者自行計算或自述，且 Reddit 討論已有人質疑 cache pricing 假設；它適合找方向，不適合直接當財務帳。先檢查 log 欄位、價格表與隱私範圍。
-- 來源：[GitHub：blendbunjaku/optimaizr](https://github.com/blendbunjaku/optimaizr)、[r/Anthropic：工具介紹](https://www.reddit.com/r/Anthropic/comments/1x2w86v/i_built_an_opensource_tool_to_understand_and/)（2026-10-11～14；作者與社群討論）。
+- **新在哪裡：** XERJ 是 Apache-2.0 的單一 Rust binary，會把 code、文件、log、PDF 等資料夾建立索引，並提供 definition-first search、agent memory 與 Elasticsearch-compatible API；主打讓 agent 取得「精確函式與契約」，少把整份檔案塞進 context。
+- **可以怎麼開始：** 先在測試 repo 綁定固定資料目錄，執行 `xerj autoindex ./project`，用三個真實任務比較 grep 與 XERJ 的檔案讀取量、輸出 token、成功率；不要一開始就索引含 secrets 的 home directory。
+- **編輯心得與限制：** 官方文件同時揭露 lexical embedder、索引權限與外連模型下載等界線；「省 token」不是「答案一定更準」，而且索引更新、授權與資料刪除也要進入團隊維運流程。
+- 來源：[XERJ project](https://xerj.org/)、[XERJ GitHub README](https://github.com/xerj-org/xerj)（2026-10-15；作者文件／社群工具）。
 
-### Decision Provenance／agent passport 開始變成可安裝的基礎層
+### Locus：把離線文件、workspace 與本地模型接成一個 agent
 
-- **新在哪裡：** Decision Provenance Standard 以 charter、decision record、AI disclosure 與 conformance ladder 描述「誰在什麼授權下做了什麼決定」；Provenance Protocol 則提供可離線驗證的 signed declaration、attestation、MCP／A2A 連結與 pinned dependency 檢查，並可 `npm install provenance-protocol`。
-- **可以怎麼開始：** 對一個會呼叫付款、部署或外部 MCP 的 agent，先寫最小 declaration：能力、禁止事項、誰負責、哪些步驟要人批；把依賴版本與來源 pin 起來，讓 release notice 能回答「實際載入的依賴是否符合宣告」。
-- **編輯心得與限制：** 標準的自我宣告不是法律證明或第三方 attestation；`confirmed` 也只代表識別資訊有控制權關聯，不代表兩個 listing 就是同一套軟體。這比較像可驗證的供應鏈 metadata，不能取代權限系統與 runtime policy。
-- 來源：[Decision Provenance Standard](https://github.com/decision-provenance-standard/standard)（v1.3，2026-10-05）、[Provenance Protocol](https://github.com/provenance-protocol/provenance-protocol)（開源 SDK；2026-10-13 讀取）。
+- **新在哪裡：** Locus 是近期仍在更新的 local-first agent，主打不把 code、文件或私人筆記上傳雲端，能索引 workspace、連到 OpenAI-compatible local LLM，並提供搜尋、編輯、執行與記憶工具。
+- **可以怎麼開始：** 用一個沒有機密的文件資料夾測試「搜尋 → 引用原文 → 小幅修改 → 本機檢查」閉環；先限制模型 server 只 listen localhost，並明確關掉不需要的 command／network tool。
+- **編輯心得與限制：** local-first 只代表資料路徑較可控，不代表 agent 自動安全；模型 server、插件、索引檔與 shell 權限仍可能把資料送出去或改壞檔案，必須逐項確認。
+- 來源：[Locus GitHub](https://github.com/Serhiy-Todchuk/Locus)（近一週讀取；社群開源專案）。
 
 ## 3. 官方新功能與推薦用法
 
-### GitHub HydraFusion 把多模型協作做成兩種模式
+### Meta Muse Spark Open：816B／42B active、1M context 的開放權重 agent 模型
 
-- **新在哪裡：** GitHub 10/14 更新研究預覽 HydraFusion：模型池加入 Claude Opus 5.5、GPT-6 Astra、GPT-6.1 Sol、GPT-6 Luna；初稿用 medium reasoning、review 用 high reasoning，Cascade 增加 judge／必要時 repair，Critique 改用多個 critic 直接檢查 workspace。HydraFusion Max 是更偏深度與完整性的版本，兩者都能在 VS Code、Copilot app、Copilot CLI 使用。
-- **推薦用法：** 先在可回滾的 repo 啟用 experimental／preview；把一般探索交給 HydraFusion，只有高風險 migration、跨檔案 review 或需要多角度查證的任務才試 Max。要求它輸出實際變更、測試與 reviewer 證據，不要把「多模型」當成自動正確。
-- **限制：** 仍是 research preview，模型路由與 token 成本會變；官方只描述 orchestration 設計，沒有提供你的 repo 上的成功率或成本保證。
-- 來源：[GitHub Changelog：HydraFusion updates and new Max option](https://github.blog/changelog/2026-10-14-hydrafusion-updates-and-new-max-option/)（2026-10-14；官方公告）。
+- **新在哪裡：** Meta 10/15 釋出 Muse Spark Open 權重：816B total、42B active、1M token context，文字／圖片／影片／音訊原生輸入，定位是長程 coding、工具呼叫與多步推理；可從 Hugging Face 取得，也列出多家 API 平台與 MLX、SGLang、vLLM 等推理路徑。
+- **推薦用法：** 先用託管 API 做小型 multi-file refactor、截圖理解或長流程 debug，要求它輸出 tool trace 與測試結果；若要本地化，再從官方 MLX adapter／模型卡確認記憶體與 license，而不是先下載大權重。
+- **限制：** Meta 的 agentic workflow、benchmark 與「桌面可跑」敘述是發布者結果；官方桌面例子需要兩台 M5 Ultra Mac Studio，不能把「open weights」誤讀成一般筆電可用。
+- 來源：[Meta AI Research：Muse Spark Open](https://research.meta.ai/blog/muse-spark-open)（2026-10-15；官方公告）、[Muse Spark Open model card](https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B-NVFP4)（權重、授權與部署資訊）。
 
-### Google Research@：Deep Review 開放一般文件驗證，Earth AI 提供 agent-to-agent API
+### NVIDIA Nemotron 3.5 Super VL／Bolt：從資料中心一路縮到本地 agent
 
-- **新在哪裡：** Google 宣布 Deep Review 擴大到一般大眾，可檢查技術文件、法律協議與財務報告；官方表示早期版本已審閱超過 16,000 份研究出版物。Earth AI 同時提供地理分析、情境預測與 experimental agent-to-agent API，讓開發者把衛星影像解析、路由與人口 embedding 接進工作流。
-- **推薦用法：** Deep Review 適合做「第二位審閱者」：要求它列出原文段落、證據與不確定性，再由人決定是否採納。Earth AI 先用非敏感、可回溯的地理資料做小型 forecast，將模型輸出與原始資料、時間戳及人工結論一起保存。
-- **限制：** 16,000 份是 Google 自己的使用數字；Earth AI 的 early access／experimental API、forecast 與代理結果都需要領域專家驗收，不可直接當醫療、公共安全或投資決策。
-- 來源：[Google Research@ 2026](https://research.google/blog/research-2026-10-ways-were-amplifying-human-ingenuity/)（2026-10-14；官方研究總覽）、[Putting Earth AI to work](https://research.google/blog/putting-earth-ai-to-work-geospatial-agents-for-our-planets-biggest-challenges/)（2026-10-14；官方技術說明與 early access）。
+- **新在哪裡：** NVIDIA 10/15 發布 Nemotron 3.5 Super VL 120B-A12B 與 Bolt 74B-A9B 24GB；Super VL 兼顧文字、圖片、文件與影片，Bolt 則瞄準 DGX Spark、RTX 與 edge 的 agentic workload，兩者都提供開放權重與多種量化／推理資源。
+- **推薦用法：** 文件／表格／圖表抽取先試 Super VL；本地硬體或低延遲互動再評估 Bolt。用自己的 20～50 個任務測 tool-call success、首 token 延遲、總成本與顯存，不要只照搬 NVIDIA 的 throughput。
+- **限制：** NVIDIA 報告的 SWE-bench、Terminal-Bench、throughput 與企業案例都是廠商測試或客戶／合作方結果；不同 harness、量化與硬體會改變結論，模型「開放」也不等於免除部署與安全維護。
+- 來源：[NVIDIA：Nemotron 3.5 Super VL／Bolt](https://blogs.nvidia.com/blog/nemotron-3-5-super-vl/)（2026-10-15；官方公告）、[Nemotron 3.5 technical report](https://research.nvidia.com/labs/nemotron/Nemotron-3.5-Super-and-Lightning/)（官方模型與評測）。
 
-### OpenAI 通知 GPT-4 系列 API 將於 2027-01-14 移除
+### Google AI Mode／AI Overviews：把原始來源更早放回答案裡
 
-- **新在哪裡：** OpenAI API deprecations 頁面 10/14 新增 GPT-4o、GPT-4o mini、GPT-4.1 及其 fine-tuned 版本的退役通知，建議遷移到 GPT-6 Luna；同頁也列出 GPT-5.3-Codex、GPT-5.1、GPT-5.4-Nano 將於 2027-04-01 移除。
-- **推薦用法：** 立刻從程式碼、環境變數、fine-tune 設定與 eval fixture 搜尋 exact model ID；建立一個可回放的 golden set，同時比較新舊模型的 JSON schema、tool call、延遲、成本與拒答行為，最後才改 production default。
-- **限制：** replacement 是官方建議，不代表語意或輸出完全相容；若依賴 snapshot 行為、函式呼叫格式或嚴格 token 預算，必須自行做 migration test。
-- 來源：[OpenAI API deprecations](https://developers.openai.com/api/docs/deprecations)（2026-10-14；官方文件）。
+- **新在哪裡：** Google 10/15 宣布 AI Mode 與 AI Overviews 增加更高位置的 inline links、官方網站專區、新聞視覺 carousel 與 creator profiles，目標是讓使用者從生成答案更快回到原始頁面。
+- **推薦用法：** 把 AI Search 當「導覽與候選整理」：點開 inline link，直接讀官方頁／原始研究，再把日期、限制與版本記下來；對產品選型或安全決策，不要只保存 Overview 的文字。
+- **限制：** Google 明確標示生成摘要仍是 experimental；連結更容易找到不等於摘要正確，也不代表所有來源都有同等可信度。
+- 來源：[Google：More ways to connect with the web from Search](https://blog.google/products-and-platforms/products/search/updates-ai-mode-overviews-explore-web/)（2026-10-15；官方產品公告）。
 
 ## 4. 使用心得與避坑
 
-### AI worm 的「會自己部署」風險，先從裝置與網路邊界處理
+### METR 進入 Anthropic 內部，不等於「第三方完全不受限」
 
-- **新證據：** Anthropic Frontier Red Team 以 15 台約 55 美元的 Android TV box 分散執行 Gemma4-26B-A4B，約 0.39 token/s；在簡化、未驗證 ADB 的 8-node redroid 實驗中，GLM-5.2 5 次有 4 次擴散到 8/8 節點。9B 模型則在測試的 9 種硬體中成功建立 8 種 inference。
-- **可以怎麼開始：** 把 IoT、測試裝置與 agent sandbox 分網；關閉未驗證 ADB、預設帳密與不必要的外連；模型只拿到明確的 userspace／工具權限，並對下載權重、啟動 inference、橫向連線與重試設定做審計。不要因為「不需要 root」就把風險當低。
-- **編輯心得與限制：** 這不是已在野外發現的 AI worm；研究刻意把 exploit／authentication 簡化，作者也把結果稱為現實成功率的 upper bound。它真正提醒的是：小模型若能把硬體辨識、套件安裝與網路編排串起來，傳統只防 datacenter 的思路不夠。
-- 來源：[Anthropic Frontier Red Team：self-replicating AI](https://www.anthropic.com/research/self-replicating-ai)（2026-10-12；官方研究與簡化實驗）。
+- **新證據：** Anthropic 10/15 表示已讓 METR 六名員工以接近內部風險團隊的硬體、辦公空間與工具權限工作，METR 可發布風險評估、事件與做法；Anthropic 僅能對客戶資料、律師特權與模型架構等狹窄類別要求刪節，並且 METR 可公開描述刪節是否合理。
+- **可以怎麼開始：** 若公司要做 agent safety review，先在合約寫清楚資料範圍、獨立性、發布權、可重現 artifact 與刪節理由；同時讓 evaluator 看得到模型、訓練／護欄與實際 incident，而不是只給整理過的 benchmark。
+- **編輯心得與限制：** 這是透明度與獨立評估制度的進展，不是安全已被證明；Anthropic 也說其他 evaluator 仍在較早期、權限與發布權較有限的階段。
+- 來源：[Anthropic：An update on independent evaluators](https://www.anthropic.com/news/an-update-on-independent-evaluators)（2026-10-15；官方政策／安全公告）、[METR](https://metr.org/)（評估機構）。
 
-### 長時間 agent 的瓶頸常常是環境，不是模型智力
+### 「可在桌面跑」要先換算總硬體成本與實際速度
 
-- **新案例：** OpenAI 客戶案例 Third Moment Research 自述同時跑 10,000 個 agent、單次研究 36–48 小時；Codex 找到 backtest 重複 polling、cache 與 memory-packing 問題，把一次約 3 小時縮到約 3–5 分鐘，官方頁面換算為 97% backtest time reduction。
-- **可以怎麼開始：** 讓 agent 先 profile 任務的等待、重試、I/O 與 context 膨脹，再決定是否需要更強模型；把「可重用 cache、非同步 job、完成訊號、停止條件」當成 harness 的一部分，而不是靠 prompt 叫它不要輪詢。
-- **限制：** 這是 OpenAI 發布的客戶故事與客戶自述，沒有外部重現、完整硬體與 baseline；3–5 分鐘的改進不能外推到一般 repo，也不能證明 10,000 個 agent 適合你的成本或治理能力。
-- 來源：[OpenAI：How Third Moment Research runs 10,000 agents](https://openai.com/index/third-moment-research/)（2026-10-14；官方客戶案例／廠商數字）。
+- **避坑：** Meta 的官方桌面示範需要兩台 M5 Ultra Mac Studio；Reddit 討論指出，若用可立即買到的 256GB 設定湊 1TB，社群估算約 38,000 美元，並質疑一般使用者是否真的能把它當 desktop model。這是社群成本討論，不是已核驗報價。
+- **可以怎麼開始：** 先比較託管 API、租 GPU、單機量化與雙機 unified memory 四條路徑；把「每次任務成本、tok/s、首 token 延遲、資料是否離開環境、模型更新負擔」放在同一張表，才知道 open weights 是否真的適合你。
+- 來源：[Meta 官方 Muse Spark Open 公告](https://research.meta.ai/blog/muse-spark-open)（硬體條件）、[r/ArtificialIntelligence：local hardware discussion](https://www.reddit.com/r/ArtificialInteligence/comments/1x6yfwt/thanks_for_the_open_weights_meta_but_how_many_of/)（社群觀點；2026-10-15）。
 
-### Runtime safety shield 仍是研究概念，不是「加一層模型就安全」
+### 「1M context」仍要用任務成功率與成本驗收
 
-- **新研究：** 10/12 的預印本提出 controller-agnostic runtime filter：用 logs 建立受限 Markov chain，再以 robust reach-avoid 計算工具呼叫的安全證書；作者在 1,050 個 sandbox episodes 中讓 7 個 controller 達到零 unsafe outcome。
-- **可以怎麼開始：** 若 agent 會操作檔案、網路或不可逆 API，先把危險動作寫成 predicate、successor set 與明確 budget；安全層失去訊號時要停止，而不是放行。把研究中的「certificate」視為設計方向，先在自己的 sandbox 做 adversarial replay。
-- **限制：** 這是 arXiv 預印本，安全證書依賴 predicate、logs 與覆蓋範圍；沒有被觀測過的狀態、錯誤抽象或新的 tool semantics 都可能讓保證失效。
-- 來源：[Controller-Agnostic Runtime Safety Certificates](https://arxiv.org/abs/2610.16865)（2026-10-12；預印本，非正式標準）。
+- **避坑：** Muse Spark Open、Nemotron 系列都把長 context 放在核心賣點，但 context 上限不會自動解決檢索噪音、工具狀態、權限或錯誤恢復。長輸入也可能讓每次失敗更貴、更難重現。
+- **可以怎麼開始：** 先做固定資料集的長文件／多檔案回放，分別測「全量 context、索引檢索、摘要＋引用」三條路徑；成功條件要包含正確引用、tool-call schema、測試與停止條件，不只看模型回答是否流暢。
+- 來源：[Meta 模型卡](https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B-NVFP4)、[NVIDIA Nemotron 技術報告](https://research.nvidia.com/labs/nemotron/Nemotron-3.5-Super-and-Lightning/)（官方能力與限制資料）。
 
 ## YouTube 深度整理
 
 ### 今日無推薦
 
-已主動查核 PAPAYA 電腦教室、Tech With Tim、Gary Chen、Matthew Berman 與 AI coding／Agent 候選。Tech With Tim 的 Jev 實測片（2026-10-08）有完整章節與技術拆解，但公開第三方頁面的觀看數證據互相矛盾，沒有可靠一致地確認超過 10,000；其他近期候選也未同時滿足「破萬觀看、可讀可靠字幕／逐字稿、非純新聞、實測深度」條件，因此不硬湊推薦。
+已主動查核 PAPAYA 電腦教室、Tech With Tim、Gary Chen、Matthew Berman 與 AI coding／Agent 候選。近 24–48 小時沒有同時符合「破萬觀看、可靠字幕／逐字稿、非純新聞、實測或技術拆解」的影片；Tech With Tim 10/04 的 Python agent harness 雖有可讀逐字稿與超過 10,000 觀看，但已超過必要的一週窗口，因此不硬湊推薦。
 
 ## 今天最值得帶回團隊的三個檢查
 
-- **成本：** 你的 agent 是在解決問題，還是在反覆重讀 context、輪詢與重建 cache？
-- **證據：** 每個「完成」是否都有可重跑的測試、輸出、時間戳與失敗停止條件？
-- **邊界：** 模型能不能碰到不必要的裝置、網路、MCP 或不可逆工具？若能，是否真的需要？
+- **模型：** 開放權重是否真的能在你的硬體、license 與資料邊界內運作？
+- **harness：** 是否能以 deterministic classifier、索引、測試與 tool trace 限制 agent 的工作面？
+- **證據：** 官方 benchmark、作者數據、社群心得與獨立 evaluator 是否被清楚分開？
 
 ## 今日一句話
 
-模型越能長時間工作，越不能只比較模型排行榜；真正要先工程化的，是成本、證據、依賴 provenance 與 fail-closed 的權限邊界。
+今天的進展不是「又一個更大的模型」，而是模型、索引、硬體與 evaluator 開始被當成一個完整 agent 系統來比較；真正可用的答案，仍要回到成本、權限與可重跑的證據。
 
-來源：[GitHub HydraFusion](https://github.blog/changelog/2026-10-14-hydrafusion-updates-and-new-max-option/)、[Google Research@ 2026](https://research.google/blog/research-2026-10-ways-were-amplifying-human-ingenuity/)、[Anthropic AI worm research](https://www.anthropic.com/research/self-replicating-ai)、[OpenAI GPT-4 deprecations](https://developers.openai.com/api/docs/deprecations)。
+來源：[Meta Muse Spark Open](https://research.meta.ai/blog/muse-spark-open)、[NVIDIA Nemotron 3.5](https://blogs.nvidia.com/blog/nemotron-3-5-super-vl/)、[Google AI Search](https://blog.google/products-and-platforms/products/search/updates-ai-mode-overviews-explore-web/)、[Anthropic independent evaluators](https://www.anthropic.com/news/an-update-on-independent-evaluators)。

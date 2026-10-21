@@ -1,8 +1,8 @@
-# AI Community Radar - 2026-10-20
+# AI Community Radar - 2026-10-21
 
-> Generated: 2026-10-20T01:39:39.335Z
+> Generated: 2026-10-21T01:25:22.911Z
 > Timezone: Asia/Taipei
-> Active cutoff: updated since 2026-10-18; archived GitHub repos excluded; max stale age 2 days.
+> Active cutoff: updated since 2026-10-19; archived GitHub repos excluded; max stale age 2 days.
 
 ## 今日摘要
 
@@ -17,9 +17,9 @@
 
 | # | Repo | Stars | Forks | Language | Updated |
 | --- | --- | ---: | ---: | --- | --- |
-| 1 | [morluto/rea](https://github.com/morluto/rea) | 337,235 | 85,152 | TypeScript | 2026-10-19T23:21:59Z |
-| 2 | [affaan-m/ECC](https://github.com/affaan-m/ECC) | 284,161 | 42,210 | JavaScript | 2026-10-19T23:13:04Z |
-| 3 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 255,285 | 55,578 | Python | 2026-10-20T01:09:34Z |
+| 1 | [morluto/rea](https://github.com/morluto/rea) | 348,272 | 87,610 | TypeScript | 2026-10-21T00:19:03Z |
+| 2 | [affaan-m/ECC](https://github.com/affaan-m/ECC) | 284,924 | 42,276 | JavaScript | 2026-10-20T23:08:28Z |
+| 3 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 255,600 | 55,695 | Python | 2026-10-21T01:12:02Z |
 
 ### 1. [morluto/rea](https://github.com/morluto/rea)
 
@@ -77,7 +77,7 @@ The agent that grows with you.
 | 指標 | 值 |
 | --- | --- |
 | Registry sample | 800 servers |
-| Active baseline since | 2026-10-18 |
+| Active baseline since | 2026-10-19 |
 | GitHub stale cutoff | 2 days |
 
 ### 可能還沒上官方 MCP Registry 的候選
@@ -102,7 +102,17 @@ The agent that grows with you.
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/supabase/mcp](https://github.com/supabase/mcp) |
 
-#### 3. [@kubb/mcp](https://www.npmjs.com/package/@kubb/mcp)
+#### 3. [@clerk/mcp-tools](https://www.npmjs.com/package/@clerk/mcp-tools)
+
+| 欄位 | 內容 |
+| --- | --- |
+| 類型 | npm-package |
+| 說明 | Tools for writing MCP clients and servers without pain |
+| 為什麼值得看 | npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。 |
+| 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
+| Repo | [https://github.com/clerk/mcp-tools](https://github.com/clerk/mcp-tools) |
+
+#### 4. [@kubb/mcp](https://www.npmjs.com/package/@kubb/mcp)
 
 | 欄位 | 內容 |
 | --- | --- |
@@ -112,7 +122,7 @@ The agent that grows with you.
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/kubb-labs/kubb](https://github.com/kubb-labs/kubb) |
 
-#### 4. [@copilotkit/mcp-apps-renderer](https://www.npmjs.com/package/@copilotkit/mcp-apps-renderer)
+#### 5. [@copilotkit/mcp-apps-renderer](https://www.npmjs.com/package/@copilotkit/mcp-apps-renderer)
 
 | 欄位 | 內容 |
 | --- | --- |
@@ -122,40 +132,30 @@ The agent that grows with you.
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/CopilotKit/CopilotKit](https://github.com/CopilotKit/CopilotKit) |
 
-#### 5. [@payloadcms/plugin-mcp](https://www.npmjs.com/package/@payloadcms/plugin-mcp)
-
-| 欄位 | 內容 |
-| --- | --- |
-| 類型 | npm-package |
-| 說明 | MCP (Model Context Protocol) capabilities with Payload |
-| 為什麼值得看 | npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。 |
-| 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
-| Repo | [https://github.com/payloadcms/payload](https://github.com/payloadcms/payload) |
-
-#### 6. [LeifDai/MACKORN-hydraulic-cone-crusher](https://github.com/LeifDai/MACKORN-hydraulic-cone-crusher)
+#### 6. [shaguocgl/buff-term](https://github.com/shaguocgl/buff-term)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | mining industry vertical-domain MACKORN cone crusher plugin: MACKORN NH/NS hydraulic cone crushers, comparable to Sandvik CH/CS and Metso HP/MP. Cone crusher selection and crushing-plant design. 22 tools, 6 skills, MCP server, no runtime dependencies, good quality, reliable, partner for sustainable development. |
+| 說明 | Buff 加持的 SSH 工具 \| 面向 AI 的 SSH 工具与 MCP 服务器，内置自研 AI Agent 编排层，接入任意 OpenAI 兼容协议的大模型。 An AI-oriented SSH tool and MCP server with a built-in self-developed AI Agent orchestration layer, compatible with integration of any large model supporting the OpenAI-compatible protocol. |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 7. [terrylica/cc-skills](https://github.com/terrylica/cc-skills)
+#### 7. [hjdspace/SpaceCode](https://github.com/hjdspace/SpaceCode)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Claude Code Skills Marketplace: plugins, skills for ADR-driven development, DevOps automation, ClickHouse management, semantic versioning, and productivity workflows |
+| 說明 | AI 驱动的智能编程桌面助手 — 编码 / 办公 / 设计三合一（Electron + Vue 3） |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 8. [jackdishman/blockula](https://github.com/jackdishman/blockula)
+#### 8. [ModernRelay/omnigraph](https://github.com/ModernRelay/omnigraph)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | 🧛 Post-quantum blockchain: ML-DSA everywhere, passkey wallets, .boo names, and an MCP server so agents can use it from one prompt |
+| 說明 | Object-storage native graph database with branching and typed ontology |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 

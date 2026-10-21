@@ -1,119 +1,89 @@
-# AI 情報日報｜2026-10-20
+# AI 情報日報｜2026-10-21
 
-約 4 分鐘閱讀。今天的主線是：AI agent 的競爭點從「再換一個模型」轉成「如何管理多個 agent、模型政策、可驗證的 loop 與失敗時的安全邊界」。
+約 4 分鐘閱讀。今天的主線是：AI agent 的價值開始落在「可觀測、可隔離、可理解」；新模型或新介面只有接上權限、資料與驗證流程，才會變成可靠工作流。
 
-> 截稿時間：2026-10-20 07:57（Asia/Taipei）。
-> 查核範圍：優先 2026-10-19～10-20；補充最近一週仍有直接實用價值的研究。避開 10/19 已報且沒有新證據的 Sphinx、DeepSeek V4.1-Flash-1017、Harness²、Junie Local 與 Anthropic Public Benefit Fund。
-> 證據標示：官方公告／文件是官方事實；GitHub release／commit 是專案目前公開狀態；Reddit、Hacker News 與影片是社群訊號；論文與廠商 benchmark 均不等於你的實際工作流結果。
+> 截稿時間：2026-10-21 08:04（Asia/Taipei）。
+> 查核範圍：優先 2026-10-19～10-21；補充最近一週仍有直接實用價值的研究。避開 10/20 已報且沒有新進展的 Sphinx、DeepSeek V4.1-Flash-1017、Harness²、Junie Local、Proliferate、Copilot model policy API 與 Loop Engineering。
+> 證據標示：官方公告／文件是官方事實；GitHub release／repo 是公開工程狀態；Hacker News 是社群訊號；論文與廠商 benchmark 不等於你的 production 結果。
 
 ## 1. 社群實戰用法
 
-### 把 agent 的長任務拆成「目標—動作—觀察—調整」迴圈
+### 先設計抽象，再讓 agent 寫實作
 
-- **新在哪裡：** IBM Technology 10/19 的 Loop Engineering 教學，把 agent workflow 拆成可重播的四段：先寫可驗證的 goal，再讓 agent action，讀回測試／工具結果，最後依結果調整，直到 stopping condition 成立。這比只追求一個「完美 prompt」更接近實際工程。
-- **可以怎麼開始：** 先拿一個有測試的 bug：goal 寫成「checkout 全部 unit tests 通過」，每輪保存 diff、測試輸出與下一步；再加一個獨立 checker 或 subagent 看結果。不要把「看起來完成」當停止條件。
-- **編輯心得與限制：** 這是影片作者的教學框架，不是標準或獨立 benchmark；checker 仍可能判錯。最值得帶走的是把 goal 寫成可驗證條件，並留下 context、persistent state 與 human review。
-- 來源：[IBM Technology｜What Is Loop Engineering? Building Better AI Agents](https://www.youtube.com/watch?v=DQBqh6gcx7U)（2026-10-19；作者框架與實作教學）、[Microsoft｜Securing the agentic insider](https://blogs.microsoft.com/blog/2026/10/19/securing-the-agentic-insider/)（2026-10-19；官方安全觀點）。
+- **新在哪裡：** Hacker News 10/19 的 Ask HN 討論有 600 近點數與近 700 則留言，核心問題不是「模型會不會寫 code」，而是工程師如何在快速產生大量程式碼後仍保有理解。高共鳴的做法包括：人先決定模組與責任、把大任務切成傳統 user story、先用 pseudo-code 或 scratch repo 對齊設計，再讓 agent 填細節。
+- **可以怎麼開始：** 對一個新功能先寫三件事：邊界、資料流、不可破壞的不變量；再把每個小任務交給 agent，要求先列出要讀的檔案與驗證方式。agent 不得自行擴大架構，完成後由人決定是否 commit。
+- **編輯心得與限制：** 這是社群經驗，不是受控研究；留言品質差異很大，也有人回報長 session 會產生「每一層都似乎合理、合起來卻錯」的結果。可採用的是「人負責設計與停止條件」，不是照抄某個人的 UML 或 prompt。
+- 來源：[Hacker News｜How to deal with shipping AI-written code you don't understand?](https://news.ycombinator.com/item?id=50151036)（2026-10-19，社群討論）。
 
-### 社群把「多 agent 並行」做成可審查的工作區
+### 把 agent trace 當成可審查的工作產物
 
-- **新在哪裡：** Show HN 的 Proliferate 是開源 AI IDE，讓 Claude Code、Codex、OpenCode 等 agent 各自跑在隔離 worktree，也能並行、交接 subagent、串 MCP／skills／workflow；討論熱點不是單一模型，而是如何把多個執行中的 diff 集中在同一個 review surface。
-- **可以怎麼開始：** 先用一個低風險 repo 建兩個互不衝突的任務：一個 agent 寫測試、一個 agent 做文件；每個 worktree 都限制權限，完成後只手動挑選 diff 合併。先讀 AGPL-3.0 與 self-hosting 文件，再決定是否放公司 code。
-- **編輯心得與限制：** Repo 頁面約 516 stars、86 forks，是採用興趣訊號，不是成熟度證明；自架仍要處理 secrets、模型登入、Docker／Rust／Node 依賴與更新風險。它解決的是編排與隔離，不會自動解決 agent 寫錯 code。
-- 來源：[Hacker News｜Show HN: Proliferate](https://news.ycombinator.com/item?id=49390739)（2026-10-20；社群討論）、[Proliferate GitHub README](https://github.com/proliferate-ai/proliferate)（目前公開 repo）、[Proliferate self-hosted deploy guide](https://github.com/proliferate-ai/proliferate/blob/main/guides/deploying/self-hosted-deploy.md)（官方文件）。
+- **新在哪裡：** Laminar 在 10/19 的 Launch HN 介紹 `flow-1`，主張用模型讀取完整 agent trace，找出「每個工具呼叫都成功、但整體意圖已偏掉」的錯誤，例如點錯按鈕或引用錯文件。這反映實務上的驗證需求已從最後一段答案，前移到 action、tool result 與中間決策。
+- **可以怎麼開始：** 每次 agent 工作至少保存 goal、工具輸入／輸出、變更 diff、測試與人工結論；先用規則檢查高風險 action，再把 trace evaluator 當輔助排序器，不要讓 evaluator 自己決定 merge 或付款。
+- **編輯心得與限制：** `flow-1` 的「等同 GPT-6 Sol、便宜 23 倍」是 Laminar 自己的 benchmark 宣稱，尚未代表你的 trace 分布；社群貼文的 58 點數也只是興趣訊號。真正值得借的是 trace schema 與失敗案例，而不是直接相信分數。
+- 來源：[Hacker News｜Launch HN: Laminar](https://news.ycombinator.com/item?id=50154029)（2026-10-19，社群與廠商自述）、[Laminar flow-1](https://laminar.sh/blog/flow-1)（廠商 benchmark，需自行重測）。
 
 ## 2. 社群新工具與新玩法
 
-### LangGraph CLI 0.4.37：部署預設與 verbose 輸出一起修正
+### OpenShell v0.1.5：agent 沙箱升級要連同 log 與 Kubernetes 政策一起看
 
-- **新在哪裡：** 10/19 release 修正 CLI verbose 模式不應印出 subprocess stdin，並把 deploy 預設改為 serverless；同一批變更也更新 JavaScript example dependencies。這是小版號，但直接影響 agent log 是否洩漏輸入，以及部署腳本是否走錯路徑。
-- **可以怎麼開始：** 升版前先在 CI 保存一份舊版 `langgraph deploy` dry-run／log，升版後確認 stdin、secret、環境變數不會出現在 verbose log，再用測試 project 驗證 serverless target。
-- **編輯心得與限制：** 這是 CLI release note 的修正，不代表所有 runtime／cloud 相容性都已驗證；不要只升 CLI 而不鎖定 SDK、runtime 與部署環境版本。
-- 來源：[LangGraph releases｜cli 0.4.37](https://github.com/langchain-ai/langgraph/releases)（2026-10-19；官方 release）。
+- **新在哪裡：** NVIDIA OpenShell 10/20 發布 v0.1.5。升級說明要求把 OCSF supervisor log 的收集 pattern 從 `openshell-ocsf.*.log` 改成 `openshell-ocsf.*.jsonl`；Kubernetes sandbox template 若要設定 pod annotation／label，則要由 operator 明確 allowlist。這是 runtime 治理的實際變更，不只是模型更新。
+- **可以怎麼開始：** 先在測試環境升級並確認 log collector、SIEM parser 與告警仍有資料，再檢查所有 SDK／API caller 的 labels、annotations 是否已列入 allowlist；保存舊 log 後才清理 `.log` 歷史檔。
+- **編輯心得與限制：** release 只證明 OpenShell 發布了這些變更，不代表你的 NemoClaw／OpenClaw 沙箱已安全。NemoClaw quickstart 也會預設嘗試匿名完成遙測，若不需要要在安裝前設定 `NEMOCLAW_DISABLE_TELEMETRY=1`；不要把遠端 API key 或個人資料直接放進第一個 sandbox。
+- 來源：[NVIDIA OpenShell v0.1.5 release](https://github.com/NVIDIA/OpenShell/releases)（2026-10-20，官方 GitHub release）、[NemoClaw quickstart](https://docs.nvidia.com/nemoclaw/latest/user-guide/openclaw/get-started/quickstart)（目前文件）。
 
-### Vercel AI SDK main 分支開始補齊 agent harness 原語
+### WhatsApp MCP：有用的「只讀」設計，也有不可忽略的條款風險
 
-- **新在哪裡：** 10/19 公開 commit 同時出現 Codex harness 的 image input、`extractHarnessPromptContent()` helper，以及第一方 bash tool；另有 MCP OAuth client credential 綁定 authorization server 的修正。這些是 main 分支的工程進展，不應誤寫成已在所有 npm 版本發布。
-- **可以怎麼開始：** 若要試用，先在 lockfile 固定 commit／版本，為 image input、bash tool 與 MCP OAuth 各寫一個最小整合測試；bash tool 只允許 sandbox workspace，OAuth 測試要確認不同 authorization server 不會共用 credential。
-- **編輯心得與限制：** commit ≠ stable release，API 可能變動；bash 與 OAuth 都是高權限邊界，應先看 diff、測試與 threat model，不要因為是「first-party」就直接開 production。
-- 來源：[Vercel AI SDK｜2026-10-19 commits](https://github.com/vercel/ai/commits)（2026-10-19；官方 repo 狀態）、[first-party bash tool commit](https://github.com/vercel/ai/commit/f64657e)（commit）、[Codex image input commit](https://github.com/vercel/ai/commit/184b9d3)（commit）。
+- **新在哪裡：** Hacker News 10/19 推出的 `whatsapp-mcp` 是部署在自己 Cloudflare 帳號的只讀 MCP server，讓 agent 搜尋與讀取個人 WhatsApp 訊息；資料放在 Durable Object 的 SQLite，工具刻意不提供送訊息。
+- **可以怎麼開始：** 若只是研究，先用測試帳號與最小 Cloudflare 專案，保留 `list_chats`、`get_messages`、`search_messages` 等讀取工具，禁止把它接到會寫回訊息的 workflow；先確認 linked device、OAuth 密碼、歷史匯入與刪除流程。
+- **編輯心得與限制：** README 明確寫出它不是官方 WhatsApp API，使用 Baileys 讀取個人訊息可能違反 WhatsApp 條款；需要 Workers Paid plan，首次匯入不保證拿到全部歷史，媒體也只存標籤。這是很好的 read-only MCP 邊界示範，不是可以直接放進公司帳號的推薦方案。
+- 來源：[whatsapp-mcp GitHub](https://github.com/finereli/whatsapp-mcp)（目前公開 repo，約 311 stars）、[Hacker News｜Show HN: WhatsApp MCP running free on Cloudflare](https://news.ycombinator.com/front?q=AI)（2026-10-19 的 AI 排名頁；社群訊號）。
 
 ## 3. 官方新功能與推薦用法
 
-### GitHub Copilot model policy API：把模型可用性納入 IaC／治理
+### Gemini 小型商家工作區：品牌規範、資料分析與連接器放到同一入口
 
-- **新在哪裡：** GitHub 10/19 將 Copilot model policy 的 GET／PATCH REST endpoints 推至 generally available，涵蓋 enterprise、enterprise teams、enterprise apps 與 organization 四層。管理者可以程式化讀取與更新哪些模型可用，而不是靠人工逐一點設定。
-- **推薦用法：** 先 GET 現行政策存成審查用 snapshot，再用小範圍 org 或 team PATCH；把允許模型、替代模型、變更人與生效日期放進 code review，並在 CI 檢查模型退役前是否仍有舊 slug。
-- **限制：** API 能管理政策，不代表模型輸出品質或費用固定；權限、API version 與 enterprise／org 模式仍要依官方文件設定。
-- 來源：[GitHub Changelog｜Copilot model policy API](https://github.blog/changelog/2026-10-19-copilot-model-policy-api-for-enterprise-orgs-and-teams/)（2026-10-19；官方公告）。
+- **新在哪裡：** Google 10/20 公布 Gemini 的小型商家專用入口，可連 Google Business Profile、Google Ads、Workspace，也可連 Adobe、Canva、Dropbox、Shopify、Wix、Zoho、Xero。使用者可以上傳網站、brand kit、字型或色盤，讓 Nano Banana 2.1 產出持續一致的品牌素材，也能把雜亂的 spreadsheet、收據與採購紀錄整理成財務圖表或互動模型。
+- **推薦用法：** 先建立一份不含個資的測試表格與品牌 kit，要求 Gemini 只產出「待人工確認」的行銷文案與月度摘要；連接器逐一開啟，不要一開始把廣告、財務與客戶資料全部授權給同一個 agent。
+- **限制：** 以上是 Google 自己的產品說明與案例，包含「每天省下兩到三小時」等使用者故事，不是獨立成效研究；新工具標示為接下來幾天陸續推出，地區、方案與第三方 app 可用性仍可能不同。
+- 來源：[Google｜New Gemini tools for small business owners](https://blog.google/innovation-and-ai/products/gemini-app/new-tools-small-business-owners/)（2026-10-20，官方公告）。
 
-### 六個 Copilot 模型已到 10/19 退役日：先驗證替代模型再改設定
+### Gemini Personal Intelligence 進入車載場景：方便，但權限邊界更重要
 
-- **新在哪裡：** GitHub 原公告指定 Gemini 3.7 Flash、GPT-5.5、GPT-5.4、GPT-5.4 mini、GPT-5 mini、Grok 4.5 於 10/19 在 Copilot Chat、inline edits、ask／agent mode 與 code completions 退役，並列出 Gemini 3.8 Flash、GPT-5.6 Sol／Luna、Grok 4.6 等建議替代。
-- **推薦用法：** 先用固定 prompt、相同 repo、相同 tool policy 跑舊模型的歷史 fixture 與新替代模型，記錄 pass rate、延遲、token／premium request、diff 大小與越權行為，再更新政策；不要只把 model slug 全域替換。
-- **限制：** 「建議替代」是 GitHub 的相容性方向，不是你的團隊最佳模型；Enterprise 管理者若關閉 global default，替代模型不一定會自動可用。
-- 來源：[GitHub Changelog｜selected Copilot models deprecation](https://github.blog/changelog/2026-09-18-upcoming-deprecation-of-selected-github-copilot-models-in-mid-october/)（2026-09-18 公告，2026-10-19 生效；官方文件）。
-
-### ChatGPT Slides 與 GPT-6 Pro 平行 agents：先用在可回溯的交付物
-
-- **新在哪裡：** OpenAI release notes 10/16 說明 ChatGPT Slides 可從對話、檔案或 outline 建立並共同編輯簡報，且可輸出 PowerPoint、PDF 或 Google Slides；同一更新也提到 GPT-6 Pro rollout multiple agents，可在同一對話平行處理不同部分並回看完成的子任務。
-- **推薦用法：** 讓一個 agent 先整理來源，另一個做大綱，最後由人檢查引用、圖表與版面；把輸出限定在 draft deck，通過人工 review 後才分享或匯出。
-- **限制：** 功能仍依 Pro／Business／Enterprise、Space、workspace 設定與 rollout eligibility；平行完成不等於彼此結果已互相驗證，來源與數字仍要逐項核對。
-- 來源：[OpenAI｜ChatGPT release notes](https://help.openai.com/en/articles/6825453-chatgpt-release-notes)（2026-10-16；官方說明）。
+- **新在哪裡：** Google 10/20 表示 Gemini 已全球進入 Android Auto 與內建 Google 的車款；在使用者明確允許後，Personal Intelligence 可連 Gmail、Calendar、Photos、Maps、YouTube 與 Search，回答例如航班登機門、沿途餐廳或從相片找地點等跨資料問題。
+- **推薦用法：** 先只連 Calendar 與 Maps，測試「找出今天下一個行程並導航」這類可核對的讀取任務；確認回答來源後再考慮加入 Gmail 或 Photos。開車時只用語音讀取，任何寫入、傳送或付款動作都應停車後由人確認。
+- **限制：** Google 說明連接預設由使用者選擇、可隨時關閉，且 Android Auto 與內建車機的 rollout 節奏不同；這是便利性功能，不是自動駕駛或可完全信任的個人秘書。車內語音、個人資料與錯誤導航的風險仍要自行管理。
+- 來源：[Google｜Personal Intelligence brings Gemini to cars globally](https://blog.google/products-and-platforms/platforms/android/android-auto-cars-with-google-built-in-gemini-personal-intelligence/)（2026-10-20，官方公告）。
 
 ## 4. 使用心得與避坑
 
-### 「同一模型多算幾次」不一定等於更多證據
+### Coding agent 的瓶頸常是「理解要改哪裡」，不是「能改幾行」
 
-- 10/16 上傳 arXiv 的 DIA 研究指出，同一 reasoning model 的重複 sampling、加深推理與自我評分可能有相關錯誤；作者提出 disagreement-triggered independent arbitration，只在偵測到不穩定時交給異質小模型 panel 獨立解題。作者在七個 benchmark、兩個 base models 上報告 14 個設定中 12 個勝過 full chain-of-thought，並稱只啟動約 17% 題目、最多比 multi-agent baseline 少 47.2% tokens。
-- 立即可做：高成本任務不要盲目把同一模型 temperature／推理輪數拉高；先設定 disagreement signal，再用不同模型或不同 prompt 獨立重做，最後保留原答案、仲裁答案與成本。
-- **避坑：** 這些數字是論文作者結果，尚非你的資料集或 production evidence；研究也不代表所有任務都適合 heterogeneous panel。
-- 來源：[arXiv｜Not All Test-Time Compute Is Evidence](https://arxiv.org/abs/2610.23213)（2026-10-16；原始研究）。
+- Microsoft 的 CABRA 研究（arXiv 10/7，GitHub 實驗資料近期公開）用 6,840 個受控任務比較 8 個 LLM 與 6 種 Copilot agent 設定，沿著 function traversal、search、runtime resolution、instruction following 等軸線增加難度。作者觀察到，tool use 能補掉很多 standalone LLM 的弱點，但在需要理解跨函式與行為差異的任務上，agent 仍會失敗；工具呼叫數對準確率的解釋力可能比修改行數更有用。
+- **立即可做：** 你的 coding-agent eval 不要只記錄 diff 行數與測試是否通過；另外記錄讀檔、搜尋、執行、修正與重試次數，挑 5 個需要跨模組理解的任務做基線。若 agent 沒有讀關鍵檔案就直接改，先修 harness 的檢查或要求它停下來，不要只換更大的模型。
+- **避坑：** CABRA 明確說它是合成、受控的研究框架，不是安全、可靠或 production-ready 證書；通過它的測試也不等於維護性、資安與長期正確性成立。
+- 來源：[arXiv｜Code Understanding is a Bottleneck for Coding Agents](https://arxiv.org/abs/2610.10610)（2026-10-07，原始研究）、[Microsoft/CABRA](https://github.com/microsoft/CABRA)（研究程式、任務與限制）。
 
-### 長對話品質下降的社群回報：先切任務，再談模型升級
+### AMIE 的醫療研究值得看，但不能當成可自行問診的產品
 
-- r/ClaudeAI 10/19 的使用者回報，長對話接近約 60% context 後品質明顯下降，並說把專案拆成較小工作、開新 session 比硬撐有效；同串也有使用量顯示異常與回覆中斷的個案。
-- 立即可做：每個 session 限定一個可交付目標，定期把決策、未解問題、測試與檔案清單寫入短摘要；下一個 session 從摘要與 failing test 重新開始。
-- **避坑：** 這是個人經驗，不是 Anthropic 的 context threshold 或普遍規律；先用自己的 trace 比較「長 session」與「摘要後新 session」的成功率、重工時間與花費。
-- 來源：[r/ClaudeAI｜Performance and Bugs Discussion Hub](https://www.reddit.com/r/ClaudeAI/comments/1x8yiff/performance_and_bugs_discussion_hub_updated_on_18/)（2026-10-18～19；社群回報，非獨立測試）。
-
-### Agentic insider：模型不可信時，控制面要是 deterministic
-
-- Microsoft 10/19 的官方文章把企業內部 agent 稱為「agentic insiders」：它們可能被過度授權、在上下文變化時採取非預期行動，不能只靠模型本身的 alignment。Microsoft 建議以 identity、permission、data、network、runtime 與 continuous monitoring 組成防禦縱深，並讓 Guardian Agents 在行動前監看與調整風險。
-- 立即可做：每個 agent 先分配獨立 identity、最小工具權限與可撤銷 token；所有寫入、外傳、權限變更都要有 policy check、audit log 與人工 escalation。模型提出「為什麼」不等於安全證明，deterministic containment 仍要保留。
-- **限制：** Guardian Agents 本身也是 agent，不能變成第二個無限權限黑盒；Microsoft 的 Project Perception 是廠商方案方向，採用前要確認可觀測性、資料邊界與失效模式。
-- 來源：[Microsoft｜Securing the agentic insider](https://blogs.microsoft.com/blog/2026/10/19/securing-the-agentic-insider/)（2026-10-19；官方文章）。
+- Google 10/20 更新 AMIE 研究說明：研究系統可在看診前以對話方式收集病史、追問細節並整理摘要，讓醫師把時間放在共同討論；目前團隊正在擴大規模、加入 audio／video，並準備更廣泛的臨床研究。文章也說每次 AMIE–患者互動都有受訓醫師監督，沒有讓系統脫離安全監看。
+- **立即可做：** 若你在做醫療或客服 agent，先把 AMIE 當成「收集與摘要」的設計參考：列出它能問什麼、什麼情況必須轉交人、摘要如何讓專業人員逐項覆核。不要讓模型直接下診斷、改病歷或發送醫療指示。
+- **避坑：** 這是 Google 的研究與訪談，不是醫療產品許可，也不是一般患者結果；研究情境、監督方式與真實臨床不同。任何健康決策仍應交給合格醫療人員。
+- 來源：[Google｜How AI can help doctors spend more time on collaborative care](https://blog.google/innovation-and-ai/models-and-research/google-research/amie-clinical-study/)（2026-10-20，官方研究說明）、[Google Research｜AMIE research update](https://research.google/blog/amie-a-research-ai-system-for-diagnostic-medical-reasoning-and-conversations/)（2026-10-06 更新，研究限制）。
 
 ## YouTube 深度整理
 
-### IBM Technology｜What Is Loop Engineering? Building Better AI Agents
+### 今日無推薦
 
-- **發布與查核：** 2026-10-19；影片頁查得約 4.1 萬觀看、10 分 47 秒、10 個章節；YouTube 匯出並閱讀完整英文字幕。頻道：IBM Technology。贊助：本次影片頁與字幕未見贊助揭露。
-- **摘要：** 影片把 prompt engineering 對比為「人手寫下一個 prompt」，把 loop engineering 定義成由系統重複 prompting、檢查結果與調整，直到可驗證 goal 成立；後半加入 schedule／hook、context、skills、persistent spine、tools、subagents 與 human-in-the-loop。
-- **3–7 個重點：**
-  1. goal 要有明確 stopping condition，例如「所有 checkout unit tests 通過」。
-  2. loop 的基本節奏是 goal → action → observe → adjust。
-  3. schedule 適合固定時間；hook 適合檔案變更或 PR 等事件。
-  4. context 會膨脹，需要 compaction 或 progressive disclosure。
-  5. persistent spine 可記錄做過什麼、什麼有效、下一輪要避開什麼。
-  6. checker subagent 能獨立驗證，但最後仍需人讀 code。
-  7. comprehension debt、intent debt 與 cognitive surrender 是自動化後的主要風險。
-- **步驟／工作流程：** 寫可驗證 goal → 讓 coding agent 修改檔案／跑測試 → 讀取紅綠結果 → 依結果換修法 → 由 checker 或 subagent review → 人確認 diff、意圖與 production 風險 → 進入下一輪或停止。
-- **工具／模型：** 影片以一般 coding agent、測試、hooks／schedule、MCP／API tools、skills、subagents 為例，未宣稱特定模型 benchmark；可對照 Microsoft 的 agent security 分層。
-- **作者心得、優缺點：** 作者最有價值的觀點是「minimal human involvement」不是 zero human involvement；優點是把 agent workflow 變成可觀測工程，缺點是需要設計 state、評估與停止條件，且迴圈會放大錯誤。
-- **限制與適合對象：** 適合已在用 Claude Code、Codex、Copilot 或自建 agent 的工程師、平台與 QA 團隊；不適合把 10 分鐘教學直接當成 production architecture。影片內容是作者教學，不是官方標準，也沒有實驗性 benchmark。
-- **是否值得看：** 值得。它不是新產品新聞，但能把今天的多 agent、模型替換與安全治理串成一個可落地的工程檢查表。
-- **可立即嘗試：** 挑一個有測試的低風險 bug，先寫出 stopping condition；每輪保存 goal、工具輸出、diff、測試結果與人工 review 結論，跑三輪後再評估是否真的省時間。
-- [影片連結](https://www.youtube.com/watch?v=DQBqh6gcx7U)｜[YouTube 搜尋查核頁](https://www.youtube.com/results?search_query=AI+coding+agent+October+2026)
+我主動查找 PAPAYA 電腦教室、Tech With Tim、Gary Chen、Matthew Berman、IBM Technology、freeCodeCamp 與其他 AI／Agent／AI Coding 頻道，優先查 10/19～10/21、必要時放寬一週。今天沒有同時符合「觀看數超過 10,000、可靠字幕或逐字稿已讀、非 Shorts、不是純新聞朗讀、具實測／教學／技術拆解」的候選，因此不以標題或簡介猜測內容，也不湊篇幅收錄。
 
 ## 今天最值得帶回團隊的三個檢查
 
-- **治理：** 用 Copilot model policy API 管理模型可用性，並在退役／升版前跑固定 fixture，不要只換 slug。
-- **驗證：** 把 agent 工作寫成有 stopping condition 的 loop；保存 diff、tool trace、測試與 checker 結果。
-- **邊界：** 每個 agent 都要有獨立 identity、最小權限、可撤銷 token 與 deterministic audit／containment；模型自己說「我理解了」不算證據。
+- **可觀測：** agent 的 goal、工具輸入／輸出、diff、測試與人工結論要能回看；最後答案正確不代表中間 action 沒有越界。
+- **可隔離：** OpenShell／NemoClaw 或任何自架 MCP 先確認 log、權限、遙測、資料儲存與條款，再接真實帳號。
+- **可理解：** coding agent eval 補上 code traversal、搜尋與理解任務；小任務、明確抽象與人保留 commit 權限，通常比盲目加大模型更穩。
 
 ## 今日一句話
 
-今天最值得採用的不是更多 agent，而是讓每個 agent 都有可驗證的目標、可回溯的狀態、可替換的模型政策，以及在失敗時會先停下來的人與控制面。
+今天最值得採用的不是把 agent 放進更多地方，而是讓它每一步都留下可審查證據、每個資料連接都有可撤銷權限、每次產生的 code 都仍然是團隊能理解與維護的系統。
 
-來源：[GitHub Copilot model policy API](https://github.blog/changelog/2026-10-19-copilot-model-policy-api-for-enterprise-orgs-and-teams)、[GitHub Copilot model deprecation](https://github.blog/changelog/2026-09-18-upcoming-deprecation-of-selected-github-copilot-models-in-mid-october/)、[Microsoft agentic insider](https://blogs.microsoft.com/blog/2026/10/19/securing-the-agentic-insider/)、[DIA 原始論文](https://arxiv.org/abs/2610.23213)、[LangGraph CLI release](https://github.com/langchain-ai/langgraph/releases)、[Proliferate](https://github.com/proliferate-ai/proliferate)、[IBM Loop Engineering](https://www.youtube.com/watch?v=DQBqh6gcx7U)。
+來源：[OpenShell v0.1.5](https://github.com/NVIDIA/OpenShell/releases)、[Gemini 小型商家工具](https://blog.google/innovation-and-ai/products/gemini-app/new-tools-small-business-owners/)、[Gemini 車載 Personal Intelligence](https://blog.google/products-and-platforms/platforms/android/android-auto-cars-with-google-built-in-gemini-personal-intelligence/)、[CABRA 原始研究](https://arxiv.org/abs/2610.10610)、[AI-written code 社群討論](https://news.ycombinator.com/item?id=50151036)、[whatsapp-mcp](https://github.com/finereli/whatsapp-mcp)。

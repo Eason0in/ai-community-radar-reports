@@ -1,8 +1,8 @@
-# AI Community Radar - 2026-10-21
+# AI Community Radar - 2026-10-22
 
-> Generated: 2026-10-21T01:25:22.911Z
+> Generated: 2026-10-22T01:23:05.913Z
 > Timezone: Asia/Taipei
-> Active cutoff: updated since 2026-10-19; archived GitHub repos excluded; max stale age 2 days.
+> Active cutoff: updated since 2026-10-20; archived GitHub repos excluded; max stale age 2 days.
 
 ## 今日摘要
 
@@ -17,9 +17,9 @@
 
 | # | Repo | Stars | Forks | Language | Updated |
 | --- | --- | ---: | ---: | --- | --- |
-| 1 | [morluto/rea](https://github.com/morluto/rea) | 348,272 | 87,610 | TypeScript | 2026-10-21T00:19:03Z |
-| 2 | [affaan-m/ECC](https://github.com/affaan-m/ECC) | 284,924 | 42,276 | JavaScript | 2026-10-20T23:08:28Z |
-| 3 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 255,600 | 55,695 | Python | 2026-10-21T01:12:02Z |
+| 1 | [morluto/rea](https://github.com/morluto/rea) | 357,991 | 89,843 | TypeScript | 2026-10-22T01:22:56Z |
+| 2 | [affaan-m/ECC](https://github.com/affaan-m/ECC) | 285,743 | 42,384 | JavaScript | 2026-10-20T23:08:28Z |
+| 3 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 255,944 | 55,831 | Python | 2026-10-22T01:15:39Z |
 
 ### 1. [morluto/rea](https://github.com/morluto/rea)
 
@@ -77,7 +77,7 @@ The agent that grows with you.
 | 指標 | 值 |
 | --- | --- |
 | Registry sample | 800 servers |
-| Active baseline since | 2026-10-19 |
+| Active baseline since | 2026-10-20 |
 | GitHub stale cutoff | 2 days |
 
 ### 可能還沒上官方 MCP Registry 的候選
@@ -102,7 +102,17 @@ The agent that grows with you.
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/supabase/mcp](https://github.com/supabase/mcp) |
 
-#### 3. [@clerk/mcp-tools](https://www.npmjs.com/package/@clerk/mcp-tools)
+#### 3. [@payloadcms/plugin-mcp](https://www.npmjs.com/package/@payloadcms/plugin-mcp)
+
+| 欄位 | 內容 |
+| --- | --- |
+| 類型 | npm-package |
+| 說明 | MCP (Model Context Protocol) capabilities with Payload |
+| 為什麼值得看 | npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。 |
+| 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
+| Repo | [https://github.com/payloadcms/payload](https://github.com/payloadcms/payload) |
+
+#### 4. [@clerk/mcp-tools](https://www.npmjs.com/package/@clerk/mcp-tools)
 
 | 欄位 | 內容 |
 | --- | --- |
@@ -112,7 +122,7 @@ The agent that grows with you.
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/clerk/mcp-tools](https://github.com/clerk/mcp-tools) |
 
-#### 4. [@kubb/mcp](https://www.npmjs.com/package/@kubb/mcp)
+#### 5. [@kubb/mcp](https://www.npmjs.com/package/@kubb/mcp)
 
 | 欄位 | 內容 |
 | --- | --- |
@@ -122,40 +132,30 @@ The agent that grows with you.
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/kubb-labs/kubb](https://github.com/kubb-labs/kubb) |
 
-#### 5. [@copilotkit/mcp-apps-renderer](https://www.npmjs.com/package/@copilotkit/mcp-apps-renderer)
-
-| 欄位 | 內容 |
-| --- | --- |
-| 類型 | npm-package |
-| 說明 | Framework-agnostic MCP Apps host for CopilotKit - the app host protocol (ext-apps AppBridge), sandbox proxy, and shared renderer consumed by the React, Vue, and Angular frontends |
-| 為什麼值得看 | npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。 |
-| 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
-| Repo | [https://github.com/CopilotKit/CopilotKit](https://github.com/CopilotKit/CopilotKit) |
-
-#### 6. [shaguocgl/buff-term](https://github.com/shaguocgl/buff-term)
+#### 6. [MysterionRise/pubchem-finder](https://github.com/MysterionRise/pubchem-finder)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Buff 加持的 SSH 工具 \| 面向 AI 的 SSH 工具与 MCP 服务器，内置自研 AI Agent 编排层，接入任意 OpenAI 兼容协议的大模型。 An AI-oriented SSH tool and MCP server with a built-in self-developed AI Agent orchestration layer, compatible with integration of any large model supporting the OpenAI-compatible protocol. |
+| 說明 | Molecular similarity search over PubChem with RDKit: CLI, MCP server for Claude, local fingerprint index |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 7. [hjdspace/SpaceCode](https://github.com/hjdspace/SpaceCode)
+#### 7. [smallrussian/libadalang-mcp](https://github.com/smallrussian/libadalang-mcp)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | AI 驱动的智能编程桌面助手 — 编码 / 办公 / 设计三合一（Electron + Vue 3） |
+| 說明 | An MCP server designed for codex for LIbadalang |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 8. [ModernRelay/omnigraph](https://github.com/ModernRelay/omnigraph)
+#### 8. [Oaklight/toolregistry-server](https://github.com/Oaklight/toolregistry-server)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Object-storage native graph database with branching and typed ontology |
+| 說明 | ToolRegistry Server: Serve Custom Tools via OpenAPI and MCP for Function-Calling LLMs |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 

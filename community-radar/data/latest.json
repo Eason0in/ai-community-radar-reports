@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
-  "date": "2026-10-21",
-  "generatedAt": "2026-10-21T01:25:22.911Z",
+  "date": "2026-10-22",
+  "generatedAt": "2026-10-22T01:23:05.913Z",
   "timeZone": "Asia/Taipei",
   "summary": "今日收錄 3 個 GitHub AI 專案與 5 個可嘗試方向。",
   "githubProjects": [
     {
       "name": "morluto/rea",
       "url": "https://github.com/morluto/rea",
-      "stars": 348272,
+      "stars": 357991,
       "language": "TypeScript",
-      "activityAt": "2026-10-21T00:19:03Z",
+      "activityAt": "2026-10-22T01:22:56Z",
       "reason": "Reverse engineer anything with agents, from app behavior down to native binaries.",
       "what": "Reverse engineer anything with agents, from app behavior down to native binaries.",
       "problem": "降低建置 AI agent、工具調用、任務規劃或多步驟自動化的成本。",
@@ -21,7 +21,7 @@
     {
       "name": "affaan-m/ECC",
       "url": "https://github.com/affaan-m/ECC",
-      "stars": 284924,
+      "stars": 285743,
       "language": "JavaScript",
       "activityAt": "2026-10-20T23:08:28Z",
       "reason": "The agent harness performance optimization system. Skills, instincts, memory, security, and research-first development for Claude Code, Codex, Opencode, Cursor and beyond.",
@@ -34,9 +34,9 @@
     {
       "name": "NousResearch/hermes-agent",
       "url": "https://github.com/NousResearch/hermes-agent",
-      "stars": 255600,
+      "stars": 255944,
       "language": "Python",
-      "activityAt": "2026-10-21T01:12:02Z",
+      "activityAt": "2026-10-22T01:15:39Z",
       "reason": "The agent that grows with you.",
       "what": "The agent that grows with you.",
       "problem": "降低建置 AI agent、工具調用、任務規劃或多步驟自動化的成本。",

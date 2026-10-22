@@ -1,89 +1,89 @@
-# AI 情報日報｜2026-10-21
+# AI 情報日報｜2026-10-22
 
-約 4 分鐘閱讀。今天的主線是：AI agent 的價值開始落在「可觀測、可隔離、可理解」；新模型或新介面只有接上權限、資料與驗證流程，才會變成可靠工作流。
+約 4 分鐘閱讀。今天的主線是：agent 開始擁有更完整的工作環境與企業工具，但可靠性不會由模型單獨帶來；要把 workspace、trace、MCP 與權限都變成可觀測、可撤銷、可驗證的邊界。
 
-> 截稿時間：2026-10-21 08:04（Asia/Taipei）。
-> 查核範圍：優先 2026-10-19～10-21；補充最近一週仍有直接實用價值的研究。避開 10/20 已報且沒有新進展的 Sphinx、DeepSeek V4.1-Flash-1017、Harness²、Junie Local、Proliferate、Copilot model policy API 與 Loop Engineering。
-> 證據標示：官方公告／文件是官方事實；GitHub release／repo 是公開工程狀態；Hacker News 是社群訊號；論文與廠商 benchmark 不等於你的 production 結果。
+> 截稿時間：2026-10-22 07:59（Asia/Taipei）。
+> 查核範圍：優先 2026-10-20～10-22；補充最近一週仍有直接實用價值的研究。避開 10/21 已報的 HN 抽象設計、Laminar、OpenShell、WhatsApp MCP、Gemini 車載 Personal Intelligence、CABRA 與 AMIE。
+> 證據標示：官方公告／文件是官方事實；GitHub／npm 是公開工程狀態；Reddit、HN 與第三方整理是社群訊號；廠商 telemetry、benchmark 與作者示範不等於你的 production 結果。
 
 ## 1. 社群實戰用法
 
-### 先設計抽象，再讓 agent 寫實作
+### 先盤點 agent 旁邊安裝的東西，再談模型安全
 
-- **新在哪裡：** Hacker News 10/19 的 Ask HN 討論有 600 近點數與近 700 則留言，核心問題不是「模型會不會寫 code」，而是工程師如何在快速產生大量程式碼後仍保有理解。高共鳴的做法包括：人先決定模組與責任、把大任務切成傳統 user story、先用 pseudo-code 或 scratch repo 對齊設計，再讓 agent 填細節。
-- **可以怎麼開始：** 對一個新功能先寫三件事：邊界、資料流、不可破壞的不變量；再把每個小任務交給 agent，要求先列出要讀的檔案與驗證方式。agent 不得自行擴大架構，完成後由人決定是否 commit。
-- **編輯心得與限制：** 這是社群經驗，不是受控研究；留言品質差異很大，也有人回報長 session 會產生「每一層都似乎合理、合起來卻錯」的結果。可採用的是「人負責設計與停止條件」，不是照抄某個人的 UML 或 prompt。
-- 來源：[Hacker News｜How to deal with shipping AI-written code you don't understand?](https://news.ycombinator.com/item?id=50151036)（2026-10-19，社群討論）。
+- **新在哪裡：** r/hacking 的社群整理把 2025 年 7 月以來能找到的 coding-agent、CI 與 MCP 安全事件逐案連到原始資料，整理出 20 起「有廠商、受影響公司或研究團隊確認」的事件；作者的分類中，13 起入口是 npm／PyPI 套件、MCP server、agent skill 或編輯器擴充，而不是模型本身。這是使用者整理，不是獨立完整的事件資料庫。
+- **可以怎麼開始：** 每個團隊先列出 coding agent、MCP server、skills、editor extension、CI action 與它們能讀取的 token／`.env`；把 agent session token 當成正式憑證輪替，讓 production delete、付款與外部傳送都需要額外核准。每週檢查「誰能安裝、誰能更新、誰能讀 secrets」。
+- **編輯心得與限制：** 這個方法的價值在於把攻擊面從「模型會不會被騙」拉回可操作的供應鏈與權限盤點；Reddit 文章的數字與案例仍應逐案回看原始 advisory，不能直接當成事件總量或風險機率。
+- 來源：[Reddit｜confirmed AI coding agent security incidents](https://www.reddit.com/r/hacking/comments/1xbs64p/i_went_through_the_confirmed_ai_coding_agent/)（2026-10-21，社群整理）、[node9.ai incidents archive](https://node9.ai/incidents)（作者提供的逐案索引）。
 
-### 把 agent trace 當成可審查的工作產物
+### 用「先讀規則、再做變更」取代一次性的大 prompt
 
-- **新在哪裡：** Laminar 在 10/19 的 Launch HN 介紹 `flow-1`，主張用模型讀取完整 agent trace，找出「每個工具呼叫都成功、但整體意圖已偏掉」的錯誤，例如點錯按鈕或引用錯文件。這反映實務上的驗證需求已從最後一段答案，前移到 action、tool result 與中間決策。
-- **可以怎麼開始：** 每次 agent 工作至少保存 goal、工具輸入／輸出、變更 diff、測試與人工結論；先用規則檢查高風險 action，再把 trace evaluator 當輔助排序器，不要讓 evaluator 自己決定 merge 或付款。
-- **編輯心得與限制：** `flow-1` 的「等同 GPT-6 Sol、便宜 23 倍」是 Laminar 自己的 benchmark 宣稱，尚未代表你的 trace 分布；社群貼文的 58 點數也只是興趣訊號。真正值得借的是 trace schema 與失敗案例，而不是直接相信分數。
-- 來源：[Hacker News｜Launch HN: Laminar](https://news.ycombinator.com/item?id=50154029)（2026-10-19，社群與廠商自述）、[Laminar flow-1](https://laminar.sh/blog/flow-1)（廠商 benchmark，需自行重測）。
+- **新在哪裡：** LayerFS 的設計把每個 agent task 放在短命、可寫的 workspace，工具呼叫後提交變更，最後再合併到共享歷史；這把「agent 改了什麼」從對話記憶變成可比較的 commit／branch。官方 DSH 整合文件還記錄了 10/20 由一個主 agent 加七個 worker 完成兩次示範，但那是作者自己的 demo。
+- **可以怎麼開始：** 先在非 production repo 做一個小任務：固定 base commit、限制 agent workspace 可見檔案、每個子任務只允許一個 branch，合併前必須跑測試並人工看 diff。若不使用 LayerFS，也可以先用普通 git worktree 複製同一套規則。
+- **限制：** 文件要求 Node、pnpm、Docker；Store 的 Linux／檔案系統條件與 macOS Docker 路徑要先驗證。每工具呼叫提交與作者示範的時間／測試數不能推導成普遍效能。
+- 來源：[LayerFS 文件](https://layerfs.ai/docs/)（目前文件）、[LayerFS × DeepSeek Harness 整合](https://layerfs.ai/docs/integrations/dsh/)（2026-10-20，作者示範）、[LayerFS GitHub](https://github.com/Ephemeral-AI-Lab/layerfs)（公開 repo）。
 
 ## 2. 社群新工具與新玩法
 
-### OpenShell v0.1.5：agent 沙箱升級要連同 log 與 Kubernetes 政策一起看
+### Cogitator 把多 agent workflow 收進一條 trace
 
-- **新在哪裡：** NVIDIA OpenShell 10/20 發布 v0.1.5。升級說明要求把 OCSF supervisor log 的收集 pattern 從 `openshell-ocsf.*.log` 改成 `openshell-ocsf.*.jsonl`；Kubernetes sandbox template 若要設定 pod annotation／label，則要由 operator 明確 allowlist。這是 runtime 治理的實際變更，不只是模型更新。
-- **可以怎麼開始：** 先在測試環境升級並確認 log collector、SIEM parser 與告警仍有資料，再檢查所有 SDK／API caller 的 labels、annotations 是否已列入 allowlist；保存舊 log 後才清理 `.log` 歷史檔。
-- **編輯心得與限制：** release 只證明 OpenShell 發布了這些變更，不代表你的 NemoClaw／OpenClaw 沙箱已安全。NemoClaw quickstart 也會預設嘗試匿名完成遙測，若不需要要在安裝前設定 `NEMOCLAW_DISABLE_TELEMETRY=1`；不要把遠端 API key 或個人資料直接放進第一個 sandbox。
-- 來源：[NVIDIA OpenShell v0.1.5 release](https://github.com/NVIDIA/OpenShell/releases)（2026-10-20，官方 GitHub release）、[NemoClaw quickstart](https://docs.nvidia.com/nemoclaw/latest/user-guide/openclaw/get-started/quickstart)（目前文件）。
+- **新在哪裡：** Cogitator 的 `workflows` 0.13.0 與 `worker` 0.9.13 在 10/21 發布後，社群查核指出 nested agent、workflow node 與 distributed worker 可以用 parent-child 關係串在同一條 GenAI trace；公開 repo 也顯示 core、workflow、worker、MCP、RAG 與 eval 等套件分拆發布。
+- **可以怎麼開始：** 先在測試 workflow 開 OpenTelemetry GenAI attributes，記錄 goal、tool call、輸入輸出與 run ID；不要一開始把 prompt 全文送到第三方 collector。檢查現有 dashboard 是否依賴舊的 `trace_` 前綴與 trace ID 長度，再升級。
+- **限制：** 這是公開套件與社群 release review，不是本報實際跑出的 benchmark；release notes 提到的 trace ID／span 語意變化可能影響整合，模型費用、工具權限與 sandbox 仍由部署者負責。
+- 來源：[Cogitator GitHub](https://github.com/cogitator-ai/Cogitator-AI)（公開 repo）、[AITrending release review](https://aitrending.fun/stories/cogitator-unified-genai-traces-workflows-workers/)（2026-10-21，第三方查核，未實跑）。
 
-### WhatsApp MCP：有用的「只讀」設計，也有不可忽略的條款風險
+### CVE Intel 把本機漏洞問答帶到 Apple Silicon 的 MLX 路徑
 
-- **新在哪裡：** Hacker News 10/19 推出的 `whatsapp-mcp` 是部署在自己 Cloudflare 帳號的只讀 MCP server，讓 agent 搜尋與讀取個人 WhatsApp 訊息；資料放在 Durable Object 的 SQLite，工具刻意不提供送訊息。
-- **可以怎麼開始：** 若只是研究，先用測試帳號與最小 Cloudflare 專案，保留 `list_chats`、`get_messages`、`search_messages` 等讀取工具，禁止把它接到會寫回訊息的 workflow；先確認 linked device、OAuth 密碼、歷史匯入與刪除流程。
-- **編輯心得與限制：** README 明確寫出它不是官方 WhatsApp API，使用 Baileys 讀取個人訊息可能違反 WhatsApp 條款；需要 Workers Paid plan，首次匯入不保證拿到全部歷史，媒體也只存標籤。這是很好的 read-only MCP 邊界示範，不是可以直接放進公司帳號的推薦方案。
-- 來源：[whatsapp-mcp GitHub](https://github.com/finereli/whatsapp-mcp)（目前公開 repo，約 311 stars）、[Hacker News｜Show HN: WhatsApp MCP running free on Cloudflare](https://news.ycombinator.com/front?q=AI)（2026-10-19 的 AI 排名頁；社群訊號）。
+- **新在哪裡：** CVE Intel 0.3.10 在 10/20 加入 MLX runtime 安裝、模型目錄與 process management，和原本的 llama.cpp／MCP 工作流並存。這類工具的實際價值不在「模型知道多少 CVE」，而是漏洞資料、模型與詢問流程可以留在本機。
+- **可以怎麼開始：** 先用一台沒有 production secrets 的 M1 以上測試機，固定 CVE／NVD／GitHub Advisory 的資料日期；讓本機模型只做摘要、關聯與候選修補，最後仍由安全人員核對 advisory、受影響版本與 exploitability。
+- **限制：** 版本資訊與變更由第三方追蹤整理，未在本日報環境重跑安裝或安全研究；本機模型仍可能漏掉新 CVE、誤判版本或把 PoC 當成可利用事實。
+- 來源：[CVE Intel 專案](https://github.com/Fazmin/cve-intel)（公開 repo）、[AITrending｜CVE Intel 0.3.10](https://aitrending.fun/stories/cve-intel-0310-mlx-apple-silicon/)（2026-10-21，第三方 release review）。
 
 ## 3. 官方新功能與推薦用法
 
-### Gemini 小型商家工作區：品牌規範、資料分析與連接器放到同一入口
+### AWS TorchNeuron：用一行裝置設定試跑 Trainium，但仍要做結果驗證
 
-- **新在哪裡：** Google 10/20 公布 Gemini 的小型商家專用入口，可連 Google Business Profile、Google Ads、Workspace，也可連 Adobe、Canva、Dropbox、Shopify、Wix、Zoho、Xero。使用者可以上傳網站、brand kit、字型或色盤，讓 Nano Banana 2.1 產出持續一致的品牌素材，也能把雜亂的 spreadsheet、收據與採購紀錄整理成財務圖表或互動模型。
-- **推薦用法：** 先建立一份不含個資的測試表格與品牌 kit，要求 Gemini 只產出「待人工確認」的行銷文案與月度摘要；連接器逐一開啟，不要一開始把廣告、財務與客戶資料全部授權給同一個 agent。
-- **限制：** 以上是 Google 自己的產品說明與案例，包含「每天省下兩到三小時」等使用者故事，不是獨立成效研究；新工具標示為接下來幾天陸續推出，地區、方案與第三方 app 可用性仍可能不同。
-- 來源：[Google｜New Gemini tools for small business owners](https://blog.google/innovation-and-ai/products/gemini-app/new-tools-small-business-owners/)（2026-10-20，官方公告）。
+- **新在哪裡：** AWS 在 10/20 開放 TorchNeuron public beta，讓 PyTorch 程式以 `.to('neuron')` 走 Trainium 原生 backend，並支援 eager execution、`torch.compile` 與 NKI custom operators；官方目前列出的硬體是 EC2 Trainium2 與 Trainium3。
+- **推薦用法：** 先拿一個已有 GPU baseline 的 inference／batch workload，在 Trainium 上固定模型權重、資料、精度與 batch size，逐項比對輸出、吞吐、延遲與每美元成本；把 `.to('neuron')` 視為起點，不要當成「完全不用改程式或重驗證」。
+- **限制：** 這是 public beta；模型算子覆蓋、編譯時間、kernel 最佳化與實際價格仍取決於 workload。AWS 的 price-performance 數字是供應商或合作案例結果，不能直接代表所有 PyTorch 專案。
+- 來源：[AWS｜TorchNeuron public beta](https://aws.amazon.com/about-aws/whats-new/2026/10/aws-announce-native-pytorch-support-trainium/)（2026-10-20，官方公告）、[AWS Insights｜TorchNeuron](https://aws.amazon.com/blogs/aws-insights/your-last-hardware-decision-shouldnt-decide-what-you-build-next/)（2026-10-20，官方說明）。
 
-### Gemini Personal Intelligence 進入車載場景：方便，但權限邊界更重要
+### Oracle AI Agent Studio：把 workflow、MCP、測試與治理放在同一個企業入口
 
-- **新在哪裡：** Google 10/20 表示 Gemini 已全球進入 Android Auto 與內建 Google 的車款；在使用者明確允許後，Personal Intelligence 可連 Gmail、Calendar、Photos、Maps、YouTube 與 Search，回答例如航班登機門、沿途餐廳或從相片找地點等跨資料問題。
-- **推薦用法：** 先只連 Calendar 與 Maps，測試「找出今天下一個行程並導航」這類可核對的讀取任務；確認回答來源後再考慮加入 Gmail 或 Photos。開車時只用語音讀取，任何寫入、傳送或付款動作都應停車後由人確認。
-- **限制：** Google 說明連接預設由使用者選擇、可隨時關閉，且 Android Auto 與內建車機的 rollout 節奏不同；這是便利性功能，不是自動駕駛或可完全信任的個人秘書。車內語音、個人資料與錯誤導航的風險仍要自行管理。
-- 來源：[Google｜Personal Intelligence brings Gemini to cars globally](https://blog.google/products-and-platforms/platforms/android/android-auto-cars-with-google-built-in-gemini-personal-intelligence/)（2026-10-20，官方公告）。
+- **新在哪裡：** Oracle 10/21 宣布面向 Industry Applications 的 AI Agent Studio，提供自然語言／視覺化 authoring、跨應用 orchestration、MCP、模型選擇、測試與 debug，以及依角色與政策限制權限。重點不是多一個聊天 UI，而是讓 agent 的工具呼叫與 workflow execution 可在上線前檢查。
+- **推薦用法：** 先用只讀的非 production 資料做一條最短流程：定義角色、目標、允許工具、核准點與失敗回復；對每次 tool input／output 做測試案例，通過後才連接真實 Oracle 應用或其他 MCP。
+- **限制：** 目前是廠商產品公告；「提升生產力」仍需由客戶自行量測，MCP connector 的資料邊界與可用模型也取決於 OCI／租戶設定。低程式碼不等於低風險，權限與審計仍要由團隊負責。
+- 來源：[Oracle｜AI Agent Studio for Industry Applications](https://www.oracle.com/news/announcement/oracle-ai-agent-studio-for-industry-applications-helps-accelerate-business-outcomes-2026-10-21/)（2026-10-21，官方公告）。
 
 ## 4. 使用心得與避坑
 
-### Coding agent 的瓶頸常是「理解要改哪裡」，不是「能改幾行」
+### 一個 prompt 可能變成十個 shell command：MCP 連線不是小事
 
-- Microsoft 的 CABRA 研究（arXiv 10/7，GitHub 實驗資料近期公開）用 6,840 個受控任務比較 8 個 LLM 與 6 種 Copilot agent 設定，沿著 function traversal、search、runtime resolution、instruction following 等軸線增加難度。作者觀察到，tool use 能補掉很多 standalone LLM 的弱點，但在需要理解跨函式與行為差異的任務上，agent 仍會失敗；工具呼叫數對準確率的解釋力可能比修改行數更有用。
-- **立即可做：** 你的 coding-agent eval 不要只記錄 diff 行數與測試是否通過；另外記錄讀檔、搜尋、執行、修正與重試次數，挑 5 個需要跨模組理解的任務做基線。若 agent 沒有讀關鍵檔案就直接改，先修 harness 的檢查或要求它停下來，不要只換更大的模型。
-- **避坑：** CABRA 明確說它是合成、受控的研究框架，不是安全、可靠或 production-ready 證書；通過它的測試也不等於維護性、資安與長期正確性成立。
-- 來源：[arXiv｜Code Understanding is a Bottleneck for Coding Agents](https://arxiv.org/abs/2610.10610)（2026-10-07，原始研究）、[Microsoft/CABRA](https://github.com/microsoft/CABRA)（研究程式、任務與限制）。
+- BeyondTrust 10/21 發布的 AI Agent Security 研究以早期客戶 endpoint telemetry 為基礎：約 132,000 個 prompts 對應 128 萬個 agent-requested shell commands，平均接近 10 個 command；85% 的 coding-agent users 至少有一個 MCP server，平均 4.35 個、最高 36 個；研究也說約一半 skill 安裝來自 code repository。這些是廠商樣本，且 command 是 agent 要求的數量，不等於都成功執行。
+- **立即可做：** 把 prompt、agent session、MCP、skill、shell command 與 human approval 串成同一份 audit record；先對 production、secrets、外部網路與破壞性指令設成 deny／需核准，再逐步放寬。你真正要問的是「這個 agent 此刻能做這個 action 嗎」，不只是「這個使用者有沒有權限」。
+- **避坑：** 不要只在 prompt 或 shell 字串上做黑名單；工具改名、包裝或從 GUI 啟動都可能繞過脆弱的字串檢查。文件描述的 endpoint／kernel enforcement 是該產品的設計主張，仍應先用自己的 agent、OS 與 MCP 版本做 bypass 測試。
+- 來源：[BeyondTrust｜AI Agent Security GA](https://www.beyondtrust.com/press/ai-agent-security-general-availability)（2026-10-21，廠商研究與產品公告）、[BeyondTrust 技術文件](https://docs.beyondtrust.com/bt-docs/docs/ai-agent-security)（目前文件，產品行為說明）。
 
-### AMIE 的醫療研究值得看，但不能當成可自行問診的產品
+### 產量上升後，瓶頸可能變成人的注意力與整合能力
 
-- Google 10/20 更新 AMIE 研究說明：研究系統可在看診前以對話方式收集病史、追問細節並整理摘要，讓醫師把時間放在共同討論；目前團隊正在擴大規模、加入 audio／video，並準備更廣泛的臨床研究。文章也說每次 AMIE–患者互動都有受訓醫師監督，沒有讓系統脫離安全監看。
-- **立即可做：** 若你在做醫療或客服 agent，先把 AMIE 當成「收集與摘要」的設計參考：列出它能問什麼、什麼情況必須轉交人、摘要如何讓專業人員逐項覆核。不要讓模型直接下診斷、改病歷或發送醫療指示。
-- **避坑：** 這是 Google 的研究與訪談，不是醫療產品許可，也不是一般患者結果；研究情境、監督方式與真實臨床不同。任何健康決策仍應交給合格醫療人員。
-- 來源：[Google｜How AI can help doctors spend more time on collaborative care](https://blog.google/innovation-and-ai/models-and-research/google-research/amie-clinical-study/)（2026-10-20，官方研究說明）、[Google Research｜AMIE research update](https://research.google/blog/amie-a-research-ai-system-for-diagnostic-medical-reasoning-and-conversations/)（2026-10-06 更新，研究限制）。
+- Anthropic 10/16 的公開研究以自身公司為案例，指出截至 8 月互動式 agent hours 已是員工時數的 6 倍，採用工具後程式碼產出與部分業務產出上升，但人類注意力成為 agent output 的瓶頸；同公司 10/13 的工程文章則說每日 merge 量從 5 月約 2,500 增至 9 月超過 30,000。兩者都是公司自述資料，不是全產業因果證據。
+- **立即可做：** 不要只追蹤「agent 產生幾行」；另外量測 review queue、失敗重試、回滾、測試等待、跨模組理解與人工核准時間。當 merge 量上升，先增加自動化驗證與變更分級，再讓 agent 取得更多權限。
+- **避坑：** 更高的 code throughput 不代表更好的產品；若 review、CI、部署與維運沒有一起擴容，團隊只是更快堆積未理解的變更。
+- 來源：[Anthropic｜How employment is changing at Anthropic](https://www.anthropic.com/research/employment-at-anthropic)（2026-10-16，官方研究）、[Anthropic｜Redesigning source control](https://www.anthropic.com/engineering/redesigning-source-control)（2026-10-13／10-15 更新，官方工程文章）。
 
 ## YouTube 深度整理
 
 ### 今日無推薦
 
-我主動查找 PAPAYA 電腦教室、Tech With Tim、Gary Chen、Matthew Berman、IBM Technology、freeCodeCamp 與其他 AI／Agent／AI Coding 頻道，優先查 10/19～10/21、必要時放寬一週。今天沒有同時符合「觀看數超過 10,000、可靠字幕或逐字稿已讀、非 Shorts、不是純新聞朗讀、具實測／教學／技術拆解」的候選，因此不以標題或簡介猜測內容，也不湊篇幅收錄。
+我主動查找 PAPAYA 電腦教室、Tech With Tim、AI coding／Agent／MCP 頻道，優先查 10/20～10/22、必要時放寬一週。YouTube 介面上有近期超過 10,000 次觀看的候選，但實際匯出字幕／逐字稿時，三部候選（約 18,000、17,000、19,000 次觀看）都回傳「No transcript is available for this YouTube video」；因此沒有任何影片同時符合「超過 10,000 觀看、可靠字幕已讀、非 Shorts、不是純新聞、具實測／教學／技術拆解」的硬門檻，也不從標題或簡介猜內容。
 
 ## 今天最值得帶回團隊的三個檢查
 
-- **可觀測：** agent 的 goal、工具輸入／輸出、diff、測試與人工結論要能回看；最後答案正確不代表中間 action 沒有越界。
-- **可隔離：** OpenShell／NemoClaw 或任何自架 MCP 先確認 log、權限、遙測、資料儲存與條款，再接真實帳號。
-- **可理解：** coding agent eval 補上 code traversal、搜尋與理解任務；小任務、明確抽象與人保留 commit 權限，通常比盲目加大模型更穩。
+- **看見每一步：** prompt、tool call、MCP、skill、command、diff 與測試結果要能串回同一個 run。
+- **隔離每一個 agent：** workspace、branch、secret、網路與 production action 都先設最小權限；合併前驗證，不把作者 demo 當成保證。
+- **量測真實瓶頸：** 除了模型輸出，也量 review queue、CI、回滾、人工核准與理解成本。
 
 ## 今日一句話
 
-今天最值得採用的不是把 agent 放進更多地方，而是讓它每一步都留下可審查證據、每個資料連接都有可撤銷權限、每次產生的 code 都仍然是團隊能理解與維護的系統。
+今天值得採用的不是讓 agent 無限制地做更多事，而是讓它在可撤銷的 workspace 中工作、在一條可審查的 trace 中留下證據，並在每個高風險 action 前遇到真正有效的權限邊界。
 
-來源：[OpenShell v0.1.5](https://github.com/NVIDIA/OpenShell/releases)、[Gemini 小型商家工具](https://blog.google/innovation-and-ai/products/gemini-app/new-tools-small-business-owners/)、[Gemini 車載 Personal Intelligence](https://blog.google/products-and-platforms/platforms/android/android-auto-cars-with-google-built-in-gemini-personal-intelligence/)、[CABRA 原始研究](https://arxiv.org/abs/2610.10610)、[AI-written code 社群討論](https://news.ycombinator.com/item?id=50151036)、[whatsapp-mcp](https://github.com/finereli/whatsapp-mcp)。
+來源：[AWS TorchNeuron](https://aws.amazon.com/about-aws/whats-new/2026/10/aws-announce-native-pytorch-support-trainium/)、[Oracle AI Agent Studio](https://www.oracle.com/news/announcement/oracle-ai-agent-studio-for-industry-applications-helps-accelerate-business-outcomes-2026-10-21/)、[LayerFS](https://layerfs.ai/docs/)、[Cogitator](https://github.com/cogitator-ai/Cogitator-AI)、[BeyondTrust AI Agent Security](https://www.beyondtrust.com/press/ai-agent-security-general-availability)。

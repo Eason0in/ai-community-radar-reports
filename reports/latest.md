@@ -1,89 +1,94 @@
-# AI 情報日報｜2026-10-22
+# AI 情報日報｜2026-10-23
 
-約 4 分鐘閱讀。今天的主線是：agent 開始擁有更完整的工作環境與企業工具，但可靠性不會由模型單獨帶來；要把 workspace、trace、MCP 與權限都變成可觀測、可撤銷、可驗證的邊界。
+約 4 分鐘閱讀。今天的主線是：agent 正從「會回答」走向能長時間運作、跨機器與跨工具執行；真正值得帶回團隊的能力，是把狀態、權限、成本與驗證一起設計。
 
-> 截稿時間：2026-10-22 07:59（Asia/Taipei）。
-> 查核範圍：優先 2026-10-20～10-22；補充最近一週仍有直接實用價值的研究。避開 10/21 已報的 HN 抽象設計、Laminar、OpenShell、WhatsApp MCP、Gemini 車載 Personal Intelligence、CABRA 與 AMIE。
-> 證據標示：官方公告／文件是官方事實；GitHub／npm 是公開工程狀態；Reddit、HN 與第三方整理是社群訊號；廠商 telemetry、benchmark 與作者示範不等於你的 production 結果。
+> 截稿時間：2026-10-23 08:06（Asia/Taipei）。
+> 查核範圍：優先 2026-10-21～10-23；補充最近一週仍有直接實用價值的更新。避開 10/22 已報的安全事件盤點、LayerFS、Cogitator、CVE Intel、AWS TorchNeuron、Oracle AI Agent Studio、BeyondTrust 遙測與 Anthropic 內部產能資料。
+> 證據標示：官方公告／文件是官方事實；GitHub release 是公開工程狀態；HN／Reddit 是社群訊號；廠商 benchmark、價格與遙測不等於你的 production 結果。
 
 ## 1. 社群實戰用法
 
-### 先盤點 agent 旁邊安裝的東西，再談模型安全
+### 把「通宵讓 agent 跑」拆成可丟棄的小任務
 
-- **新在哪裡：** r/hacking 的社群整理把 2025 年 7 月以來能找到的 coding-agent、CI 與 MCP 安全事件逐案連到原始資料，整理出 20 起「有廠商、受影響公司或研究團隊確認」的事件；作者的分類中，13 起入口是 npm／PyPI 套件、MCP server、agent skill 或編輯器擴充，而不是模型本身。這是使用者整理，不是獨立完整的事件資料庫。
-- **可以怎麼開始：** 每個團隊先列出 coding agent、MCP server、skills、editor extension、CI action 與它們能讀取的 token／`.env`；把 agent session token 當成正式憑證輪替，讓 production delete、付款與外部傳送都需要額外核准。每週檢查「誰能安裝、誰能更新、誰能讀 secrets」。
-- **編輯心得與限制：** 這個方法的價值在於把攻擊面從「模型會不會被騙」拉回可操作的供應鏈與權限盤點；Reddit 文章的數字與案例仍應逐案回看原始 advisory，不能直接當成事件總量或風險機率。
-- 來源：[Reddit｜confirmed AI coding agent security incidents](https://www.reddit.com/r/hacking/comments/1xbs64p/i_went_through_the_confirmed_ai_coding_agent/)（2026-10-21，社群整理）、[node9.ai incidents archive](https://node9.ai/incidents)（作者提供的逐案索引）。
+- **新在哪裡：** r/ClaudeCode 10/22 的討論從「敢不敢讓 agent 過夜」整理出一個很實際的共識：不要把信任寄託在模型，而是把每次工作包成可回復的 branch／worktree，沒有 production credential，限制網路與破壞性指令，每個階段都要有測試或明確 done check。留言也提到要設 max turns／預算上限，遇到需要人決定的事就留下紀錄停下來。
+- **可以怎麼開始：** 先挑一個最壞結果只是刪掉 branch 的任務；建立獨立 worktree，清掉 `.env` 與 production token，允許必要的 test／build，拒絕 `git push`、刪除與非預期網路呼叫；每一小步通過測試就 commit，早上只看 diff、被拒絕的工具呼叫與最後一行狀態。
+- **編輯心得與限制：** 這是 Reddit 使用者經驗，不是統計研究；留言中關於快取、token 及新版本 telemetry 的細節沒有在本日報逐項驗證。可採用的是隔離、可驗證與硬上限這三個模式，不是「106 個功能無人介入」等個人案例的效率宣稱。
+- 來源：[Reddit｜Are you guys really trusting these models on overnight tasks?](https://www.reddit.com/r/ClaudeCode/comments/1xc84d3/are_u_guys_really_trusting_these_models_on/)（2026-10-22，社群討論；原文串與留言中的工作流建議）。
 
-### 用「先讀規則、再做變更」取代一次性的大 prompt
+### 用「規劃模型＋執行模型＋交接檔」降低 coding agent 的上下文浪費
 
-- **新在哪裡：** LayerFS 的設計把每個 agent task 放在短命、可寫的 workspace，工具呼叫後提交變更，最後再合併到共享歷史；這把「agent 改了什麼」從對話記憶變成可比較的 commit／branch。官方 DSH 整合文件還記錄了 10/20 由一個主 agent 加七個 worker 完成兩次示範，但那是作者自己的 demo。
-- **可以怎麼開始：** 先在非 production repo 做一個小任務：固定 base commit、限制 agent workspace 可見檔案、每個子任務只允許一個 branch，合併前必須跑測試並人工看 diff。若不使用 LayerFS，也可以先用普通 git worktree 複製同一套規則。
-- **限制：** 文件要求 Node、pnpm、Docker；Store 的 Linux／檔案系統條件與 macOS Docker 路徑要先驗證。每工具呼叫提交與作者示範的時間／測試數不能推導成普遍效能。
-- 來源：[LayerFS 文件](https://layerfs.ai/docs/)（目前文件）、[LayerFS × DeepSeek Harness 整合](https://layerfs.ai/docs/integrations/dsh/)（2026-10-20，作者示範）、[LayerFS GitHub](https://github.com/Ephemeral-AI-Lab/layerfs)（公開 repo）。
+- **新在哪裡：** 另一篇 r/ClaudeCode 使用心得把長專案拆成四個具體做法：用較強模型只做 plan、用較便宜模型執行；把 orchestrator context 從 1M 降到 400K；讓每個 session 更新文件；結束時產生 continuation prompt。作者自述能降低探索成本，但這是單一使用者的經驗，不能當成通用節省比例。
+- **可以怎麼開始：** 先做一個 `decisions.md`、`handoff.md` 與任務清單；規定 plan session 只能產生規格和驗收條件，execute session 只做一個小任務；每次結束把已完成、未完成、假設與下一步寫入檔案，下一個 session 先讀檔再讀程式碼。
+- **限制：** 沒有公開可重現 benchmark，也沒有證明 30–40% 節省適用你的 repo；若交接檔未經測試或 diff 驗證，只是把錯誤從對話搬到 Markdown。
+- 來源：[Reddit｜I went from exhausting Claude Code’s weekly limits in 2 days to making them last the entire week](https://www.reddit.com/r/ClaudeCode/comments/1x7ifnd/i_went_from_exhausting_claude_codes_weekly_limits/)（2026-10-16，社群實測，補充一週內仍有成本管理價值）。
 
 ## 2. 社群新工具與新玩法
 
-### Cogitator 把多 agent workflow 收進一條 trace
+### Omnara：把長時間 agent 做成可自架的控制平面
 
-- **新在哪裡：** Cogitator 的 `workflows` 0.13.0 與 `worker` 0.9.13 在 10/21 發布後，社群查核指出 nested agent、workflow node 與 distributed worker 可以用 parent-child 關係串在同一條 GenAI trace；公開 repo 也顯示 core、workflow、worker、MCP、RAG 與 eval 等套件分拆發布。
-- **可以怎麼開始：** 先在測試 workflow 開 OpenTelemetry GenAI attributes，記錄 goal、tool call、輸入輸出與 run ID；不要一開始把 prompt 全文送到第三方 collector。檢查現有 dashboard 是否依賴舊的 `trace_` 前綴與 trace ID 長度，再升級。
-- **限制：** 這是公開套件與社群 release review，不是本報實際跑出的 benchmark；release notes 提到的 trace ID／span 語意變化可能影響整合，模型費用、工具權限與 sandbox 仍由部署者負責。
-- 來源：[Cogitator GitHub](https://github.com/cogitator-ai/Cogitator-AI)（公開 repo）、[AITrending release review](https://aitrending.fun/stories/cogitator-unified-genai-traces-workflows-workers/)（2026-10-21，第三方查核，未實跑）。
+- **新在哪裡：** Omnara 在 HN 10/22 登上 Show HN，GitHub README 將它定位為開源、可自架的 managed-agent platform：可選不同模型與機器，持久化每一步 event log，支援工具、skills、MCP、subagents、排程、Slack／Discord／GitHub 整合與逐工具 approval。GitHub 頁面查核時約 3.2k stars、Apache-2.0。
+- **可以怎麼開始：** 不要先接 production；先用 Docker Compose 啟一個本機實例，跑 README 的 `agent.yaml`，只掛一台測試 machine 與一個 read-only tool，確認 event log、approval、restart 後續跑與 secrets scope，再評估是否需要雲端或自架。
+- **限制：** README 明確提醒 local defaults intentionally insecure；自架需要 Docker Compose、Postgres／Redis 等組件與安全設定。HN 37 points、12 則留言是注意力訊號，不是穩定性或安全性證明；雲端與自架的資料責任也不同。
+- 來源：[Hacker News｜Show HN: Omnara](https://news.ycombinator.com/item?id=50183892)（2026-10-22，37 points、12 則留言，社群訊號）、[Omnara GitHub](https://github.com/omnara-ai/omnara)（目前 README／公開 repo）。
 
-### CVE Intel 把本機漏洞問答帶到 Apple Silicon 的 MLX 路徑
+### OpenAI CLI：把 REST API 操作變成可組合的 shell 命令
 
-- **新在哪裡：** CVE Intel 0.3.10 在 10/20 加入 MLX runtime 安裝、模型目錄與 process management，和原本的 llama.cpp／MCP 工作流並存。這類工具的實際價值不在「模型知道多少 CVE」，而是漏洞資料、模型與詢問流程可以留在本機。
-- **可以怎麼開始：** 先用一台沒有 production secrets 的 M1 以上測試機，固定 CVE／NVD／GitHub Advisory 的資料日期；讓本機模型只做摘要、關聯與候選修補，最後仍由安全人員核對 advisory、受影響版本與 exploitability。
-- **限制：** 版本資訊與變更由第三方追蹤整理，未在本日報環境重跑安裝或安全研究；本機模型仍可能漏掉新 CVE、誤判版本或把 PoC 當成可利用事實。
-- 來源：[CVE Intel 專案](https://github.com/Fazmin/cve-intel)（公開 repo）、[AITrending｜CVE Intel 0.3.10](https://aitrending.fun/stories/cve-intel-0310-mlx-apple-silicon/)（2026-10-21，第三方 release review）。
+- **新在哪裡：** OpenAI 10/22 公開 `openai/openai-cli`，定位不是 coding agent，而是 OpenAI REST API 的官方 CLI；README 明確區分 `openai`（呼叫特定 API、批次與 shell script）和 Codex CLI（讀寫專案與執行 coding agent）。可用 JSON／JSONL、GJSON transform、檔案上傳、batch、image、admin usage 等命令。
+- **可以怎麼開始：** 先用不含敏感資料的測試 API key，執行 `openai --help` 與 `openai models list --format jsonl`；把一個原本手寫 curl 的批次流程改成 `files upload`／`batches create`／`batches wait`，明確檢查 exit status 後才讀取輸出檔。
+- **社群訊號與限制：** HN 229 points、109 則留言顯示大家在討論它和 Codex 的邊界，以及 README 是否說清楚「何時該用」；這不是產品可靠性的證明。CLI 仍會處理 API key、檔案與 admin endpoint，secret manager、權限與輸出清理仍要由你負責。
+- 來源：[OpenAI CLI GitHub](https://github.com/openai/openai-cli)（2026-10-22 公開 repo／官方 README）、[Hacker News｜OpenAI CLI](https://news.ycombinator.com/item?id=50191507)（2026-10-22，社群討論）。
 
 ## 3. 官方新功能與推薦用法
 
-### AWS TorchNeuron：用一行裝置設定試跑 Trainium，但仍要做結果驗證
+### OpenAI：數千個 agent 平行讀生物資料，重點是「候選」不是自動下結論
 
-- **新在哪裡：** AWS 在 10/20 開放 TorchNeuron public beta，讓 PyTorch 程式以 `.to('neuron')` 走 Trainium 原生 backend，並支援 eager execution、`torch.compile` 與 NKI custom operators；官方目前列出的硬體是 EC2 Trainium2 與 Trainium3。
-- **推薦用法：** 先拿一個已有 GPU baseline 的 inference／batch workload，在 Trainium 上固定模型權重、資料、精度與 batch size，逐項比對輸出、吞吐、延遲與每美元成本；把 `.to('neuron')` 視為起點，不要當成「完全不用改程式或重驗證」。
-- **限制：** 這是 public beta；模型算子覆蓋、編譯時間、kernel 最佳化與實際價格仍取決於 workload。AWS 的 price-performance 數字是供應商或合作案例結果，不能直接代表所有 PyTorch 專案。
-- 來源：[AWS｜TorchNeuron public beta](https://aws.amazon.com/about-aws/whats-new/2026/10/aws-announce-native-pytorch-support-trainium/)（2026-10-20，官方公告）、[AWS Insights｜TorchNeuron](https://aws.amazon.com/blogs/aws-insights/your-last-hardware-decision-shouldnt-decide-what-you-build-next/)（2026-10-20，官方說明）。
+- **新在哪裡：** OpenAI、PerturbAI 與 Scripps Research 10/21 發表案例：用 GPT-Rosalind 驅動數千個 agent，平行分析數百萬個小鼠腦細胞的 whole-brain CRISPR atlas，在 32 分鐘內把基因擾動、文獻與可能機制連成 reasoning atlas。官方比較中，最大工作量時分散式 agent 引用超過 700 篇文獻，單一 agent 只引用 11 篇；盲測中人類專家 75% 偏好分散式報告。
+- **推薦用法：** 把同一模式移植到可驗證的知識工作：每個 worker 只負責一個資料切片，輸出「觀察、來源、假設、反證、下一個實驗」；彙整器只合併可追溯證據，最後由專家決定要不要做實驗或採取行動。
+- **限制：** 這是 OpenAI 與合作方的研究案例，時間、偏好與引用數都是該實驗設定的結果；生物學候選仍需實驗驗證，不能把 agent 報告當成新藥、因果關係或臨床結論。
+- 來源：[OpenAI｜Using thousands of AI agents to uncover new leads in biological data](https://openai.com/index/scaling-ai-research-for-complex-biological-data/)（2026-10-21，官方研究案例）、[原始預印本入口](https://www.biorxiv.org/)（官方頁面提供的 paper 連結）。
 
-### Oracle AI Agent Studio：把 workflow、MCP、測試與治理放在同一個企業入口
+### Mistral Voxtral 3：語音輸入、推理、工具呼叫與回話放進同一條串流
 
-- **新在哪裡：** Oracle 10/21 宣布面向 Industry Applications 的 AI Agent Studio，提供自然語言／視覺化 authoring、跨應用 orchestration、MCP、模型選擇、測試與 debug，以及依角色與政策限制權限。重點不是多一個聊天 UI，而是讓 agent 的工具呼叫與 workflow execution 可在上線前檢查。
-- **推薦用法：** 先用只讀的非 production 資料做一條最短流程：定義角色、目標、允許工具、核准點與失敗回復；對每次 tool input／output 做測試案例，通過後才連接真實 Oracle 應用或其他 MCP。
-- **限制：** 目前是廠商產品公告；「提升生產力」仍需由客戶自行量測，MCP connector 的資料邊界與可用模型也取決於 OCI／租戶設定。低程式碼不等於低風險，權限與審計仍要由團隊負責。
-- 來源：[Oracle｜AI Agent Studio for Industry Applications](https://www.oracle.com/news/announcement/oracle-ai-agent-studio-for-industry-applications-helps-accelerate-business-outcomes-2026-10-21/)（2026-10-21，官方公告）。
+- **新在哪裡：** Mistral 10/20 發布 Voxtral 3 語音 agent SDK 與 speech models：支援 50+ 語言轉錄、diarization、context biasing、end-of-turn detection，TTS 支援 35+ 語言與 50+ 方言；SDK 把聽、推理、tool calling、說整合成即時 pipeline，官方列出 API 與自部署路徑。官方價目包含 batch transcription $0.0035／分鐘、realtime $0.008／分鐘、TTS $13／百萬字元，voice-agent API 另按分鐘計費。
+- **推薦用法：** 先做「查詢但不執行」的客服 prototype：通話轉錄→抽取身份與問題→查 read-only API→口頭回覆；把 booking、退款、付款等 action 先設成 approval，並固定保留音訊／轉錄保存期限與刪除規則。
+- **限制：** Mistral 頁面中的 state-of-the-art、延遲、品質／價格圖表是廠商或合作方評測；語音 agent 最難的仍是打斷、數字／專名、權限與錯誤回復，不能只看 demo。
+- 來源：[Mistral｜Voxtral 3](https://mistral.ai/news/voxtral-3/)（2026-10-20，官方發布與價格）、[Voxtral 文件](https://docs.mistral.ai/capabilities/audio/)（目前官方文件）。
+
+### Mistral × NVIDIA：工程 agent 評測開始把「技術正確」和成本放在一起
+
+- **新在哪裡：** 10/21 的合作公告聚焦 CAD／CAE／EDA：把 Mistral 模型、資料生成、physics modeling、NVIDIA CUDA-X／Warp 與 Omniverse 接起來，並計畫發布 physics 與 agentic AI 的公開 benchmark／資料集；評測不只看是否完成多步工具流程，也要量技術正確性、執行時間與計算成本。
+- **推薦用法：** 這個評測方向值得直接借到內部 agent：每一個 workflow 同時記錄輸出正確性、工具成功率、人工修正、延遲、token／GPU 成本與失敗回復；沒有通過 domain verifier 的結果不能因為「看起來合理」就進入設計流程。
+- **限制：** 目前是合作與路線公告，不是已交付的公開 benchmark；Mistral 對 Large 4 的模型規模、權重時程與合作成果也屬官方說法，不能先當成可用效能。
+- 來源：[Mistral｜Advances AI for Engineering with NVIDIA](https://mistral.ai/news/mistral-nvidia-ai-for-industrial-engineering/)（2026-10-21，官方公告）。
 
 ## 4. 使用心得與避坑
 
-### 一個 prompt 可能變成十個 shell command：MCP 連線不是小事
+### MCP 工具越多，越要先升級再做長上下文測試
 
-- BeyondTrust 10/21 發布的 AI Agent Security 研究以早期客戶 endpoint telemetry 為基礎：約 132,000 個 prompts 對應 128 萬個 agent-requested shell commands，平均接近 10 個 command；85% 的 coding-agent users 至少有一個 MCP server，平均 4.35 個、最高 36 個；研究也說約一半 skill 安裝來自 code repository。這些是廠商樣本，且 command 是 agent 要求的數量，不等於都成功執行。
-- **立即可做：** 把 prompt、agent session、MCP、skill、shell command 與 human approval 串成同一份 audit record；先對 production、secrets、外部網路與破壞性指令設成 deny／需核准，再逐步放寬。你真正要問的是「這個 agent 此刻能做這個 action 嗎」，不只是「這個使用者有沒有權限」。
-- **避坑：** 不要只在 prompt 或 shell 字串上做黑名單；工具改名、包裝或從 GUI 啟動都可能繞過脆弱的字串檢查。文件描述的 endpoint／kernel enforcement 是該產品的設計主張，仍應先用自己的 agent、OS 與 MCP 版本做 bypass 測試。
-- 來源：[BeyondTrust｜AI Agent Security GA](https://www.beyondtrust.com/press/ai-agent-security-general-availability)（2026-10-21，廠商研究與產品公告）、[BeyondTrust 技術文件](https://docs.beyondtrust.com/bt-docs/docs/ai-agent-security)（目前文件，產品行為說明）。
+- **新在哪裡：** GitHub MCP Server 2.0.3 在 10/21 的 release 修正 UTF-8 repository resource URI、超過 1 MB 檔案改回 resource link、`list_label` cursor pagination，並升級 Go 1.27.3 以處理 compromised CA mitigation。Anthropic Claude Code 2.1.306 同日修正 cloud session 缺少環境變數時 `claude -p` 誤報未登入，以及多 MCP 工具 session 中 API error 被誤報為 prompt 太長並觸發不必要 compaction。
+- **立即可做：** 若 agent 會掛多個 MCP，先在 staging 更新 client／server，測試 UTF-8 path、大檔案 resource、分頁 label 與長工具清單；記錄真正的 HTTP/API error、compaction 次數和工具 schema，而不是只看最後一句自然語言錯誤。
+- **避坑：** 「prompt 太長」可能只是上游 API error 的替代訊息；大檔案與大量工具 metadata 也會放大 context、成本與故障面。先減少 server 數、限制每 session 工具，再決定是否需要更大 context。
+- 來源：[GitHub MCP Server 2.0.3 release](https://github.com/github/github-mcp-server/releases/tag/v2.0.3)（2026-10-21，官方 release）、[Claude Code v2.1.306 release](https://github.com/anthropics/claude-code/releases/tag/v2.1.306)（2026-10-21，官方 release）。
 
-### 產量上升後，瓶頸可能變成人的注意力與整合能力
+### 供應商 benchmark、社群 demo 與 production evidence 要分開
 
-- Anthropic 10/16 的公開研究以自身公司為案例，指出截至 8 月互動式 agent hours 已是員工時數的 6 倍，採用工具後程式碼產出與部分業務產出上升，但人類注意力成為 agent output 的瓶頸；同公司 10/13 的工程文章則說每日 merge 量從 5 月約 2,500 增至 9 月超過 30,000。兩者都是公司自述資料，不是全產業因果證據。
-- **立即可做：** 不要只追蹤「agent 產生幾行」；另外量測 review queue、失敗重試、回滾、測試等待、跨模組理解與人工核准時間。當 merge 量上升，先增加自動化驗證與變更分級，再讓 agent 取得更多權限。
-- **避坑：** 更高的 code throughput 不代表更好的產品；若 review、CI、部署與維運沒有一起擴容，團隊只是更快堆積未理解的變更。
-- 來源：[Anthropic｜How employment is changing at Anthropic](https://www.anthropic.com/research/employment-at-anthropic)（2026-10-16，官方研究）、[Anthropic｜Redesigning source control](https://www.anthropic.com/engineering/redesigning-source-control)（2026-10-13／10-15 更新，官方工程文章）。
+- 今天的三個官方案例都很有用，但證據層級不同：OpenAI 的分散式生物研究是合作研究案例；Voxtral 的語言、延遲、價格圖表是供應商頁面；Mistral–NVIDIA 仍有部分是合作計畫。最容易踩的坑，是把「模型能示範」誤寫成「團隊已可靠上線」。
+- **立即可做：** 為每個 AI 功能建立一張小型 evidence card：發布日期、原始連結、輸入資料、模型／版本、工具權限、成功定義、失敗案例、成本與人工 fallback。只有在自己的資料與自己的驗收測試通過後，才把「可試用」升成「可部署」。
 
 ## YouTube 深度整理
 
 ### 今日無推薦
 
-我主動查找 PAPAYA 電腦教室、Tech With Tim、AI coding／Agent／MCP 頻道，優先查 10/20～10/22、必要時放寬一週。YouTube 介面上有近期超過 10,000 次觀看的候選，但實際匯出字幕／逐字稿時，三部候選（約 18,000、17,000、19,000 次觀看）都回傳「No transcript is available for this YouTube video」；因此沒有任何影片同時符合「超過 10,000 觀看、可靠字幕已讀、非 Shorts、不是純新聞、具實測／教學／技術拆解」的硬門檻，也不從標題或簡介猜內容。
+我主動查找 PAPAYA 電腦教室、AI coding／Agent／MCP 英文頻道，優先查 10/21～10/23、必要時放寬一週。YouTube 查到的候選包括：Lisa Crosbie《Build your own AI Agent in Copilot Agent Builder (October 2026 UPDATE)》（約 1.2 萬觀看、2 天前）、Mikey No Code《How Complete Beginners Master Claude Code MCP in 19 minutes》（約 1.2 萬觀看、9 小時前），兩部實際匯出字幕都回傳「No transcript is available for this YouTube video」；Adrian Twarog《I Tried Coding with Local AI Models for 7 Days》約 8.3 萬觀看，但頁面顯示約 2 週前，超過必要的一週放寬窗口。因此沒有任何影片同時符合「超過 10,000 觀看、可靠字幕已讀、非 Shorts、不是純新聞、具實測／教學／技術拆解」的硬門檻。
 
 ## 今天最值得帶回團隊的三個檢查
 
-- **看見每一步：** prompt、tool call、MCP、skill、command、diff 與測試結果要能串回同一個 run。
-- **隔離每一個 agent：** workspace、branch、secret、網路與 production action 都先設最小權限；合併前驗證，不把作者 demo 當成保證。
-- **量測真實瓶頸：** 除了模型輸出，也量 review queue、CI、回滾、人工核准與理解成本。
+- **先做可丟棄的 agent：** worktree／container、最小權限、沒有 production secrets，通過測試才留下 commit。
+- **把 agent 當成可觀測服務：** 保存每一步 event、tool call、approval、成本、錯誤與交接檔，不要只保存最後答案。
+- **把 benchmark 還原成自己的 verifier：** 正確性、延遲、成本、權限與人工回復一起驗收，供應商 demo 只作候選，不作結論。
 
 ## 今日一句話
 
-今天值得採用的不是讓 agent 無限制地做更多事，而是讓它在可撤銷的 workspace 中工作、在一條可審查的 trace 中留下證據，並在每個高風險 action 前遇到真正有效的權限邊界。
+今天最值得採用的不是「讓更多 agent 同時跑」，而是把平行工作放進可回復的 workspace，把每個工具動作留下證據，並用自己的 verifier 決定哪些結果真的能進 production。
 
-來源：[AWS TorchNeuron](https://aws.amazon.com/about-aws/whats-new/2026/10/aws-announce-native-pytorch-support-trainium/)、[Oracle AI Agent Studio](https://www.oracle.com/news/announcement/oracle-ai-agent-studio-for-industry-applications-helps-accelerate-business-outcomes-2026-10-21/)、[LayerFS](https://layerfs.ai/docs/)、[Cogitator](https://github.com/cogitator-ai/Cogitator-AI)、[BeyondTrust AI Agent Security](https://www.beyondtrust.com/press/ai-agent-security-general-availability)。
+來源：[OpenAI 分散式生物研究](https://openai.com/index/scaling-ai-research-for-complex-biological-data/)、[Mistral Voxtral 3](https://mistral.ai/news/voxtral-3/)、[Mistral × NVIDIA 工程 AI](https://mistral.ai/news/mistral-nvidia-ai-for-industrial-engineering/)、[Omnara](https://github.com/omnara-ai/omnara)、[OpenAI CLI](https://github.com/openai/openai-cli)、[GitHub MCP Server 2.0.3](https://github.com/github/github-mcp-server/releases/tag/v2.0.3)。

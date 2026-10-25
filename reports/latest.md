@@ -1,82 +1,89 @@
-# AI 情報日報｜2026-10-24
+# AI 情報日報｜2026-10-25
 
-約 4 分鐘閱讀。今天的主線是：agent 正從「能呼叫工具」走向「有自己的執行環境、身份、政策與觀測紀錄」；開放模型則把可試用性推高，也把硬體、驗證與成本問題一起帶進來。
+約 4 分鐘閱讀。今天的主線是：AI coding agent 開始被放進團隊的通知、用量治理與安全驗證流程；模型端則往更長 context、更快的小決策與可開放權重發展。
 
-> 截稿時間：2026-10-24 07:59（Asia/Taipei）。
-> 查核範圍：優先 2026-10-22～10-24；補充最近一週仍有直接實用價值的工具與事件。避開 10/23 已報的過夜 coding agent、Omnara、OpenAI CLI、GPT-Rosalind、Voxtral 3、Mistral × NVIDIA 與 MCP／Claude Code 2.1.306。
-> 證據標示：官方公告／文件是官方事實；GitHub release／issue 是公開工程狀態；Reddit 是個人實戰；媒體轉述與廠商 benchmark 不等於你的 production 結果。
+> 截稿時間：2026-10-25 08:00（Asia/Taipei）。
+> 查核範圍：優先 2026-10-23～10-25；補充最近一週仍有直接實用價值的更新。避開 10/24 已報的 IQuest-Q1、Google Agent Compute Engine、Claude Code 2.1.309、OpenCode Console 事件與 pdd-kit。
+> 證據標示：官方公告／文件是官方事實；Reddit、Hacker News 是社群訊號；廠商 benchmark 只代表廠商測試，未視為獨立排名。
 
 ## 1. 社群實戰用法
 
-### 用「決策帳＋code map＋事件檢查」管理長專案
+### 把 agent 遵循規則的問題，拆成可觀測的工作流
 
-- **新在哪裡：** 10/23 一篇 r/ClaudeWorkflows 的個人分享，把複雜 iPhone／Mac app 拆成一個主 session 協調多個背景 agent；每個 agent 使用獨立 worktree，另以 decision ledger、code map、headless test／build 和事件式完成檢查維持狀態。重點不是同時開很多 agent，而是讓每個 agent 的責任、輸出與驗證可被接回主線。
-- **可以怎麼開始：** 先只開一個主 session 與一個 side agent；為每個任務寫「負責檔案、完成條件、測試命令、不得碰的範圍」，用 worktree 隔離修改。讓 side agent 回報事件與結果，主 session 只在測試或人工決策通過後整合。
-- **編輯心得與限制：** 這是單一作者的工作流，沒有公開速度或成本對照；語音操作、多模型協調也不代表一定更快。真正可複製的是交接檔、獨立 workspace、headless 驗證與明確整合點。
-- 來源：[Reddit｜Advanced Claude Code Workflow](https://www.reddit.com/r/ClaudeWorkflows/comments/1xd2msw/workflow_advanced_claude_code_workflow_multiagent/)（2026-10-23，社群實戰，個人案例）。
+- **新在哪裡：** 10/24 的 Claude 工作流分享提出一套改善 agent adherence 的做法：把確定性工作移到 script，用 hook 讓子 agent 讀同一套核心規則，主動清理過長 context，必要時在 compaction 後重讀規則，最後分析 session log 找出偏離點。這是個人經驗，不是受控實驗，原帖互動也很少。
+- **可以怎麼開始：** 先挑一個重複任務，把「格式檢查、測試、檔案清單」寫成 script；再加一個 hook 驗證 agent 是否讀到專案規則。每次失敗記錄實際 prompt、tool output、compaction 前後與最後差異，不要只記 agent 的自我解釋。
+- **編輯心得與限制：** 真正可複製的是把 deterministic work 外移、把 session 變成可稽核事件；「我很少再遇到問題」仍是作者自述，不能當成功率證據。
+- 來源：[Reddit｜Workflow to Improve Claude Code Agent Adherence](https://www.reddit.com/r/ClaudeWorkflows/comments/1xeiosb/workflow_workflow_to_improve_claude_code_agent/)（2026-10-24，社群實戰，低互動個案）。
 
-### 把產品規則放進可審查的 Product Model
+### 用「可重播」而不是多開 terminal 管理背景 agent
 
-- **新在哪裡：** pdd-kit 是近期社群開源的 Product-Driven Development 工具，把 entities、capabilities、journeys、scenarios 與 business rules 以 Git 追蹤的 Markdown model 保存；agent 可用 `/pdd-map` 從既有 repo 建立模型，再以 `/pdd-verify` 對照程式碼與產品規則。
-- **可以怎麼開始：** 不要一次掃整個 monorepo；先挑一個容易說清楚的流程，例如「建立訂單」或「發佈報告」，執行 mapping 後人工審閱 coverage 與 limitation，再用 `npx pdd-toolkit lint`。只把確認過的模型當作 agent 上下文。
-- **限制：** repo 的設計與範例不是品質 benchmark；模型本身也可能被 agent 誤建。它適合減少每次重新探索產品規則，不取代測試、review 或正式規格。
-- 來源：[pdd-kit GitHub](https://github.com/itai-gendler/pdd-kit)（開源 repo／工具文件）、[社群採用討論](https://github.com/Part-DB/Part-DB-server/issues/1600)（2026-10-14，社群案例）。
+- **新在哪裡：** 10/23 HN 的 Show HN「Corgi」把 agent、dev server、worktree 和資源用量放進類 tmux 的 terminal multiplexer；它能看哪個 agent 正在工作、需要你處理或已完成，也能回看檔案變更。
+- **可以怎麼開始：** 先用一個小 repo 開兩個 worktree：一個跑 agent、一個跑測試或 dev server；只有在 status、diff 與測試都看得懂時才增加並行數。Corgi 官方提供 macOS、Linux、WSL 安裝方式，也支援 Claude Code、Codex、Pi、OpenCode。
+- **編輯心得與限制：** 這解決的是工作區可見性，不是 agent 品質；官方頁面仍是早期工具介紹，不能推論長期穩定性或 token 節省。
+- 來源：[Corgi 官方網站](https://corgi.computer/)（工具說明）、[Hacker News｜Show HN](https://news.ycombinator.com/front?day=2026-10-23)（2026-10-23，125 points／42 comments，社群訊號）。
 
 ## 2. 社群新工具與新玩法
 
-### IQuest-Q1：面向 agentic CLI 的 320B 開放權重 MoE
+### Kimi K3.1 Pro：先用 hosted API，別急著等 open weights
 
-- **新在哪裡：** IQuest-Q1 的論文在 10/22 提交，官方 repo 同步提供模型卡與部署方式；它是約 320B 總參數、約 15B active parameters、512K context 的 MoE，定位是 coding、reasoning 與多步工具使用。官方提供 OpenAI-compatible serving 路徑與 Claude Code／Codex harness 建議。
-- **可以怎麼開始：** 先把它當作研究用候選，不要直接放進日常開發。用官方 serving image 在有足夠 GPU／儲存的環境啟動，拿 5–10 個自己的 CLI 任務做固定 prompt、固定 harness、固定 timeout 的 A/B；記錄成功率、重試次數、token、延遲和人工修正。
-- **限制：** 320B 權重約 650GB 等級，官方模型卡明說目前是 text-only，工具格式需要相容 parser；repo 的 benchmark 表多為團隊自測或引用公開數字，不能當成獨立排名。官方也提醒它可能漏掉限制、重複失敗或留下未完成工作。
-- 來源：[IQuest-Q1 技術報告](https://arxiv.org/abs/2610.30949)（2026-10-22，原始研究）、[IQuest-Q1 官方 repo](https://github.com/IQuestLab/IQuest-Q1)（模型卡／部署說明）。
+- **新在哪裡：** Moonshot 10/23 發布 Kimi K3.1 Pro 與 Highspeed，提供 1M token context，可在 Kimi、Kimi Work、Kimi Code 與 API 使用；完整權重預計 11/4 才釋出。這讓長程 coding、文件與 agent 任務可以先用服務端試跑。
+- **可以怎麼開始：** 用 Kimi Code 或 API 固定同一組 5–10 個真實任務，記錄完成率、重試、延遲、token 與人工修正，再和現有模型比較。長 context 不等於應該把整個 repo 一次塞進去，先用檔案索引與分段摘要。
+- **限制：** 官方 Terminal-Bench 4.0 的 65.7% 是廠商結果，Kimi Code Bench 3.0 也是內部 benchmark；目前 hosted access 與預計的 open weights 不是同一種可控性，硬體需求、授權與實際成本仍待確認。
+- 來源：[Kimi K3.1 Pro 官方技術文章](https://www.kimi.ai/blog/kimi-k3-1-pro)（2026-10-23，官方公告與廠商 benchmark）、[HN 討論](https://news.ycombinator.com/item?id=50212065)（社群反應）。
 
 ## 3. 官方新功能與推薦用法
 
-### Google Agent Compute Engine：把 agent 的「電腦」做成可治理 microVM
+### OpenAI Decisions API GA：把小判斷從大型 agent loop 拆出來
 
-- **新在哪裡：** Google Cloud 10/22 公布 Agent Compute Engine，預計以 preview 形式提供硬體隔離的 microVM，讓 agent 執行程式、工具、瀏覽器與企業流程；每個 microVM 有自己的身份、短期憑證、持久化 Hyperdisk，並可在 agent 等待人或外部系統時 pause／resume。Google 同時公布可在 GKE 使用的開源 Agent Substrate，以及 Agent Gateway、Registry、Identity、OpenTelemetry observability 等治理元件。
-- **推薦用法：** 先照它的架構拆自己的 agent：執行環境、短期身份、egress policy、工具註冊、trace 與成本帳分離。若做 prototype，先只允許 read-only 工具與單一測試資料域，確認每次 model call、tool invocation、agent hop 都有 trace，再增加寫入權限。
-- **限制：** Agent Compute Engine 尚未 GA；「最高 10x compute density」與 200,000 agents 的 activation／latency 數字是 Google 的工程 benchmark。Agent Substrate 雖稱可跨雲與支援 Claude Code、OpenClaw、Hermes，實際移植成本、價格與可攜性仍需自行驗證。
-- 來源：[Google Cloud｜Introducing Agent Compute Engine and expanded agent governance](https://cloud.google.com/blog/topics/ai-infrastructure/introducing-agent-compute-engine-and-expanded-agent-governance)（2026-10-22，官方公告）。
+- **新在哪裡：** OpenAI 10/22 宣布 Decisions API 正式可用，以 GPT-6 Luna 處理分類、路由、下一步動作等 bounded decisions；官方稱相較 Responses API 最快可達 10 倍，並新增 GPT-Live、prompt caching、US／EU inference residency、原生 JSON 與圖片輸入，以及單次最多 400 個問題。
+- **推薦用法：** 把「是否轉人工」「選哪個工具」「是否需要再查一次」這種輸出範圍有限的判斷獨立成 schema，對每個決策保留輸入、候選選項、confidence、延遲與 fallback。只有需要開放式產出的步驟才交給完整 agent。
+- **限制：** 10 倍是官方效能宣稱；文章沒有替你的 prompt、區域、流量與 cache 命中率提供保證。先用自己的 trace 做 p50／p95、錯誤率與總成本比較。
+- 來源：[OpenAI｜Build more responsive apps with the Decisions API](https://openai.com/index/decisions-api/)（2026-10-22，官方產品公告）。
 
-### Claude Code v2.1.309：sandbox 與 MCP 權限修補值得先升級驗證
+### GitHub Copilot 進 Teams：從通知到 PR，但 review 仍不可省
 
-- **新在哪裡：** Anthropic 10/22 發布 v2.1.309，修正 macOS／Linux sandboxed Bash 在命令前執行 shell startup files、sandboxed command 或 auto-accepted edit 修改 `--mcp-config`、停用的 MCP server 被重新連回，以及多個 Bash／worktree permission check 漏放命令的情況。
-- **推薦用法：** 先在 staging 更新，再測四組 regression：sandbox 內的 `.zshrc`／`.bashrc`、symlink 路徑 denyWrite、MCP config 寫入、複合 `cd && git` 命令。把「被拒絕、被要求確認、成功執行」分開記錄，不要只看 agent 最後回覆。
-- **限制：** release note 是修補清單，不是完整安全保證；不同 OS、安裝方式、permission mode 與 MCP server 仍可能有差異。更新後也要重跑自己的 allow／deny policy 測試。
-- 來源：[Claude Code v2.1.309 release](https://github.com/anthropics/claude-code/releases/tag/v2.1.309)（2026-10-22，官方 GitHub release）。
+- **新在哪裡：** GitHub 10/23 更新 Teams 整合：收到 issue 通知後，可在頻道、群組或私人聊天 `@GitHub`，讓 Copilot 調查問題、修 bug 並建立 pull request；團隊仍需測試、review、merge。舊版 GitHub notifications app 會改名 deprecated，並預計 11/16 退場。
+- **推薦用法：** 先在低風險 repo 開啟，要求 agent 回傳重現步驟、修改檔案、測試結果與未處理風險；將 Teams 觸發視為「建立候選 PR」，不要直接授予自動合併權。
+- **限制：** 這是流程入口的改善，不代表 issue 描述、外部連結或測試環境都可信；仍需檢查 repository scope、branch protection 與 secret exposure。
+- 來源：[GitHub Changelog｜Turn notifications into code with GitHub Copilot in Teams](https://github.blog/changelog/2026-10-23-turn-notifications-into-code-with-github-copilot-in-teams)（2026-10-23，官方更新）。
+
+### Copilot 用量 API 開始看見 OpenCode、Claude Code 與 Codex
+
+- **新在哪裡：** GitHub 10/23 在 enterprise／organization 的 1-day 與 28-day 報表加入 `totals_by_client`，可按 `opencode`、`claude_code`、`codex`、`zed`、Copilot CLI 等 client 看 request、session、token 與 model selection mode。
+- **推薦用法：** 每週把 client、model、token 與 request count 對照費用、成功率和人工修正；特別注意 request count 是 model calls，不是 prompts，而且 client 是整合傳來的 best-effort 標記，不是可信身份證明。
+- **限制：** 需要相應 Copilot Metrics 權限；Copilot code review／cloud agent 的模型多半標成 product-selected 或 unknown，不要把報表誤讀成完整的 agent 行為追蹤。
+- 來源：[GitHub Changelog｜Usage metrics API adds usage from tools like OpenCode](https://github.blog/changelog/2026-10-23-usage-metrics-api-adds-usage-from-tools-like-opencode)（2026-10-23，官方更新）。
 
 ## 4. 使用心得與避坑
 
-### OpenCode Console 事件：不要把 hosted workspace 當成安全的 key vault
+### Claude 形式驗證的新進展：證明範圍比「AI 找到 bug」更重要
 
-- **新在哪裡：** 10/17 公開的 OpenCode Console 事件仍值得本週內補看：公司表示舊版 Console 系統遭入侵，約 1.4% 的 Console 使用者可能受影響，風險集中在儲存在 workspace 的第三方 provider API key；媒體報導 OpenAI、Anthropic、Google 都介入停用或處理疑似暴露的 key。這不是「本機 CLI 一定被植入」的證據，而是 delegated credential storage 的提醒。
-- **立即可做：** 若收到 OpenCode 通知，立刻撤銷並重發所有相關 key，檢查 provider usage／billing、縮短 key 生命週期並設 spend alert。即使沒有收到通知，也不要把可長期使用的 root／admin key 放進不清楚 retention、rotation、incident response 的 hosted agent workspace。
-- **限制：** 事件細節仍以公司通知與後續報告為準；「large-scale distillation attack」是公司對事件的描述，根因、暴露範圍與退款條件不可只靠媒體標題推定。
-- 來源：[OpenCode 官方安全模型](https://github.com/anomalyco/opencode/security)（明示本機 agent 沒有 sandbox）、[TechCrunch｜OpenCode Console breach](https://techcrunch.com/2026/10/19/hackers-hit-ai-coding-tool-opencode-running-up-charges-on-users-ai-accounts/)（2026-10-19，媒體轉述公司說法）。
+- **新在哪裡：** Anthropic 10/22 表示，與 Theorem 合作讓 Claude 對 123 個 open-source library 的 239 個 fuzz entry point 產生並通過 Rocq proof，合計約 1.8 億行 proof；流程也找到一些傳統 fuzzing 不容易碰到的 bug，並公開部分 proof 與可信元件。
+- **立即可做：** 如果團隊已有 C／C++ fuzz entry point，先選一個小 library，把「要證明的 theorem、編譯目標、OS／CPU model、輸入大小與 proof checker」寫進驗收紀錄，再和現有 fuzz、ASan、static analysis 並行。
+- **限制：** 這不是「程式已無 bug」：官方明確限定單執行緒、static RISC-V binary、固定 memory budget、Linux model，並承認 spec 不完整、caller misuse、x86／ARM／glibc 差異等缺口；proof 也可能耗費數億 token。廠商展示的成功率與成本不能直接外推到 production。
+- 來源：[Anthropic｜LLMs are making formal software verification feasible at a much larger scale](https://www.anthropic.com/research/formal-verification)（2026-10-22，官方研究／工程報告）。
 
-### 把「模型訊息」和「實際送出的 context」分開稽核
+### GitHub CLI 的短期 OAuth token：安全性提高，舊 script 可能壞掉
 
-- **新在哪裡：** OpenCode issue #58193 在 10/22 回報：長 agent session 中出現偽裝 harness 的 prompt-injection block，provider 收到的 context 有注入文字，但本機 session DB 保存的 user message 沒有。這是單一、尚未確認的 issue，不足以宣稱系統性漏洞，卻指出 agent audit 常見盲點：只保存 UI 對話，可能看不到真正送給 provider 的內容。
-- **立即可做：** 對高權限或高成本 session 保存 request／response hash、system／developer／user／tool 邊界、MCP server 回傳、compaction 前後摘要與拒絕事件；發現 DB、UI、provider trace 不一致時先停用寫入權限，再重現與輪換可能暴露的 token。
-- **限制：** issue body 是使用者報告，不是維護者已確認的漏洞，也沒有獨立重現結果；本日只把它當作 audit design 的警示。
-- 來源：[OpenCode issue #58193](https://github.com/anomalyco/opencode/issues/58193)（2026-10-22，公開 issue，未確認）。
+- **新在哪裡：** GitHub CLI v2.103.0 在 public preview 支援 `gh auth login --expiring`，access token 會過期並由 rotating refresh token 自動刷新；GitHub 建議搭配 `gh auth setup-git`，並使用 Git 2.46 以上。
+- **立即可做：** 先在非 production automation 的帳號驗證 `gh auth status`、HTTPS credential helper 與 CI 行為；任何外部工具都要每次重新呼叫 `gh auth token`，不要把一次讀出的 token 長期存檔。
+- **限制：** 依賴固定 token 的 script、extension 或第三方整合會因 token 過期失效；這個功能是 opt-in，若 workflow 需要長時間不變的 token，先不要切換。
+- 來源：[GitHub Changelog｜Opt in to expiring, auto-refreshing OAuth tokens](https://github.blog/changelog/2026-10-21-github-cli-opt-in-to-expiring-auto-refreshing-oauth-tokens)（2026-10-21，官方更新）。
 
 ## YouTube 深度整理
 
 ### 今日無推薦
 
-我主動查找 PAPAYA 電腦教室、Tech With Tim、Matthew Berman、Gary Chen 與其他 AI coding／Agent／工具頻道，優先查 10/22～10/24、必要時放寬一週。PAPAYA《為什麼一堆人在瘋 Grok Bot？》於 10/20 發布，頻道 RSS 查核為 255,216 次觀看，內容看起來有 Bot、記憶、排程與技能流程；但本次沒有成功讀到可可靠核對的字幕／逐字稿。其他近期候選也未同時滿足「超過 10,000 觀看、可靠字幕已讀、非 Shorts、不是純新聞、具實測／教學／技術拆解」的硬門檻，因此不從標題或介紹猜測內容。
+我主動查找 PAPAYA 電腦教室、Tech With Tim、Gary Chen、Matthew Berman 與其他 AI／Agent／AI Coding 頻道，優先查 10/23～10/25、必要時放寬一週。近期候選沒有同時滿足「觀看數超過 10,000、可靠字幕或逐字稿已讀、非 Shorts、不是純新聞、具實測／教學／技術拆解」的硬門檻；因此不從標題、縮圖或介紹猜測內容。
 
 ## 今天最值得帶回團隊的三個檢查
 
-- **隔離先於自動化：** worktree／microVM、短期 credential、egress policy 和可回復任務，先於「讓更多 agent 同時跑」。
-- **稽核真正的 context：** 同時保存 UI 訊息、工具回傳、compaction、provider request 與拒絕／核准事件，避免只相信最後一段自然語言。
-- **把 benchmark 變成自己的驗收：** 固定 harness、任務、timeout、成本與人工修正；開放模型或雲端廠商數字只能作候選訊號。
+- **先拆 bounded decision：** 路由、分類與是否繼續查詢不必每次啟動完整 agent。
+- **再量化 agent 使用：** 把 client、model、token、session、測試與人工修正放在同一張週報裡。
+- **最後驗證安全邊界：** proof、短期 token、Teams 觸發和長 context 都要記錄「涵蓋什麼」與「沒有涵蓋什麼」。
 
 ## 今日一句話
 
-今天最值得採用的不是某個更大的模型，而是把 agent 當成有身份、權限、成本與 trace 的執行服務；模型升級後，隔離與證據鏈也要一起升級。
+AI agent 的下一個瓶頸不是「能不能再多做一件事」，而是能不能在通知、用量、憑證與證明範圍都清楚的情況下，把事情交給它做。
 
-來源：[Google Cloud Agent Compute Engine](https://cloud.google.com/blog/topics/ai-infrastructure/introducing-agent-compute-engine-and-expanded-agent-governance)、[Claude Code v2.1.309](https://github.com/anthropics/claude-code/releases/tag/v2.1.309)、[IQuest-Q1](https://github.com/IQuestLab/IQuest-Q1)、[OpenCode security](https://github.com/anomalyco/opencode/security)。
+來源：[OpenAI Decisions API](https://openai.com/index/decisions-api/)、[GitHub Copilot in Teams](https://github.blog/changelog/2026-10-23-turn-notifications-into-code-with-github-copilot-in-teams)、[Anthropic formal verification](https://www.anthropic.com/research/formal-verification)、[Kimi K3.1 Pro](https://www.kimi.ai/blog/kimi-k3-1-pro)。

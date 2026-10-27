@@ -1,8 +1,8 @@
-# AI Community Radar - 2026-10-26
+# AI Community Radar - 2026-10-27
 
-> Generated: 2026-10-26T01:04:18.970Z
+> Generated: 2026-10-27T01:56:27.894Z
 > Timezone: Asia/Taipei
-> Active cutoff: updated since 2026-10-24; archived GitHub repos excluded; max stale age 2 days.
+> Active cutoff: updated since 2026-10-25; archived GitHub repos excluded; max stale age 2 days.
 
 ## 今日摘要
 
@@ -17,9 +17,9 @@
 
 | # | Repo | Stars | Forks | Language | Updated |
 | --- | --- | ---: | ---: | --- | --- |
-| 1 | [morluto/rea](https://github.com/morluto/rea) | 384,739 | 96,305 | TypeScript | 2026-10-25T19:21:28Z |
-| 2 | [affaan-m/ECC](https://github.com/affaan-m/ECC) | 288,871 | 42,829 | JavaScript | 2026-10-25T23:16:34Z |
-| 3 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 257,060 | 56,307 | Python | 2026-10-26T00:57:49Z |
+| 1 | [morluto/rea](https://github.com/morluto/rea) | 391,954 | 98,214 | TypeScript | 2026-10-27T01:55:33Z |
+| 2 | [affaan-m/ECC](https://github.com/affaan-m/ECC) | 289,891 | 42,956 | JavaScript | 2026-10-26T04:56:56Z |
+| 3 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 257,425 | 56,411 | Python | 2026-10-27T01:40:42Z |
 
 ### 1. [morluto/rea](https://github.com/morluto/rea)
 
@@ -77,7 +77,7 @@ The agent that grows with you.
 | 指標 | 值 |
 | --- | --- |
 | Registry sample | 800 servers |
-| Active baseline since | 2026-10-24 |
+| Active baseline since | 2026-10-25 |
 | GitHub stale cutoff | 2 days |
 
 ### 可能還沒上官方 MCP Registry 的候選
@@ -102,27 +102,17 @@ The agent that grows with you.
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/supabase/mcp](https://github.com/supabase/mcp) |
 
-#### 3. [@kubb/mcp](https://www.npmjs.com/package/@kubb/mcp)
+#### 3. [@copilotkit/mcp-apps-renderer](https://www.npmjs.com/package/@copilotkit/mcp-apps-renderer)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | npm-package |
-| 說明 | MCP server for Kubb. Exposes code generation as a tool over the Model Context Protocol so AI assistants like Claude, Cursor, and other MCP-compatible clients can generate TypeScript types, clients, and more. |
+| 說明 | Framework-agnostic MCP Apps host for CopilotKit - the app host protocol (ext-apps AppBridge), sandbox proxy, and shared renderer consumed by the React, Vue, and Angular frontends |
 | 為什麼值得看 | npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。 |
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
-| Repo | [https://github.com/kubb-labs/kubb](https://github.com/kubb-labs/kubb) |
+| Repo | [https://github.com/CopilotKit/CopilotKit](https://github.com/CopilotKit/CopilotKit) |
 
-#### 4. [@payloadcms/plugin-mcp](https://www.npmjs.com/package/@payloadcms/plugin-mcp)
-
-| 欄位 | 內容 |
-| --- | --- |
-| 類型 | npm-package |
-| 說明 | MCP (Model Context Protocol) capabilities with Payload |
-| 為什麼值得看 | npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。 |
-| 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
-| Repo | [https://github.com/payloadcms/payload](https://github.com/payloadcms/payload) |
-
-#### 5. [@traceloop/instrumentation-mcp](https://www.npmjs.com/package/@traceloop/instrumentation-mcp)
+#### 4. [@traceloop/instrumentation-mcp](https://www.npmjs.com/package/@traceloop/instrumentation-mcp)
 
 | 欄位 | 內容 |
 | --- | --- |
@@ -132,30 +122,40 @@ The agent that grows with you.
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/traceloop/openllmetry-js](https://github.com/traceloop/openllmetry-js) |
 
-#### 6. [reefbarman/agentlink](https://github.com/reefbarman/agentlink)
+#### 5. [@maroonedsoftware/mcp](https://www.npmjs.com/package/@maroonedsoftware/mcp)
+
+| 欄位 | 內容 |
+| --- | --- |
+| 類型 | npm-package |
+| 說明 | Model Context Protocol (MCP) server dispatcher for ServerKit. |
+| 為什麼值得看 | npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。 |
+| 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
+| Repo | [https://github.com/MaroonedSoftware/serverkit](https://github.com/MaroonedSoftware/serverkit) |
+
+#### 6. [thinx-pro/nightcap](https://github.com/thinx-pro/nightcap)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | An open-source coding-agent harness for VS Code, with Desktop and CLI previews. Bring your own models, use editor intelligence, review diffs, steer autonomy, and connect tools through MCP. |
+| 說明 | 🌙 A hard stop for agents you leave running: dollar caps, pinned models and a crash-safe action ledger for MCP tools and Claude Code |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 7. [LunarWerxs/SageThumbs-2k](https://github.com/LunarWerxs/SageThumbs-2k)
+#### 7. [WireCatLabs/cli-base](https://github.com/WireCatLabs/cli-base)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Windows 11 shell extension (Rust): Explorer thumbnails for 331 file types Windows can't show, including camera RAW, PSD, HEIC/AVIF, video, ebooks, comics and CAD. Crash-isolated, source-available rebuild of SageThumbs. |
+| 說明 | The foundation for agent-ready CLIs: output for people and machines, stable exit codes, keyring, testable clocks |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 8. [mdany75/Developpeur](https://github.com/mdany75/Developpeur)
+#### 8. [starroyhq/mioon](https://github.com/starroyhq/mioon)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Claude retouche vos photos dans Lightroom Classic comme un pro : un connecteur MCP et un module Lightroom, avec votre forfait claude.ai. |
+| 說明 | 本地优先的开源视频创作工作台，支持画板、时间线剪辑与 AI 视频、图片生成 |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 

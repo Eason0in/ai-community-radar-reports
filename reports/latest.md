@@ -1,80 +1,85 @@
-# AI 情報日報｜2026-10-31
+# AI 情報日報｜2026-11-01
 
-約 4 分鐘閱讀。今天的主線是：模型能力開始往「可部署、可測試、可被工作流接住」移動；開放權重與 agent SDK 都更接近工程資產，但硬體、授權、評測與安全邊界不能省略。
+約 4 分鐘閱讀。今天的主線是：AI agent 不只是在寫程式，還在管理記憶、工具、評測與背景服務；而 10/29 的擴充套件供應鏈事件提醒我們，這些邊界必須一起審核。
 
-> 查核範圍：優先 2026-10-29～10-31；補充最近一週仍有直接實用價值的進展。昨天已報的 GitHub Copilot Fusion、Agentic Workflows、Android Studio Rabbit 2、OpenAI Model Spec 與 instruction-file poisoning，今天不重複報導。
-> 證據標示：官方公告／文件是官方事實；GitHub 專案與 Reddit 是社群工具或個案；廠商自行公布的 benchmark、客戶案例與示範均標示為發布方結果，不能直接當成獨立驗證。
+> 查核範圍：優先 2026-10-30～11-01；補充最近一週仍有直接實用價值的進展。昨天已報的 Mistral Large 4、Genie 4、Cursor Agent SDK、ESP32 模擬器、Octomind 與 October Harness，今天不重複報導。
+> 證據標示：官方公告／文件是官方事實；GitHub 專案與 Reddit 是社群工具或個案；廠商自行公布的 benchmark、效率數字與成本估算均標示為發布方結果。
 
 ## 1. 社群實戰用法
 
-### 用 ESP32 模擬器把 coding agent 接上真實驗收迴路
+### 不要讓多個 agent 共用一條超長對話
 
-- **新在哪裡：** Reddit 社群分享以 Claude Code 搭配 `esp32sim-mcp`，讓 agent 不只寫 ESP-IDF firmware，還能在模擬器建置、開機、讀 serial output、按虛擬按鈕、加入虛擬 Wi‑Fi、截取畫面，再依失敗結果修正。這是把「寫 code → 猜結果」改成「寫 code → 執行 → 讀取證據 → 修正」的具體工作流。
-- **可以怎麼開始：** 先用一個會輸出固定 serial 訊息的 ESP32 小專案；把 build、boot、serial assertion、按鍵互動與 screenshot 做成 MCP tools，要求 agent 每次變更後跑同一套驗收，再由人檢查差異。
-- **編輯心得與限制：** 原帖是社群個案，互動量不高，沒有獨立效率實驗；硬體模擬器的覆蓋率也不等於真機。適合拿來縮短早期 feedback loop，不適合因此取消真機、功耗、網路斷線與安全測試。
-- 來源：[Claude Code Workflow：Autonomous ESP32 Firmware Development and Testing with Local Emulator](https://www.reddit.com/r/ClaudeWorkflows/comments/1xabulp/workflow-claude-code-workflow-autonomous-esp32/)（2026-10-19，社群個案，中可信度）。
+- **新在哪裡：** r/ClaudeCode 一篇 10/27 的實戰討論，描述的做法是由一個主 agent 判斷任務難度、寫成 ticket／工作說明，再讓不同模型各自取得隔離 worktree 執行；另一個 agent 負責 review。留言也有人回報，將主 agent 的指示寫入檔案、重新開乾淨 session，比讓 sub-agent 在原對話裡不斷聊天更省 token。這是社群經驗，不是控制實驗。
+- **可以怎麼開始：** 先固定五個欄位：目標、允許修改的檔案、驗收命令、預算／timeout、交接輸出；每個任務獨立 worktree，完成後只提交 diff、測試結果與未解風險。複雜任務才升級到更強模型或額外 reviewer。
+- **編輯心得與限制：** worktree 能隔離檔案，不會自動隔離錯誤假設、API key 或網路權限；多 agent 也可能增加協調成本。適合用在可拆分、可測試的 repo 任務，不適合拿來掩蓋沒有清楚規格的工作。
+- 來源：[r/ClaudeCode：Claude Max 20x weekly depleted in less than 2.5 days](https://www.reddit.com/r/ClaudeCode/comments/1xgxv58/claude_max_20x_weekly_depleted_in_less_than_25/)（2026-10-27，社群個案，中低可信度）。
 
 ## 2. 社群新工具與新玩法
 
-### Octomind：把 coding agent 變成可排程、可嵌入的 runtime
+### EvoScientist v0.4.0：每個專案一個背景 agent 服務
 
-- **新在哪裡：** GitHub 開源專案 Octomind 將 CLI-first coding agent、MCP、sub-agent delegation、daemon 與 RPC／JSON 介面放在同一個 runtime；它的定位不是另一個聊天 UI，而是能在 terminal、CI 或背景服務中被呼叫的 agent 執行層。
-- **可以怎麼開始：** 先用單一 repo、唯讀工具與低權限 token 跑一次 JSON／one-shot 任務；再加上明確的工作目錄、命令白名單、timeout 與人工核准，最後才考慮 daemon 或排程。
-- **編輯心得與限制：** 這是專案 README 的能力宣稱，尚未有本日可引用的獨立 benchmark；agent 直接繼承啟動程序的作業系統權限，MCP、extension 與 repo 設定都要視為可執行供應鏈。先在 sandbox 測，不要把「可嵌入」誤當成「已安全隔離」。
-- 來源：[Muvon/octomind｜open-source AI coding agent and agent runtime](https://github.com/Muvon/octomind)（近一週仍有更新，GitHub 社群工具，待實測）。
+- **新在哪裡：** GitHub 專案 10/31 發布 v0.4.0，將每個專案的背景服務、記憶 worker 與對話 surface 收斂到一個可停止的服務；同時加入 GPT-6.1 Terra、較嚴格的 shell sandbox 與更安全的更新流程。這是專案自述，不代表獨立品質驗證。
+- **可以怎麼開始：** 只在一個非關鍵專案試用；先確認服務的工作目錄、模型金鑰、瀏覽器來源限制與更新檔來源，再用 EvoSci server stop 驗證停止路徑。把 rubric／goal 當成驗收條件，不要讓背景服務直接擁有 production token。
+- **編輯心得與限制：** 背景服務讓長任務與多 surface 更順，但也把常駐程序、記憶與權限疊在一起；macOS 目前標示 Apple silicon 限制，仍應先讀 release notes 和實際權限。
+- 來源：[EvoScientist v0.4.0](https://github.com/EvoScientist/EvoScientist)（2026-10-31，GitHub 專案，待實測）。
 
-### October Harness：以訊息匯流排協調多個 coding agent
+### llama.cpp 夜間版：本地推論更像可驗證的發布物
 
-- **新在哪裡：** October Harness 把多 agent 協作做成 runtime＋public bus：agent 可以收發 durable messages、跨電腦協調，並以 TUI、CLI、JSON、RPC 或 embedded SDK 執行；這比在一個聊天視窗裡複製多份 prompt 更接近可觀測的交接系統。
-- **可以怎麼開始：** 先把任務拆成「實作、測試、review」三個角色，每個角色只拿到必要工具；訊息固定包含目標、revision、輸出檔與驗收條件，所有結果回到同一個 issue 或 handoff 檔。
-- **編輯心得與限制：** 專案明確提醒它不是 sandbox，agent 仍以啟動使用者的 OS 權限執行；bus peer 也不能被當成授權來源。協調層解決的是上下文與訊息流，不會自動解決錯誤決策或權限風險。
-- 來源：[October Harness｜multiplayer-first coding harness](https://github.com/october-dev/october-harness)（2026-10-27 前後可見更新，GitHub 社群工具，待實測）。
+- **新在哪裡：** llama.cpp 在 10/30～31 連續發布 b12017～b12024；變更包括 OpenCL fwht、Gemma 4 影像尺寸處理、Qwen3-Coder think block 與 Responses API 的修正，並提供多平台二進位檔與 GitHub attestation。b12024 是 pre-release，不能當穩定版。
+- **可以怎麼開始：** 若要把本地模型接到 agent，先固定一個 nightly、記下 commit／attestation 與後端，再跑自己的 tool-call、長上下文與多模態 smoke tests；不要因為有 nightly binary 就跳過版本鎖定。
+- **編輯心得與限制：** 夜間版對硬體支援與模型相容性很有價值，但更新頻率高，使用者要自己承擔回歸與效能差異。
+- 來源：[llama.cpp releases](https://github.com/ggml-org/llama.cpp/releases)（2026-10-30～31，GitHub 官方專案）、[b12020 build attestation](https://github.com/ggml-org/llama.cpp/attestations/62071228)（2026-10-31）。
 
 ## 3. 官方新功能與推薦用法
 
-### Mistral Large 4／Le Chonk：開放權重正式落地，主打 coding 與 defensive security
+### Codex CLI 0.166.0：把長 session 的恢復與診斷補齊
 
-- **新在哪裡：** Mistral 於 10/29 釋出改良版 Mistral Large 4 的權重；官方描述為 1T 參數、原生多模態、三種 reasoning mode，可從 Hugging Face 下載，以 vLLM 或 SGLang 自行部署，也能用 Mistral Studio、API、OpenRouter、NVIDIA NIM 或 Vibe Code。官方列出的 API 價格為每百萬 token：input $0.70、cached input $0.07、output $2.10。
-- **推薦用法：** 先用 Low／Medium reasoning 跑自己的小型 coding eval，記錄修正率、輸出 token、延遲與顯存，再決定是否用 High；需要資料主權或離線部署時，才把自託管成本與維運納入比較。
-- **評測與限制：** FrontierCode 2.0、Artificial Analysis Coding Agent Index、Terminal-Bench、Cyber Index 等數字是 Mistral 在公告中引用的發布方結果／外部評測摘錄，不是本日獨立重跑。1T 模型的實際硬體、量化與 serving 成本仍需自行驗證；開放權重也不代表所有商業託管方式都無條件免費，官方授權對 Model-as-a-Service 有額外商業授權要求。
-- 來源：[Mistral Large 4 (Le Chonk) is now open weight](https://mistral.ai/news/mistral-large-4-oss/)（2026-10-29，官方公告）。
+- **新在哪裡：** OpenAI Codex 10/29 發布 0.166.0：TUI 加入可用鍵盤選取、搜尋與定位的 transcript 操作；Markdown 在 async question 與 transcript 回覆中一致呈現；codex queue --resume 可恢復排隊後卸載的 thread；codex doctor --network-only 可只檢查設定、連線與 WebSocket；同版也把 GPT-6.1 Terra 加入 bundled、Vertex AI 與 Bedrock catalog。
+- **推薦用法：** 先在長任務中用 transcript search 找到「最後一次有效決策」，再用 queue resume 接續；遇到只在公司網路失敗的情況，先跑 network-only doctor。任何 MCP 或外部工具恢復後仍要重新確認權限與工作目錄。
+- **限制：** release notes 說明的是功能已加入，不代表所有平台、登入方案或模型供應商都同時可用。
+- 來源：[OpenAI Codex 0.166.0 release](https://github.com/openai/codex/releases/tag/rust-v0.166.0)（2026-10-29，官方 release）。
 
-### Google Genie 4：可即時以文字改變世界的研究預覽
+### GitHub Copilot Memory／Dreaming：把團隊習慣變成可審核上下文
 
-- **新在哪裡：** Google DeepMind 10/27 宣布 Genie 4，主打即時互動世界模擬：使用者可以用鍵盤移動、以自然語言改天氣／鏡頭／人物或物件，模型同時生成環境聲與互動對話；Google 也示範讓 Gemini 4 Argon 分解任務、持續觀察畫面並在模擬中調整步驟。
-- **推薦用法：** 若你能取得研究預覽，適合先拿來做 agent／robotics 的情境沙盒：固定任務、記錄每一步 prompt、影格與成功條件，再比較模擬中的規劃是否能轉移到真實環境。不要把生成出的物理結果直接當成真實世界測試。
-- **限制：** 目前是 trusted testers 的 research preview，並非一般開發者可直接依賴的穩定 API；官方展示與產品能力說明也不等於對所有物理、語音或長時間一致性的獨立保證。
-- 來源：[Genie 4: A new generation of world simulation](https://deepmind.google/blog/genie-4-a-new-generation-of-world-simulation/)（2026-10-27，官方研究公告）。
+- **新在哪裡：** GitHub 10/28 宣布 Copilot Memory 在付費方案一般可用，可跨 Copilot app、CLI、VS Code、cloud agent、code review、Slack、Teams 與 Mobile 保存個人偏好和 repository conventions；Dreaming 則進入 public preview，會整理個人記憶、repository instruction／skill 與 code-review guidance，對 checked-in 變更提出 PR。
+- **推薦用法：** 先只寫低風險、可驗證的規則，例如測試命令、PR 摘要格式與不可碰的目錄；開啟 repository dreaming 前，先設定誰能 review 它提出的 instruction／skill PR，並定期刪除過期記憶。
+- **限制：** Dreaming 是 opt-in 且會消耗 AI credits；GitHub 提到的「93% 更遵循偏好、42% 工作流更有效率」是其 public-preview review 的發布方結果，不是獨立研究。記憶若過時，反而會讓 agent 一致地做錯事。
+- 來源：[GitHub intelligence：Memory 與 Dreaming](https://github.blog/changelog/2026-10-28-github-intelligence-puts-your-code-context-and-history-to-work/)（2026-10-28，官方 changelog）。
 
-### Cursor Agent SDK：把 agent 當成版本控制中的小型軟體專案
+### Microsoft Copilot 評測：用合成企業環境測時間脈絡與跨部門流程
 
-- **新在哪裡：** Cursor 10/20 將 Agent SDK 開放，讓團隊用 TypeScript 定義 prompt、tools、連線與 evals，支援 GitHub／GitLab／Bitbucket PR 事件、sub-agent、平行任務、event replay，並可用 `agent-sdk deploy` 部署到 Cursor，或自行包成 Node container。
-- **推薦用法：** 從「PR 風險分流」或「依團隊知識庫 review」開始：把規則、工具、測試案例與 replay 一起放進 repo，先在 local playground 觀察，再用小流量部署；任何自動 approve 或寫回外部系統的動作都保留人工核准。
-- **限制：** Cursor 公告中的 `kb-reviewer` 約一天完成、PGA Tour 軟體工廠等是官方／客戶案例，不是普遍生產力保證。SDK 讓 agent 可測試與可部署，但不會替團隊定義正確的 policy、secrets scope 或失敗回復策略。
-- 來源：[Introducing the Agent SDK](https://prod.cursor.com/blog/agent-sdk)（2026-10-20，官方產品公告）。
+- **新在哪裡：** Microsoft Research 10/30 公開 Industry Evaluation Data Generation Platform：用公開的 O*NET、職缺與 SEC 資料建立不含客戶資料的合成 tenant，模擬使用者、會議、郵件、文件與隨時間變化的組織，再自動產生並驗證產業特定查詢。
+- **推薦用法：** 做企業 RAG／agent 評測時，不要只用問答題；加入跨日期的「上週決定了什麼」、跨角色的責任追蹤、引用正確性、敏感資料隔離與 action approval。每次版本從同一份設定重建資料，才能比較回歸。
+- **限制：** 39% 品質改善、每份資料集約 10 萬美元節省與 30 萬美元專案節省都是 Microsoft 的內部估計／結果；合成環境再像，也不能完全代表真實租戶的語言、權限與例外流程。
+- 來源：[Microsoft Research：From synthetic enterprise data evaluations to real Microsoft Copilot AI confidence](https://www.microsoft.com/en-us/research/blog/from-synthetic-enterprise-data-evaluations-to-real-microsoft-copilot-ai-confidence/)（2026-10-30，官方研究）。
 
 ## 4. 使用心得與避坑
 
-### 「開放權重」與「可生產使用」中間還隔著三張表
+### Cursor marketplace 的 Claude Code 擴充套件事件：安裝來源就是安全邊界
 
-- **第一張是硬體／成本表：** 先量化模型大小、量化版本、顯存、吞吐、併發、快取與維運，不要只拿 API 單價和雲端模型比較。
-- **第二張是評測表：** 將自己的 repo、語言、工具與安全限制做成固定 eval；廠商 benchmark、示範影片與客戶引言都只能當候選訊號，不能取代實測。
-- **第三張是授權／風險表：** 確認模型 license、商業託管限制、資料是否離開環境、agent 能碰到哪些 token／檔案／網路，以及失敗時誰能停止它。自託管增加控制力，也同時增加 patch、monitoring、capacity 與 incident response 責任。
-- **今天的判斷：** Le Chonk 值得拿來做小規模 coding／security eval；Genie 4 適合關注 simulation-to-agent 的研究方向；Agent SDK 類產品則適合把重複流程產品化。三者都不應直接跳過「小樣本、可回放、有限權限、人工核准」四個門檻。
-- 來源：[Mistral Large 4 官方公告](https://mistral.ai/news/mistral-large-4-oss/)（2026-10-29）、[Cursor Agent SDK](https://prod.cursor.com/blog/agent-sdk)（2026-10-20）、[Genie 4](https://deepmind.google/blog/genie-4-a-new-generation-of-world-simulation/)（2026-10-27）。
+- **發生什麼事：** Cursor 10/29 公告，VS Code Marketplace 中的 Anthropic.claude-code 2.1.312／2.1.313 在美西時間 02:27～13:35 可被下載；惡意修改版嘗試安裝持久 SSH backdoor。Cursor 表示已下架、暫停 marketplace、輪替金鑰並重建服務；Microsoft Security 確認目前證據指向 Cursor marketplace，Microsoft Visual Studio Marketplace 與 npm 的官方套件未受此事件影響。
+- **立即怎麼做：** 檢查是否曾從 Cursor marketplace 安裝上述版本；若有，先隔離主機，再檢查 LaunchAgent、cron／Startup 與使用者 SSH key 等持久化位置，撤銷／輪替可能暴露的 token，最後只從官方來源重裝。惡意程式可能執行失敗，所以「沒看到反向連線」不能當成已排除。
+- **編輯心得與限制：** 這不是「Claude Code 本身被入侵」的證據，而是 marketplace／更新鏈的供應鏈事件；也提醒我們，AI extension、MCP、skill 與 agent settings 都應像依賴套件一樣鎖版本、審來源、留安裝紀錄。
+- 來源：[Cursor security notice](https://cursor.com/blog/claude-code-extension-security-notice)（2026-10-29，官方事件公告）、[Microsoft Security 分析](https://www.microsoft.com/en-us/security/blog/2026/10/30/inside-malicious-claude-code-branded-cursor-extension-persistent-ssh-backdoor/)（2026-10-30，第一手技術分析）、[Claude Code v2.1.316 release](https://github.com/anthropics/claude-code/releases/tag/v2.1.316)（2026-10-31，官方 release；含相關限制修正與版本說明）。
+
+### 最小權限要落到每個工具，不只寫在 agent system prompt
+
+- **今天的判斷：** Microsoft Foundry 10/30 的建議是讓 agent 只拿到當前任務所需的最小工具權限，並綁定正確身份與決策紀錄；這與 Cursor 事件的教訓相同：人類批准畫面、sandbox 或「官方名稱」都不能替代實際的權限與供應鏈檢查。
+- **可以怎麼開始：** 將讀取、寫入、網路、secret、部署分開授權；每次外部副作用留下 actor、工具、目標、結果與人工核准者；對 extension／MCP／skill 做 lockfile、hash 或 attestation 驗證。
+- 來源：[Microsoft Foundry：Designing Least-Privilege Tool Access for AI Agents](https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/designing-least-privilege-tool-access-for-ai-agents-with-microsoft-foundry/4567029)（2026-10-30，官方技術文章）。
 
 ## YouTube 深度整理
 
 ### 今日無推薦
 
-我主動查找 PAPAYA 電腦教室與其他中英文 AI／工具／Agent／AI Coding 頻道，優先查 2026-10-29～10-31、必要時放寬至一週。搜尋結果沒有同時提供可靠字幕／逐字稿、超過 10,000 觀看、且具實測／教學／技術拆解的合格候選；因此不從標題或介紹猜測內容，也不硬湊影片。
+我主動查找 PAPAYA 電腦教室與其他中英文 AI／工具／Agent／AI Coding 頻道，優先查 2026-10-30～11-01、必要時放寬至一週。找到的候選沒有同時提供可靠字幕／逐字稿、超過 10,000 觀看、且具實測／教學／技術拆解的證據；因此不從標題或介紹猜測內容，也不硬湊影片。
 
 ## 今天最值得帶回團隊的三個檢查
 
-- **把 agent 接到證據：** build、模擬器、測試、replay 與 screenshot 要能回放，不只看摘要。
-- **把模型接到成本：** 比較 token、延遲、硬體、授權與維運，不只看 benchmark 名次。
-- **把協作接到權限：** message bus、SDK 或 daemon 都要有窄工作目錄、最小 token 與人工停止點。
+- **來源：** extension、MCP、skill、模型 binary 都要記錄來源、版本與可驗證的 hash／attestation。
+- **隔離：** 多 agent 用獨立 worktree，但 token、網路、檔案與部署權限也要分層。
+- **評測：** 用可重建的合成或 fixture 資料測時間脈絡、引用、工具副作用與回歸，不只測一輪 demo。
 
 ## 今日一句話
 
-AI agent 的下一個分水嶺，不是「能不能做更多事」，而是「能不能在可回放的證據、可計算的成本與可撤回的權限裡做事」。
+Agent 的真正信任邊界，已經從「模型回答得對不對」擴大到「它記得什麼、裝了什麼、能碰什麼，以及我們能不能重現驗收」。

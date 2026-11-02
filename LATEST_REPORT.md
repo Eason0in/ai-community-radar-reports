@@ -1,85 +1,69 @@
-# AI 情報日報｜2026-11-01
+# AI 情報日報｜2026-11-02
 
-約 4 分鐘閱讀。今天的主線是：AI agent 不只是在寫程式，還在管理記憶、工具、評測與背景服務；而 10/29 的擴充套件供應鏈事件提醒我們，這些邊界必須一起審核。
-
-> 查核範圍：優先 2026-10-30～11-01；補充最近一週仍有直接實用價值的進展。昨天已報的 Mistral Large 4、Genie 4、Cursor Agent SDK、ESP32 模擬器、Octomind 與 October Harness，今天不重複報導。
-> 證據標示：官方公告／文件是官方事實；GitHub 專案與 Reddit 是社群工具或個案；廠商自行公布的 benchmark、效率數字與成本估算均標示為發布方結果。
+> 搜尋範圍：以 Asia/Taipei 2026-10-31～11-02 為主，補充一週內仍有直接用法的新進展。官方公告／文件是官方事實；GitHub 專案是發布者自述；作者時間、數量與效能均不視為獨立驗證。
 
 ## 1. 社群實戰用法
 
-### 不要讓多個 agent 共用一條超長對話
+### Karpathy 的 HackerTube：先定義資料來源，再讓 agent 完成產品閉環
 
-- **新在哪裡：** r/ClaudeCode 一篇 10/27 的實戰討論，描述的做法是由一個主 agent 判斷任務難度、寫成 ticket／工作說明，再讓不同模型各自取得隔離 worktree 執行；另一個 agent 負責 review。留言也有人回報，將主 agent 的指示寫入檔案、重新開乾淨 session，比讓 sub-agent 在原對話裡不斷聊天更省 token。這是社群經驗，不是控制實驗。
-- **可以怎麼開始：** 先固定五個欄位：目標、允許修改的檔案、驗收命令、預算／timeout、交接輸出；每個任務獨立 worktree，完成後只提交 diff、測試結果與未解風險。複雜任務才升級到更強模型或額外 reviewer。
-- **編輯心得與限制：** worktree 能隔離檔案，不會自動隔離錯誤假設、API key 或網路權限；多 agent 也可能增加協調成本。適合用在可拆分、可測試的 repo 任務，不適合拿來掩蓋沒有清楚規格的工作。
-- 來源：[r/ClaudeCode：Claude Max 20x weekly depleted in less than 2.5 days](https://www.reddit.com/r/ClaudeCode/comments/1xgxv58/claude_max_20x_weekly_depleted_in_less_than_25/)（2026-10-27，社群個案，中低可信度）。
+- **新在哪裡：** Andrej Karpathy 10/31 公開 HackerTube，將 Hacker News 2007–2026 的留言交給 Opus 5.5 篩選，再由 Claude Code Workflow 用 Sonnet 去除垃圾，整理成 40,000 則影片推薦、6,454 部影片與 150 個主題，最後包成網站。約 2 小時、影片數與 token 數都是作者自述，不是獨立 benchmark。
+- **可以怎麼開始：** 把「來源 → 清理 → 分類 → UI → 部署」拆成可檢查的階段；先選一個有明確社群訊號的資料集，再讓 agent 建立最小可用介面。人工只保留 API key、主機、網域與上線驗收，不要把憑證交給模型。
+- **編輯心得與限制：** 真正可複製的是資料管線與產品邊界，不是「兩小時做完」的速度宣稱。作者說自己沒有讀寫程式或操作終端機；若換成團隊或正式服務，仍需審查資料授權、YouTube API 配額、部署安全與長期維運。
+- 來源：[Karpathy 原文](https://karpathy.bearblog.dev/hacker-tube/)（2026-10-31，作者一手說明，高可信但數字未獨立驗證）、[HackerTube](https://hackertube.org/)。
 
 ## 2. 社群新工具與新玩法
 
-### EvoScientist v0.4.0：每個專案一個背景 agent 服務
+### DeepSeek dsh-superagent：讓 GitHub 工作項目成為 agent 的入口
 
-- **新在哪裡：** GitHub 專案 10/31 發布 v0.4.0，將每個專案的背景服務、記憶 worker 與對話 surface 收斂到一個可停止的服務；同時加入 GPT-6.1 Terra、較嚴格的 shell sandbox 與更安全的更新流程。這是專案自述，不代表獨立品質驗證。
-- **可以怎麼開始：** 只在一個非關鍵專案試用；先確認服務的工作目錄、模型金鑰、瀏覽器來源限制與更新檔來源，再用 EvoSci server stop 驗證停止路徑。把 rubric／goal 當成驗收條件，不要讓背景服務直接擁有 production token。
-- **編輯心得與限制：** 背景服務讓長任務與多 surface 更順，但也把常駐程序、記憶與權限疊在一起；macOS 目前標示 Apple silicon 限制，仍應先讀 release notes 和實際權限。
-- 來源：[EvoScientist v0.4.0](https://github.com/EvoScientist/EvoScientist)（2026-10-31，GitHub 專案，待實測）。
+- **新在哪裡：** DeepSeek Harness Team 10/31 發布 `dsh-superagent` 研究原型：監聽 GitHub，選擇性接 Feishu；獲授權的請求會建立 work item、在自己的 agent session 與目錄工作，最後回到原對話回報或開 PR，並用 web panel 留下需要人處理的事項。
+- **可以怎麼開始：** 只在非關鍵 repo 試用；先限定哪些人／來源能建立工作、哪些路徑可改、PR 必須通過哪些測試，再讓 agent 處理一個小 issue。把「可自動做」與「必須人批准」寫成 repo 規則。
+- **編輯心得與限制：** 官方 README 明確說這是 reference-only、不是正式 DeepSeek 產品，也不是 production-ready；它展示的是授權、執行、回報三段式模型，不等於可直接交付 production 權限。
+- 來源：[dsh-superagent GitHub](https://github.com/DeepSeek-ai/dsh-superagent-prototype)（2026-10-31，專案原作者，高可信但研究原型）。
 
-### llama.cpp 夜間版：本地推論更像可驗證的發布物
+### OpenCode 2.2.5：把 worktree、shell 與 context 預算變成一級操作
 
-- **新在哪裡：** llama.cpp 在 10/30～31 連續發布 b12017～b12024；變更包括 OpenCL fwht、Gemma 4 影像尺寸處理、Qwen3-Coder think block 與 Responses API 的修正，並提供多平台二進位檔與 GitHub attestation。b12024 是 pre-release，不能當穩定版。
-- **可以怎麼開始：** 若要把本地模型接到 agent，先固定一個 nightly、記下 commit／attestation 與後端，再跑自己的 tool-call、長上下文與多模態 smoke tests；不要因為有 nightly binary 就跳過版本鎖定。
-- **編輯心得與限制：** 夜間版對硬體支援與模型相容性很有價值，但更新頻率高，使用者要自己承擔回歸與效能差異。
-- 來源：[llama.cpp releases](https://github.com/ggml-org/llama.cpp/releases)（2026-10-30～31，GitHub 官方專案）、[b12020 build attestation](https://github.com/ggml-org/llama.cpp/attestations/62071228)（2026-10-31）。
+- **新在哪裡：** 10/30 發布的 v2.2.5 新增快捷鍵切換 worktree／base branch／shell mode，可在 `opencode.json` 用 `"compaction": { "buffer": "20%" }` 以比例保留 context；同版也修正超過 10 MiB 的 MCP stdio 訊息斷線與 compaction 上限問題。
+- **可以怎麼開始：** 多任務 repo 先為每個 agent 建 worktree，為不同模型設相同的 compaction buffer，再用實際長任務比較恢復率與 token 消耗。MCP server 若會傳大輸出，先以 10 MiB 以上 fixture 做 smoke test。
+- **編輯心得與限制：** 快捷鍵改善操作摩擦，但不會自動解決 merge、權限或錯誤上下文；比例 buffer 也只是配置，不是品質保證。這是社群工具的 release note，不代表每種模型／provider 都同樣穩定。
+- 來源：[OpenCode v2.2.5 release](https://github.com/anomalyco/opencode/releases/tag/v2.2.5)（2026-10-30，官方 GitHub release）。
 
 ## 3. 官方新功能與推薦用法
 
-### Codex CLI 0.166.0：把長 session 的恢復與診斷補齊
+### Claude Code 2.1.316：更細的 subagent effort 與 gateway policy
 
-- **新在哪裡：** OpenAI Codex 10/29 發布 0.166.0：TUI 加入可用鍵盤選取、搜尋與定位的 transcript 操作；Markdown 在 async question 與 transcript 回覆中一致呈現；codex queue --resume 可恢復排隊後卸載的 thread；codex doctor --network-only 可只檢查設定、連線與 WebSocket；同版也把 GPT-6.1 Terra 加入 bundled、Vertex AI 與 Bedrock catalog。
-- **推薦用法：** 先在長任務中用 transcript search 找到「最後一次有效決策」，再用 queue resume 接續；遇到只在公司網路失敗的情況，先跑 network-only doctor。任何 MCP 或外部工具恢復後仍要重新確認權限與工作目錄。
-- **限制：** release notes 說明的是功能已加入，不代表所有平台、登入方案或模型供應商都同時可用。
-- 來源：[OpenAI Codex 0.166.0 release](https://github.com/openai/codex/releases/tag/rust-v0.166.0)（2026-10-29，官方 release）。
+- **新在哪裡：** Anthropic 10/31 發布 v2.1.316，加入 `CLAUDE_CODE_SUBAGENT_EFFORT`，可在 subagent 沒有明確指定時設定 effort；Claude apps gateway 增加 pooled group budget 與 `managed.policy_mode: layered`；Bedrock guardrail 增加 input tagging。另公告 Opus 4.8 fast mode 已於 10/30 deprecated，11/30 移除，且不會自動退回標準 fast mode。
+- **推薦用法：** 團隊先把 subagent effort、群組預算與政策合併規則寫入可審核設定；若仍依賴 Opus 4.8 fast mode，立即安排 Opus 5.5 遷移與成本／延遲回歸測試。Bedrock 使用者要確認輸入標籤是否與既有 guardrail 規則一致。
+- **限制：** 這些功能的實際可用性仍受登入方案、gateway、Bedrock 設定與模型供應區域影響；版本號更新不等於你的帳號已開通全部能力。
+- 來源：[Claude Code v2.1.316 release](https://github.com/anthropics/claude-code/releases/tag/v2.1.316)（2026-10-31，官方 release）。
 
-### GitHub Copilot Memory／Dreaming：把團隊習慣變成可審核上下文
+### OpenAI 支援共享 robots.txt 訓練偏好訊號，但目前不是立即生效的封鎖
 
-- **新在哪裡：** GitHub 10/28 宣布 Copilot Memory 在付費方案一般可用，可跨 Copilot app、CLI、VS Code、cloud agent、code review、Slack、Teams 與 Mobile 保存個人偏好和 repository conventions；Dreaming 則進入 public preview，會整理個人記憶、repository instruction／skill 與 code-review guidance，對 checked-in 變更提出 PR。
-- **推薦用法：** 先只寫低風險、可驗證的規則，例如測試命令、PR 摘要格式與不可碰的目錄；開啟 repository dreaming 前，先設定誰能 review 它提出的 instruction／skill PR，並定期刪除過期記憶。
-- **限制：** Dreaming 是 opt-in 且會消耗 AI credits；GitHub 提到的「93% 更遵循偏好、42% 工作流更有效率」是其 public-preview review 的發布方結果，不是獨立研究。記憶若過時，反而會讓 agent 一致地做錯事。
-- 來源：[GitHub intelligence：Memory 與 Dreaming](https://github.blog/changelog/2026-10-28-github-intelligence-puts-your-code-context-and-history-to-work/)（2026-10-28，官方 changelog）。
-
-### Microsoft Copilot 評測：用合成企業環境測時間脈絡與跨部門流程
-
-- **新在哪裡：** Microsoft Research 10/30 公開 Industry Evaluation Data Generation Platform：用公開的 O*NET、職缺與 SEC 資料建立不含客戶資料的合成 tenant，模擬使用者、會議、郵件、文件與隨時間變化的組織，再自動產生並驗證產業特定查詢。
-- **推薦用法：** 做企業 RAG／agent 評測時，不要只用問答題；加入跨日期的「上週決定了什麼」、跨角色的責任追蹤、引用正確性、敏感資料隔離與 action approval。每次版本從同一份設定重建資料，才能比較回歸。
-- **限制：** 39% 品質改善、每份資料集約 10 萬美元節省與 30 萬美元專案節省都是 Microsoft 的內部估計／結果；合成環境再像，也不能完全代表真實租戶的語言、權限與例外流程。
-- 來源：[Microsoft Research：From synthetic enterprise data evaluations to real Microsoft Copilot AI confidence](https://www.microsoft.com/en-us/research/blog/from-synthetic-enterprise-data-evaluations-to-real-microsoft-copilot-ai-confidence/)（2026-10-30，官方研究）。
+- **新在哪裡：** OpenAI 10/30 表示將尊重 IETF AI Preferences 工作中的共享 robots.txt signal，讓網站用一套偏好向多家 AI provider 表達「是否允許 foundation-model training」；OpenAI 說預計未來幾個月實作，現有 crawler controls 仍繼續適用。
+- **推薦用法：** 先把 GPTBot、OAI-SearchBot、搜尋曝光與訓練用途分開盤點，等規格與 provider 實作明確後再更新 robots.txt；同時保留 WAF、存取紀錄與內容授權政策，不能只靠一行設定判定已完成防護。
+- **限制：** 這是自願性、仍在實作中的共享訊號，不是今天就能驗證的全球封鎖；不要把「不讓訓練」誤當成「不讓搜尋或使用者觸發的即時讀取」。
+- 來源：[OpenAI 公告](https://openai.com/index/helping-websites-express-ai-training-preferences/)（2026-10-30，官方公司公告）、[IETF AI Preferences 工作](https://datatracker.ietf.org/doc/draft-ietf-aipref-vocab/)。
 
 ## 4. 使用心得與避坑
 
-### Cursor marketplace 的 Claude Code 擴充套件事件：安裝來源就是安全邊界
+### VOLTA：模型可能被拿來整理被竊資料，防守重點是 token 與瀏覽器邊界
 
-- **發生什麼事：** Cursor 10/29 公告，VS Code Marketplace 中的 Anthropic.claude-code 2.1.312／2.1.313 在美西時間 02:27～13:35 可被下載；惡意修改版嘗試安裝持久 SSH backdoor。Cursor 表示已下架、暫停 marketplace、輪替金鑰並重建服務；Microsoft Security 確認目前證據指向 Cursor marketplace，Microsoft Visual Studio Marketplace 與 npm 的官方套件未受此事件影響。
-- **立即怎麼做：** 檢查是否曾從 Cursor marketplace 安裝上述版本；若有，先隔離主機，再檢查 LaunchAgent、cron／Startup 與使用者 SSH key 等持久化位置，撤銷／輪替可能暴露的 token，最後只從官方來源重裝。惡意程式可能執行失敗，所以「沒看到反向連線」不能當成已排除。
-- **編輯心得與限制：** 這不是「Claude Code 本身被入侵」的證據，而是 marketplace／更新鏈的供應鏈事件；也提醒我們，AI extension、MCP、skill 與 agent settings 都應像依賴套件一樣鎖版本、審來源、留安裝紀錄。
-- 來源：[Cursor security notice](https://cursor.com/blog/claude-code-extension-security-notice)（2026-10-29，官方事件公告）、[Microsoft Security 分析](https://www.microsoft.com/en-us/security/blog/2026/10/30/inside-malicious-claude-code-branded-cursor-extension-persistent-ssh-backdoor/)（2026-10-30，第一手技術分析）、[Claude Code v2.1.316 release](https://github.com/anthropics/claude-code/releases/tag/v2.1.316)（2026-10-31，官方 release；含相關限制修正與版本說明）。
-
-### 最小權限要落到每個工具，不只寫在 agent system prompt
-
-- **今天的判斷：** Microsoft Foundry 10/30 的建議是讓 agent 只拿到當前任務所需的最小工具權限，並綁定正確身份與決策紀錄；這與 Cursor 事件的教訓相同：人類批准畫面、sandbox 或「官方名稱」都不能替代實際的權限與供應鏈檢查。
-- **可以怎麼開始：** 將讀取、寫入、網路、secret、部署分開授權；每次外部副作用留下 actor、工具、目標、結果與人工核准者；對 extension／MCP／skill 做 lockfile、hash 或 attestation 驗證。
-- 來源：[Microsoft Foundry：Designing Least-Privilege Tool Access for AI Agents](https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/designing-least-privilege-tool-access-for-ai-agents-with-microsoft-foundry/4567029)（2026-10-30，官方技術文章）。
+- **發生什麼事：** Cisco Talos 10/31 分析一個名為 VOLTA-AUTODOXER 的 Windows infostealer：它先竊取瀏覽器憑證、cookies、支付卡、錢包、OAuth／聊天 session、SSH 與雲端金鑰，再把結構化資料送到 OpenRouter，要求 LLM 排出受害者資產的變現價值；若模型拒答，會依序切換 Claude、Kimi、Gemini。Talos 沒有確認受害者數量，也沒有證明這個 AI 階段已在野外成功運作。
+- **立即怎麼做：** 對不明程序啟動 Chrome `--headless` 設警示或阻擋；若主機可能受影響，保留 `%APPDATA%\\volta_debug.txt` 等跡證，從可信設備撤銷 token、輪替密碼與 SSH／雲端金鑰。不要因為惡意程式自刪或沒有看到 LLM 請求，就當成沒有外洩。
+- **編輯心得與限制：** 這不是「模型自己入侵」的證據，而是把竊取後的人工分級工作外包給模型；防守要看瀏覽器 session、API key、MCP／agent 執行環境的實際權限，不只看 prompt 是否安全。
+- 來源：[Cisco Talos 原始分析](https://blog.talosintelligence.com/appraisal-by-ai-model-driven-victim-prioritization-in-the-volta-infostealer/)（2026-10-31，第一手威脅研究，高可信但樣本與在野影響有限）。
 
 ## YouTube 深度整理
 
 ### 今日無推薦
 
-我主動查找 PAPAYA 電腦教室與其他中英文 AI／工具／Agent／AI Coding 頻道，優先查 2026-10-30～11-01、必要時放寬至一週。找到的候選沒有同時提供可靠字幕／逐字稿、超過 10,000 觀看、且具實測／教學／技術拆解的證據；因此不從標題或介紹猜測內容，也不硬湊影片。
+我主動查找 PAPAYA 電腦教室與其他中英文 AI／工具／Agent／AI Coding 頻道，優先查 2026-10-31～11-02，必要時放寬至一週；目前沒有同時能證明觀看數超過 10,000、已讀可靠字幕／逐字稿、且具實測／教學／技術拆解深度的候選，因此不從標題或介紹猜測內容，也不硬湊影片。
 
 ## 今天最值得帶回團隊的三個檢查
 
-- **來源：** extension、MCP、skill、模型 binary 都要記錄來源、版本與可驗證的 hash／attestation。
-- **隔離：** 多 agent 用獨立 worktree，但 token、網路、檔案與部署權限也要分層。
-- **評測：** 用可重建的合成或 fixture 資料測時間脈絡、引用、工具副作用與回歸，不只測一輪 demo。
+- **流程：** agent 最有價值的交付單位不是一段聊天，而是可授權、可測試、可回報的 work item。
+- **邊界：** worktree 與 compaction 只處理隔離和上下文；token、瀏覽器 session、MCP 與部署權限仍要另外分層。
+- **驗收：** 對作者自述的速度、數量與 benchmark，保留原始資料、版本、成本與失敗案例，別把 demo 數字當成團隊基準。
 
 ## 今日一句話
 
-Agent 的真正信任邊界，已經從「模型回答得對不對」擴大到「它記得什麼、裝了什麼、能碰什麼，以及我們能不能重現驗收」。
+今天的共同訊號不是「agent 會不會寫更多程式」，而是「能否把資料、權限、context 與人類批准切成可驗證的工作流」。

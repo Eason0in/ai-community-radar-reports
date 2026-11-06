@@ -1,8 +1,8 @@
-# AI Community Radar - 2026-11-05
+# AI Community Radar - 2026-11-06
 
-> Generated: 2026-11-05T03:21:48.311Z
+> Generated: 2026-11-06T03:19:21.353Z
 > Timezone: Asia/Taipei
-> Active cutoff: updated since 2026-11-03; archived GitHub repos excluded; max stale age 2 days.
+> Active cutoff: updated since 2026-11-04; archived GitHub repos excluded; max stale age 2 days.
 
 ## 今日摘要
 
@@ -17,9 +17,9 @@
 
 | # | Repo | Stars | Forks | Language | Updated |
 | --- | --- | ---: | ---: | --- | --- |
-| 1 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 260,602 | 57,473 | Python | 2026-11-05T03:17:34Z |
-| 2 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 201,316 | 78,218 | C++ | 2026-11-05T03:12:58Z |
-| 3 | [firecrawl/firecrawl](https://github.com/firecrawl/firecrawl) | 198,694 | 10,482 | TypeScript | 2026-11-05T03:19:26Z |
+| 1 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 260,916 | 57,618 | Python | 2026-11-06T03:14:18Z |
+| 2 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 201,318 | 78,237 | C++ | 2026-11-06T03:13:17Z |
+| 3 | [firecrawl/firecrawl](https://github.com/firecrawl/firecrawl) | 199,001 | 10,491 | TypeScript | 2026-11-06T02:57:01Z |
 
 ### 1. [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent)
 
@@ -77,7 +77,7 @@ Supercharge your AI agents with data from the web and beyond. Building the libra
 | 指標 | 值 |
 | --- | --- |
 | Registry sample | 800 servers |
-| Active baseline since | 2026-11-03 |
+| Active baseline since | 2026-11-04 |
 | GitHub stale cutoff | 2 days |
 
 ### 可能還沒上官方 MCP Registry 的候選
@@ -132,30 +132,30 @@ Supercharge your AI agents with data from the web and beyond. Building the libra
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/traceloop/openllmetry-js](https://github.com/traceloop/openllmetry-js) |
 
-#### 6. [Servosity/msp-skills](https://github.com/Servosity/msp-skills)
+#### 6. [WireCatLabs/wirecat-desktop](https://github.com/WireCatLabs/wirecat-desktop)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Free MCP servers + Claude Code Skills for MSP tools - PSA, RMM, backup, M365. Local-first: your data never leaves your network. |
+| 說明 | The WireCat desktop app: search your chats, meetings and notes, connect any AI agent to them, and approve what it remembers. Local-first, for macOS, Windows and Linux. |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 7. [mikimatsub/swsd-mcp](https://github.com/mikimatsub/swsd-mcp)
+#### 7. [CSOAI-ORG/councilof-ai](https://github.com/CSOAI-ORG/councilof-ai)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | MCP server for SolarWinds Service Desk: tickets, service catalog, KB, change/release workflows, assets/CMDB, procurement, and risk. |
+| 說明 | Council of AI — operating AI measurement and evidence organisation. Published methods, signed records, free verification and scoped evidence services. CSOAI Ltd; measurement, not certification. |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 8. [vibeic/vibe-ic](https://github.com/vibeic/vibe-ic)
+#### 8. [mikeparcewski/wicked-estate](https://github.com/mikeparcewski/wicked-estate)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | AI-native IC design plugin with MCP-EDA — from natural-language intent to verified silicon. |
+| 說明 | What your agents know about your system: a 114-language code graph, memory and knowledge, in a local CLI and MCP server (33 MCP tools, 3 domains). Holds your data sources' structure, never their rows. |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 

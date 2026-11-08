@@ -1,83 +1,76 @@
-# AI 情報日報｜2026-11-07
+# AI 情報日報｜2026-11-08
 
-> 搜尋範圍：以 Asia/Taipei 2026-11-05～11-07 為主，優先採用 11/6～11/7 的官方公告、原始 repo、release notes 與技術文章。官方事實、社群專案自述、研究結果與廠商 benchmark 分開標示；昨天已報且沒有新進展的題目不重複。
+> 搜尋範圍：以 Asia/Taipei 2026-11-06～11-08 為主，優先採用 11/6～11/7 的官方 release、原始文章與 GitHub 專案。官方事實、專案自述、社群實作與編輯推論分開標示；11/07 已報且沒有新進展的題目不重複。
 
 ## 1. 社群實戰用法
 
-### 先錄製 agent，再測它是否真的遵守流程
+### 先清理「會把 agent 帶偏」的舊 TODO
 
-- **新在哪裡：** 社群工具 `agentverify` 在 11/06 的 0.9.0 增加「只錄不存在的 cassette」、逐一檢查送給模型的文字、阻擋含 token／key／signature 的 URL，以及可選的工具結果／角色／參數 drift 檢查。它支援 OpenAI Agents SDK、Anthropic、Gemini、LangGraph、MCP 等多個 adapter；這是開源專案功能，不是模型供應商保證。
-- **可以怎麼開始：** 在測試 repo 先用 cassette 錄一次真實流程，再在 CI replay；對高風險 agent 加 `assert_no_credential_urls`、允許工具清單與 `drift="fail"`。只有流程需要重錄時才更新 cassette，避免每次測試都呼叫付費 API。
-- **編輯心得與限制：** cassette 能驗證 prompt、tool call 與結果是否漂移，不能證明 agent 在未覆蓋的情境永遠安全；production trace 也要搭配權限與副作用檢查。先把「路徑正確」加入測試，別只測最後一句回答。
-- 來源：[agentverify 0.9.0 CHANGELOG](https://github.com/simukappu/agentverify/blob/main/CHANGELOG.md)（2026-11-06；社群開源工具）。
+- **新在哪裡：** Google Developers Blog 11/06 分享以數千名工程師、數億 agent steps 的內部 trace 做的分析：13% 的讀檔 session 會看到 `TODO(bug/...)` 或 `FIXME(bug/...)`；其中 6% 會針對該 bug 採取後續行動，而 83% 是開發者沒有要求的行動。Google 的資料也顯示，這些未提示的 detour 平均多 70% steps、77% tokens、105% 等待時間。這是 Google 內部資料與分析，不是跨公司的獨立 benchmark。
+- **可以怎麼開始：** 在 agent 讀得到的 repo 先掃描帶 bug ID 的 TODO，對照 tracker 狀態；已修好、won't-fix 或重複的先刪除，仍有效的改成短而明確的上下文。給 coding agent 的任務也加上「遇到未被要求的 TODO 先列出，不要擴大 scope」規則。
+- **編輯心得與限制：** 舊註解現在不只是維護負債，也是上下文污染。自動清理只能送 PR 供人審，不能讓 agent 因為看見一個 ticket 就直接改 code；Google 的統計來自其自身工作流，應在自己的 trace 中重測。
+- 來源：[Google Developers Blog：Agent Distraction](https://developers.googleblog.com/en/agent-distraction/)（2026-11-06；官方文章，數字為 Google 內部分析）。
 
 ## 2. 社群新工具與新玩法
 
-### Qwen Code 把 Skill 安裝變成可回查的工作流
+### OpenCode 2.2.6：把 scripted agent 放進隔離 worktree，完成後自動不進收件匣
 
-- **新在哪裡：** Qwen Code v0.26.9（11/06）新增 Skill ZIP 上傳、daemon 安裝 API、TypeScript SDK、一次啟用或停用 1–100 個 Skill，以及安裝回執與失敗復原；Web Shell 可直接在 Skills 頁面上傳。另有 sandbox `/verify` 讀取 PR review threads、圖片輸入與 managed-agent automation 預設啟用。
-- **可以怎麼開始：** 先固定 `v0.26.9`，在 disposable workspace 上傳一個只讀 Skill ZIP；把安裝 attempt ID、receipt、啟用清單與實際呼叫的工具一起保存，再測 `/verify` 是否真的看得到 unresolved／resolved review threads。
-- **編輯心得與限制：** 「安裝成功」不等於「Skill 可信」。QQ 主動推送、背景回覆與 automation 預設開啟會擴大訊息與權限表面；團隊應先關閉非必要 channel、限制 Skill 來源，並在正式 repo 外驗證。
-- 來源：[Qwen Code v0.26.9 release notes](https://github.com/QwenLM/qwen-code/releases/tag/v0.26.9)（2026-11-06；專案官方 release）。
+- **新在哪裡：** 11/06 的 v2.2.6 新增 `opencode run --worktree`（`-w`），可替 scripted/CI session 建立新的 Git worktree；`--archived` 則在建立時就把 run 排除於 inbox、首頁與 session 清單。另有 opt-in 的 MCP connection pooling，可讓相同設定的多個專案共享連線。
+- **可以怎麼開始：** 在 repo 根目錄先試 `opencode run -w --worktree=agent-a "完成小型修正並跑測試"`；排程或 CI 用 `opencode run --archived`，避免大量一次性 session 汙染人類工作區。要用 pooling 先確認 MCP server 沒有把連線狀態、工作目錄或權限錯誤地視為全域共享。
+- **編輯心得與限制：** worktree 只隔離檔案與 Git 狀態，不會自動替你審查 agent 的副作用；`run` 會等待它啟動的 background shell、subagent 和 image job，若 prompt 啟動 dev server 或 watcher，CI 可能永遠不結束，必須自行設 timeout。
+- 來源：[OpenCode v2.2.6 release](https://github.com/anomalyco/opencode/releases/tag/v2.2.6)（2026-11-06；社群開源專案）。
 
-### OpenDirector：在本機瀏覽器把生成、素材與剪輯放在同一個工作區
+### Qwen Code 0.27.0：把本機檔案變更與 Skill／managed-agent 狀態露出來
 
-- **新在哪裡：** 開源專案 OpenDirector 11/06 發布 v0.1.0：本機儲存的 AI 影片工作區，能用聊天產生文字／素材、在 canvas 整理參考資產、做圖片與影片編輯，再從 timeline 輸出 MP4、JSON、FCPXML 與 asset bundle。模型可接供應商 API 或自架服務。
-- **可以怎麼開始：** 先以非敏感素材建立一個短片專案，配置一個 API provider；測「參考資產 → 生成 → canvas 迭代 → timeline 剪輯 → MP4」完整路徑，確認專案資料只留在本機，並把 provider 金鑰放在環境設定而非素材目錄。
-- **編輯心得與限制：** 這是早期版本，repo 頁面當時約 116 stars，不能當成成熟剪輯器或隱私保證。生成、去背、延展等能力取決於外接模型；正式使用前應檢查輸出授權、快取與模型端資料政策。
-- 來源：[OpenDirector README](https://github.com/ThinkFlowLab/OpenDirector)（2026-11-06 release；Apache-2.0，社群專案）。
+- **新在哪裡：** 11/07 發布的 v0.27.0 加入 local session 的 `FileChanged` hook、較完整的 Skill completion details、managed-agent 基礎工具對齊 daemon，以及 GitHub repository event 的 allowlist／blocklist。這些是 release notes 的專案功能，不等於任何模型本身變強。
+- **可以怎麼開始：** 固定版本後，在 disposable workspace 寫一個只讀或只記錄的 `FileChanged` hook，觀察 agent 哪些檔案真的被動過；GitHub channel 先設定 allowlist，再測一個測試 repo 的 issue／PR event，避免把整個組織的活動餵給 session。
+- **編輯心得與限制：** completion receipt、hook 與事件篩選能改善可回查性，但不會自動建立可信邊界；Skill ZIP、daemon 與 GitHub event 仍要限制來源、權限與可接觸的 repo。這一版同時含大量 managed-agent 修正，正式升級前應先做一次可回復的 smoke test。
+- 來源：[Qwen Code v0.27.0 release](https://github.com/QwenLM/qwen-code/releases/tag/v0.27.0)（2026-11-07；專案官方 release）。
 
 ## 3. 官方新功能與推薦用法
 
-### Kanana-2-v-decide：讓 agent 直接拿到選擇與分數
+### Codex 0.167.0：先用 agent command center 看未讀結果，再切 backend
 
-- **新在哪裡：** Kakao 11/06 開源 3B 規模的多模態決策模型；輸入文字或圖片，輸出機率、選擇或分數，不必先生成一段自然語言再抽取結論。Kakao 表示 H200 單卡平均 0.04 秒，約為 GPT-6 Luna 的 43 倍；這是廠商自己的測試，不能直接當成跨硬體的普遍結果。採用 Kanana Open License，可商用但仍要自行看授權與模型卡。
-- **推薦用法：** 把它放在客服分類、工具選擇、商品圖片判斷等「有限選項」節點：先定義 JSON schema 與拒答／人工轉接門檻，再把決策結果交給規則或另一個 agent 執行；不要讓分數直接觸發退款、刪除或高權限操作。
-- **編輯心得與限制：** 這種小模型適合做 router／judge 前置層，不代表它能取代通用模型的推理。Kakao 的 Decision Bench 與比較結果是官方報告，導入前要用自己的中文、圖片與錯誤成本資料重測。
-- 來源：[Kakao 官方公告](https://www.kakaocorp.com/page/detail/12193?lang=KOR)、[Kanana-2-v-decide Hugging Face collection](https://huggingface.co/collections/kakaocorp/kanana-2-v-decide)（2026-11-06；速度與評測數字為廠商結果）。
+- **新在哪裡：** OpenAI Codex 11/06 的 0.167.0 穩定版新增 `codex agents --no-daemon` agent command center，session picker 會標示 unread results；也能在 terminal session picker 切換 connected backend 並保留草稿，支援本機圖片預覽，approval prompt 開啟時可直接展開 patch details。
+- **推薦用法：** 多個長任務並行時，先以 command center 看哪些 session 有新結果，再進入單一 session 審 diff；切換 provider 前先保存目前 draft，避免把「換模型」誤當成「重新開始」。對含圖片的 UI 任務，先確認 terminal 是否支援 preview，再把 transcript path 存進可回查的工作紀錄。
+- **編輯心得與限制：** 這些是工作台與可見性改善，不代表 agent 產出可以免審；同一版也強化 network approval 結束與 managed command checkpoint，CI 仍應以 exit code、diff 與測試結果作為完成條件。
+- 來源：[OpenAI Codex 0.167.0 release](https://github.com/openai/codex/releases/tag/rust-v0.167.0)（2026-11-06；官方 GitHub release）。
 
-### Images 2.6：把快速草稿與精準修改分成兩條路
+### GitHub Agentic Workflows 1.2.1：跨 agent continuation 也要 fail closed
 
-- **新在哪裡：** OpenAI 11/04 發布 Images 2.6：ChatGPT、Codex 與 API 支援 GIF、SVG、markup 指定修改區域，並新增 `complexity` 控制規劃量；API 提供偏快的 `gpt-image-2.6-flare` 與偏精細的 `gpt-image-2.6-sunburst`。官方表示生成速度提升 50%，屬官方產品宣稱。
-- **推薦用法：** 先用 Flare、低 complexity 做構圖與多輪草稿；確定版面後再以同一提示、參考圖與尺寸比較 Sunburst。對海報、產品圖與精確局部修改，使用 markup 並逐次只改一件事；要 GIF 則明確寫起始姿勢與回到起始姿勢的 loop 條件。
-- **編輯心得與限制：** `complexity` 是規劃量，不等於輸出品質；高 complexity 可能增加延遲與不必要變更。文字、商標、透明背景與翻譯結果仍應人工逐字檢查，不能只看視覺上「很像」。
-- 來源：[OpenAI Images 2.6 公告](https://openai.com/index/introducing-images-2-6/)、[Image prompting guide](https://developers.openai.com/api/docs/guides/image-prompting)（2026-11-04；速度與品質描述為官方資料）。
-
-### Cosmos 3 新 checkpoint：把模擬資料生成接到 agent skill
-
-- **新在哪裡：** NVIDIA 在 11/05 透過 Hugging Face 公開四個 Cosmos 3 Nano open-weight checkpoint，分別做多視角 RGB／LiDAR、串流駕駛觀測、模擬器控制轉 RGB，以及雙臂機器人動作到影片；每個模型有 16B trainable parameters，使用 OpenMDW1.1。
-- **推薦用法：** 不要直接把生成影片當真實世界答案。先用官方 inference skill 或 notebook 跑一個樣本，再用 held-out episodes 比較感測器同步、控制延遲、物體幾何與 policy 成功率；只有短跑執行成功，不代表訓練已收斂。
-- **限制：** 官方文件列出的 Sim-Bimanual 環境需要 Linux、NVIDIA GPU、Docker、NVIDIA Container Toolkit，發布設定曾以單張 GB200 測試，這不是最低硬體規格。物理一致性與 sim-to-real 仍需獨立驗證。
-- 來源：[NVIDIA Cosmos 3 open models on Hugging Face](https://huggingface.co/blog/nvidia/cosmos-interactive-world-simulation)（2026-11-05；硬體需求與限制依官方文章）。
+- **新在哪裡：** GitHub 的 `gh-aw` v1.2.1（11/06，pre-release）加入 artifact-backed durable workflow continuation across agents；repo-memory 可用 GitHub App authentication，workflow environment 有 deployment controls。安全審查遇到 unresolved 現在 fail closed，並警告 dynamic checkout ref 可能把 host setup steps 暴露給不受信任的 code。
+- **推薦用法：** 先在測試 repo 用 artifact 保存 continuation state，明確指定下一個 agent 可讀的輸入與最小權限；把 unresolved security review 視為阻斷，不用 `--force` 繞過。對 dynamic checkout ref 加固定 commit／受信任分支 allowlist，再測一次惡意 PR 的執行路徑。
+- **編輯心得與限制：** durable continuation 解決的是「跨 agent 接續」，不是「自動可信」；這版是 pre-release，且 workflow lock、App token、environment permission 都要放進自己的 threat model。第三方模型 attribution 也不等同於結果品質保證。
+- 來源：[GitHub Agentic Workflows v1.2.1 release](https://github.com/github/gh-aw/releases/tag/v1.2.1)（2026-11-06；GitHub 官方專案，pre-release）。
 
 ## 4. 使用心得與避坑
 
-### Claude Code 2.1.319：背景 task 很方便，但安全檢查不能被 gateway 吃掉
+### Agent session 的「恢復成功」要看 run_id、delivery state 與 process probe
 
-- **發生什麼事：** Anthropic 11/06 的 v2.1.319 讓 MCP server 以 task 形式執行的工具呼叫立即進背景，完成後再回報；可用 `CLAUDE_CODE_DISABLE_MCP_TASK_BACKGROUND=1` 改回等待模式。同版也調整 auto mode：在 telemetry 或 feature flag 關閉、或 LLM gateway 無法做 server-side check 時，動作會被詢問或拒絕，不再悄悄 fallback 到內建 classifier；`claude -p` 被拒絕時也會以 exit 1 結束。
-- **可以怎麼開始：** 先更新到固定版本，在測試 MCP server 上比較背景與前景兩種模式；CI 以 exit code 判定成功，並記錄 task id、完成事件與實際權限。若經過 Bedrock／Vertex／Foundry 或自建 gateway，明確驗證 auto-mode server check 是否真的抵達，不要只看 CLI 顯示。
-- **避坑重點：** 背景化會讓「指令已送出」與「結果已驗證」分離；deploy、migration、付款或刪除類工具要保留人工 approval 與完成後 verifier。gateway 讓安全檢查失聯時，拒絕是保護，不是要用環境變數繞過的錯誤。
-- 來源：[Claude Code v2.1.319 release](https://github.com/anthropics/claude-code/releases/tag/v2.1.319)（2026-11-06；官方 release notes）。
+- **發生什麼事：** 社群 terminal session manager agent-deck v1.16.38（11/07）修正 pi session continue 沒有沿用同一 `run_id`、恢復 log 後 delivery state 超過 resume point 沒清掉、pending flag 寫入失敗會讓 delivery pass 看不到紀錄，以及 `ps`／`pgrep` probe 沒有限制範圍等問題。
+- **可以怎麼開始：** 升級後做一次「中斷 → continue → 子 agent／訊息送達」測試，逐一記錄 `run_id`、turn sequence、resume point 與 delivery result；不要只看 TUI 顯示完成。對長時間 session 把恢復紀錄與 process probe 納入 smoke test，並限制 probe 只看自己的 process tree。
+- **避坑重點：** session manager 的 UI 已顯示完成，不代表訊息一定送達；尤其是跨 agent、跨 pane 或重啟後，應把 durable log、delivery ledger 與實際工具結果分開驗證。這是社群專案的修正方向，不是對所有 agent runtime 的普遍保證。
+- 來源：[agent-deck v1.16.38 release](https://github.com/asheshgoplani/agent-deck/releases/tag/v1.16.38)（2026-11-07；社群開源專案）。
 
-### Agent catalog 不能只靠「找到」：要驗證簽章與 trust model
+### 對醫療 AI，別把單一正確率當成安全證明
 
-- **發生什麼事：** `ai-catalog-cli` v0.4.0（11/06）新增保存 Sigstore bundle、trust manifest 驗證指令，並改成離線優先選擇 Sigstore 服務；同時採用新的 trust model，屬 breaking change。這代表「agent 找到一個 Skill／MCP」與「允許它進入環境」應該是兩個步驟。
-- **可以怎麼開始：** 在 CI 對 catalog、Skill 或 MCP manifest 做 digest／簽章驗證，把來源網域、簽章 bundle、授權範圍與版本 hash 一起保存；驗證失敗時停止安裝，不要用 `--force` 或把整個 marketplace 當成可信邊界。
-- **編輯心得與限制：** Sigstore 只解決可驗證的發布鏈，不會替你判斷 Skill 是否過度索權、是否含惡意 instruction 或是否符合業務需求；仍需最小權限、隔離執行與人工 review。
-- 來源：[ai-catalog-cli CHANGELOG](https://github.com/Agent-Card/ai-catalog-cli/blob/main/CHANGELOG.md)（2026-11-06；社群工具，breaking change 需先看 migration 文件）。
+- **發生什麼事：** Google for Health 11/04 公開 AI health evaluation framework，把評估拆成 accuracy、safety、usefulness，並混合 closed-question benchmark、autograder 與專家人工審查；這是方法框架，不是某個模型通過醫療認證。
+- **可以怎麼開始：** 先為自己的醫療 use case 寫三張表：可接受錯誤、不可接受傷害、使用者是否真的能完成任務；再分別設計 closed questions、危險情境與專家 review，最後才比較模型分數。
+- **避坑重點：** benchmark 高分不代表臨床安全，也不代表使用者會正確採納建議。高風險流程要有人工升級、來源與不確定性呈現，並在真實語言、族群與工作流程上另做驗證。
+- 來源：[Google：A framework for evaluating AI in health](https://blog.google/innovation-and-ai/technology/health/evaluating-health-ai-at-scale/)（2026-11-04；官方方法文章）。
 
 ## YouTube 深度整理
 
 ### 今日無推薦
 
-我主動查找 PAPAYA 電腦教室與其他中英文 AI／工具／Agent／AI Coding 頻道，優先查 2026-11-05～11-07，並放寬至一週。搜尋結果沒有同時滿足「觀看數超過 10,000、非純新聞朗讀、具實測／教學／技術拆解，且能取得並讀完可靠字幕或逐字稿」的候選；因此不從標題、縮圖或介紹猜內容，今日無推薦。
+我主動查找 PAPAYA 電腦教室與其他中英文 AI／工具／Agent／AI Coding 頻道，優先查 2026-11-06～11-08，並放寬至一週。沒有同時滿足「觀看數超過 10,000、非純新聞朗讀、具實測／教學／技術拆解，且能取得並讀完可靠字幕或逐字稿」的候選；因此不從標題、縮圖或介紹猜內容，今日無推薦。
 
 ## 今天最值得帶回團隊的三個檢查
 
-- **決策與生成分開：** router／judge 可用小模型輸出結構化選擇；最後仍由規則、來源與 verifier 決定能否執行。
-- **背景不等於完成：** MCP task、managed agent 與影片／模擬生成都要有完成事件、結果檢查與可回復路徑。
-- **發現不等於信任：** Skill、catalog、MCP 與第三方模型先驗證來源、簽章、權限與版本，再放進正式工作流。
+- **先清上下文，再放大 agent：** 舊 TODO、過期規格與未整理的 bug reference 會直接變成 scope creep。
+- **隔離執行與可回查狀態：** worktree、archived run、artifact continuation 和 run_id 各自解決不同問題，不能只靠一個「完成」提示。
+- **安全失敗要保留：** unresolved review、dynamic checkout、外部事件與高風險醫療建議都應在無法驗證時停下來，而不是自動繞過。
 
 ## 今日一句話
 
-AI agent 的下一個實用分工不是讓單一模型什麼都做，而是把選擇、生成、執行與驗證拆開，讓每一步都有可回查的證據。
+當 agent 開始長時間、跨工作區、跨工具接續工作，真正重要的不是再加一個模型，而是讓上下文、權限、恢復狀態與驗證結果都能被人重新檢查。

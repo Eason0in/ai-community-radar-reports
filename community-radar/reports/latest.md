@@ -1,8 +1,8 @@
-# AI Community Radar - 2026-11-06
+# AI Community Radar - 2026-11-09
 
-> Generated: 2026-11-06T03:19:21.353Z
+> Generated: 2026-11-09T02:30:50.807Z
 > Timezone: Asia/Taipei
-> Active cutoff: updated since 2026-11-04; archived GitHub repos excluded; max stale age 2 days.
+> Active cutoff: updated since 2026-11-07; archived GitHub repos excluded; max stale age 2 days.
 
 ## 今日摘要
 
@@ -17,9 +17,9 @@
 
 | # | Repo | Stars | Forks | Language | Updated |
 | --- | --- | ---: | ---: | --- | --- |
-| 1 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 260,916 | 57,618 | Python | 2026-11-06T03:14:18Z |
-| 2 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 201,318 | 78,237 | C++ | 2026-11-06T03:13:17Z |
-| 3 | [firecrawl/firecrawl](https://github.com/firecrawl/firecrawl) | 199,001 | 10,491 | TypeScript | 2026-11-06T02:57:01Z |
+| 1 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 261,793 | 58,224 | Python | 2026-11-09T02:27:35Z |
+| 2 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 201,402 | 78,176 | C++ | 2026-11-08T22:39:44Z |
+| 3 | [firecrawl/firecrawl](https://github.com/firecrawl/firecrawl) | 199,842 | 10,515 | TypeScript | 2026-11-08T16:51:25Z |
 
 ### 1. [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent)
 
@@ -77,7 +77,7 @@ Supercharge your AI agents with data from the web and beyond. Building the libra
 | 指標 | 值 |
 | --- | --- |
 | Registry sample | 800 servers |
-| Active baseline since | 2026-11-04 |
+| Active baseline since | 2026-11-07 |
 | GitHub stale cutoff | 2 days |
 
 ### 可能還沒上官方 MCP Registry 的候選
@@ -102,17 +102,7 @@ Supercharge your AI agents with data from the web and beyond. Building the libra
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/kubb-labs/kubb](https://github.com/kubb-labs/kubb) |
 
-#### 3. [@payloadcms/plugin-mcp](https://www.npmjs.com/package/@payloadcms/plugin-mcp)
-
-| 欄位 | 內容 |
-| --- | --- |
-| 類型 | npm-package |
-| 說明 | MCP (Model Context Protocol) capabilities with Payload |
-| 為什麼值得看 | npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。 |
-| 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
-| Repo | [https://github.com/payloadcms/payload](https://github.com/payloadcms/payload) |
-
-#### 4. [@supabase/mcp-utils](https://www.npmjs.com/package/@supabase/mcp-utils)
+#### 3. [@supabase/mcp-utils](https://www.npmjs.com/package/@supabase/mcp-utils)
 
 | 欄位 | 內容 |
 | --- | --- |
@@ -121,6 +111,16 @@ Supercharge your AI agents with data from the web and beyond. Building the libra
 | 為什麼值得看 | npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。 |
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/supabase/mcp](https://github.com/supabase/mcp) |
+
+#### 4. [@payloadcms/plugin-mcp](https://www.npmjs.com/package/@payloadcms/plugin-mcp)
+
+| 欄位 | 內容 |
+| --- | --- |
+| 類型 | npm-package |
+| 說明 | MCP (Model Context Protocol) capabilities with Payload |
+| 為什麼值得看 | npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。 |
+| 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
+| Repo | [https://github.com/payloadcms/payload](https://github.com/payloadcms/payload) |
 
 #### 5. [@traceloop/instrumentation-mcp](https://www.npmjs.com/package/@traceloop/instrumentation-mcp)
 
@@ -132,30 +132,30 @@ Supercharge your AI agents with data from the web and beyond. Building the libra
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/traceloop/openllmetry-js](https://github.com/traceloop/openllmetry-js) |
 
-#### 6. [WireCatLabs/wirecat-desktop](https://github.com/WireCatLabs/wirecat-desktop)
+#### 6. [hproxy-com/free-proxy-list](https://github.com/hproxy-com/free-proxy-list)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | The WireCat desktop app: search your chats, meetings and notes, connect any AI agent to them, and approve what it remembers. Local-first, for macOS, Windows and Linux. |
+| 說明 | Free proxy list, verified around the clock: HTTP, HTTPS, SOCKS4 and SOCKS5 proxies with country, anonymity, latency and uptime on every row, updated several times a day. Live list, proxy checker, keyless API and MCP server at hproxy.com. |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 7. [CSOAI-ORG/councilof-ai](https://github.com/CSOAI-ORG/councilof-ai)
+#### 7. [actionplatform/action-platform](https://github.com/actionplatform/action-platform)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Council of AI — operating AI measurement and evidence organisation. Published methods, signed records, free verification and scoped evidence services. CSOAI Ltd; measurement, not certification. |
+| 說明 | Your platform team, as a CLI. Scaffold, release and deploy on any stack and cloud; git-flow enforced; MCP for AI agents. |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 8. [mikeparcewski/wicked-estate](https://github.com/mikeparcewski/wicked-estate)
+#### 8. [cyeinfpro/codepier](https://github.com/cyeinfpro/codepier)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | What your agents know about your system: a 114-language code graph, memory and knowledge, in a local CLI and MCP server (33 MCP tools, 3 domains). Holds your data sources' structure, never their rows. |
+| 說明 | 把 AI 接入你的真实开发环境。CodePier 让 ChatGPT / MCP 安全连接本地项目、Pi / Codex、Shell、浏览器与桌面能力。 |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 

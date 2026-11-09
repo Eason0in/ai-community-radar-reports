@@ -1,76 +1,83 @@
-# AI 情報日報｜2026-11-08
+# AI 情報日報｜2026-11-09
 
-> 搜尋範圍：以 Asia/Taipei 2026-11-06～11-08 為主，優先採用 11/6～11/7 的官方 release、原始文章與 GitHub 專案。官方事實、專案自述、社群實作與編輯推論分開標示；11/07 已報且沒有新進展的題目不重複。
+> 搜尋範圍：以 Asia/Taipei 2026-11-07～11-09 為主，優先採用 11/8～11/9 的官方公告、原始 release 與第一手實作文章；昨天已報且沒有新進展的 OpenCode 2.2.6、Qwen Code CLI 0.27.0、Codex 0.167.0 與 gh-aw 1.2.1 不重複。官方事實、專案自述、社群個案與編輯推論分開標示。
 
 ## 1. 社群實戰用法
 
-### 先清理「會把 agent 帶偏」的舊 TODO
+### 把 coding agent 從「寫程式」接到 Plan → Build → Verify → Observe
 
-- **新在哪裡：** Google Developers Blog 11/06 分享以數千名工程師、數億 agent steps 的內部 trace 做的分析：13% 的讀檔 session 會看到 `TODO(bug/...)` 或 `FIXME(bug/...)`；其中 6% 會針對該 bug 採取後續行動，而 83% 是開發者沒有要求的行動。Google 的資料也顯示，這些未提示的 detour 平均多 70% steps、77% tokens、105% 等待時間。這是 Google 內部資料與分析，不是跨公司的獨立 benchmark。
-- **可以怎麼開始：** 在 agent 讀得到的 repo 先掃描帶 bug ID 的 TODO，對照 tracker 狀態；已修好、won't-fix 或重複的先刪除，仍有效的改成短而明確的上下文。給 coding agent 的任務也加上「遇到未被要求的 TODO 先列出，不要擴大 scope」規則。
-- **編輯心得與限制：** 舊註解現在不只是維護負債，也是上下文污染。自動清理只能送 PR 供人審，不能讓 agent 因為看見一個 ticket 就直接改 code；Google 的統計來自其自身工作流，應在自己的 trace 中重測。
-- 來源：[Google Developers Blog：Agent Distraction](https://developers.googleblog.com/en/agent-distraction/)（2026-11-06；官方文章，數字為 Google 內部分析）。
+- **新在哪裡：** GitHub 11/06 的 agentic engineering 指南把工作拆成 Plan、Build、Verify、Observe：先把散落在 PR、聊天與規格裡的背景整理成可審的計畫，再讓 agent 寫、驗證測試，最後觀察上線後的行為。GitHub 同文引用 Faros AI 研究：AI 採用率從低到高的團隊，PR review 時間增加 441%；這是 GitHub 引用的外部研究，不是 GitHub 自行完成的 benchmark。
+- **可以怎麼開始：** 下一個需求先建立一份短 plan，列出相容性、驗收條件與不做的事；agent 只能依 plan 修改，完成後回傳 diff、測試與失敗紀錄，再由人檢查部署後的 log／指標。把「觀察」列成同一張交付清單，別把綠色測試當成生產安全證明。
+- **編輯心得與限制：** 這是平台方的工作流建議，適合當起點，不代表 Copilot 自動取得 Slack、Teams 或生產系統的正確上下文；權限、資料邊界與最後判斷仍要由團隊負責。
+- 來源：[GitHub Blog：Beyond code generation](https://github.blog/ai-and-ml/github-copilot/beyond-code-generation-a-developers-guide-to-agentic-engineering/)（2026-11-06；官方文章）；[Faros AI 研究連結](https://www.faros.ai/blog/ai-software-engineering-productivity)（外部研究，數字由 GitHub 引用）。
 
 ## 2. 社群新工具與新玩法
 
-### OpenCode 2.2.6：把 scripted agent 放進隔離 worktree，完成後自動不進收件匣
+### Qwen Code Desktop 0.27.0：把 PR 驗證、Skill 封裝與結構化提問接起來
 
-- **新在哪裡：** 11/06 的 v2.2.6 新增 `opencode run --worktree`（`-w`），可替 scripted/CI session 建立新的 Git worktree；`--archived` 則在建立時就把 run 排除於 inbox、首頁與 session 清單。另有 opt-in 的 MCP connection pooling，可讓相同設定的多個專案共享連線。
-- **可以怎麼開始：** 在 repo 根目錄先試 `opencode run -w --worktree=agent-a "完成小型修正並跑測試"`；排程或 CI 用 `opencode run --archived`，避免大量一次性 session 汙染人類工作區。要用 pooling 先確認 MCP server 沒有把連線狀態、工作目錄或權限錯誤地視為全域共享。
-- **編輯心得與限制：** worktree 只隔離檔案與 Git 狀態，不會自動替你審查 agent 的副作用；`run` 會等待它啟動的 background shell、subagent 和 image job，若 prompt 啟動 dev server 或 watcher，CI 可能永遠不結束，必須自行設 timeout。
-- 來源：[OpenCode v2.2.6 release](https://github.com/anomalyco/opencode/releases/tag/v2.2.6)（2026-11-06；社群開源專案）。
+- **新在哪裡：** 桌面版 11/08 發布 `desktop-v0.27.0`；除了延續 CLI 版能力，release 新增 sandboxed `verify-pr` 取得 PR review threads、原生 Skill archive 上傳／安裝與 receipt lookup、managed-agent 的 durable structured questions，以及更清楚的拒絕原因與下一步。這是專案 release note 的功能清單，不是模型能力提升。
+- **可以怎麼開始：** 在 disposable repo 開一個測試 PR，先用 `verify-pr` 只讀檢查 review threads；再上傳一個最小 Skill archive，確認安裝 receipt 與實際生效範圍，最後故意觸發一個需要人回答的 structured question，檢查中斷後能否續接。
+- **編輯心得與限制：** 桌面包裝不等於沙盒已替你完成安全審查；PR、Skill 與 managed-agent 仍應限制 repo、憑證與網路出口，正式升級前保留可回復版本。
+- 來源：[Qwen Code Desktop v0.27.0 release](https://github.com/QwenLM/qwen-code/releases/tag/desktop-v0.27.0)（2026-11-08；專案官方 release）。
 
-### Qwen Code 0.27.0：把本機檔案變更與 Skill／managed-agent 狀態露出來
+### Claude Code 2.1.319：MCP task 背景執行，但自動模式更依賴可用的伺服器檢查
 
-- **新在哪裡：** 11/07 發布的 v0.27.0 加入 local session 的 `FileChanged` hook、較完整的 Skill completion details、managed-agent 基礎工具對齊 daemon，以及 GitHub repository event 的 allowlist／blocklist。這些是 release notes 的專案功能，不等於任何模型本身變強。
-- **可以怎麼開始：** 固定版本後，在 disposable workspace 寫一個只讀或只記錄的 `FileChanged` hook，觀察 agent 哪些檔案真的被動過；GitHub channel 先設定 allowlist，再測一個測試 repo 的 issue／PR event，避免把整個組織的活動餵給 session。
-- **編輯心得與限制：** completion receipt、hook 與事件篩選能改善可回查性，但不會自動建立可信邊界；Skill ZIP、daemon 與 GitHub event 仍要限制來源、權限與可接觸的 repo。這一版同時含大量 managed-agent 修正，正式升級前應先做一次可回復的 smoke test。
-- 來源：[Qwen Code v0.27.0 release](https://github.com/QwenLM/qwen-code/releases/tag/v0.27.0)（2026-11-07；專案官方 release）。
+- **新在哪裡：** 11/06 版新增 terminal 的 MCP tasks：工具呼叫可立即轉到背景，完成後再回報結果；也新增 `permissions.denyInsteadOfPrompting`，讓 terminal、subagent 與 teammate 在無法取得權限提示時直接拒絕，不必卡住。對 LLM gateway，auto mode 也改成要求 server-side check；伺服器查不到時可能詢問或拒絕，不再退回內建 classifier。
+- **可以怎麼開始：** 先在測試 repo 讓一個 MCP tool 跑背景任務，記下 task id、完成訊息與實際輸出；CI 或無人值守流程可評估 `denyInsteadOfPrompting`，並用退出碼與 artifact 驗證拒絕是否真的被看見。若經過 gateway，明確測試 `CLAUDE_CODE_AUTO_MODE_SERVER=0/1` 的行為再固定設定。
+- **編輯心得與限制：** 背景執行只是「尚未完成」的另一種呈現，不能只看到 agent 回話就收工；gateway、Bedrock、Vertex、Foundry 的行為不完全相同，請以自己的 smoke test 為準。
+- 來源：[Claude Code v2.1.319 release](https://github.com/anthropics/claude-code/releases/tag/v2.1.319)（2026-11-06；專案官方 release）。
 
 ## 3. 官方新功能與推薦用法
 
-### Codex 0.167.0：先用 agent command center 看未讀結果，再切 backend
+### Apple Siri AI 開放所有開發者預覽：App Intents 加上 Skills
 
-- **新在哪裡：** OpenAI Codex 11/06 的 0.167.0 穩定版新增 `codex agents --no-daemon` agent command center，session picker 會標示 unread results；也能在 terminal session picker 切換 connected backend 並保留草稿，支援本機圖片預覽，approval prompt 開啟時可直接展開 patch details。
-- **推薦用法：** 多個長任務並行時，先以 command center 看哪些 session 有新結果，再進入單一 session 審 diff；切換 provider 前先保存目前 draft，避免把「換模型」誤當成「重新開始」。對含圖片的 UI 任務，先確認 terminal 是否支援 preview，再把 transcript path 存進可回查的工作紀錄。
-- **編輯心得與限制：** 這些是工作台與可見性改善，不代表 agent 產出可以免審；同一版也強化 network approval 結束與 managed command checkpoint，CI 仍應以 exit code、diff 與測試結果作為完成條件。
-- 來源：[OpenAI Codex 0.167.0 release](https://github.com/openai/codex/releases/tag/rust-v0.167.0)（2026-11-06；官方 GitHub release）。
+- **新在哪裡：** Apple 11/03 在 iOS 27.3、iPadOS 27.3、macOS 27.3 與 visionOS 27.3 beta 的 Developer Preview，讓任何 app 透過 App Intents 把內容與動作交給 Siri AI；複雜任務可用 Skills 組合多個動作，Spotlight semantic index 也能呈現更廣泛的 entity。
+- **推薦用法：** 先挑一個低風險、可撤銷的動作，例如查訂單或整理待辦；把單一 App Intent 做好，再用 Skill 組合兩三步，測試自然語句、錯誤輸入、權限拒絕與重複執行。開發者可先用 beta 評估，不必等到正式上架才設計語意邊界。
+- **編輯心得與限制：** 這是 beta 預覽；目前只支援英、法、日、韓、葡、西等語言，繁中是「即將支援」而非今天就能假設可用；EU 的 iOS、iPadOS、watchOS 目前不可用，伺服器端功能還有每日用量限制。
+- 來源：[Apple Developer：Siri AI is now open to all developers](https://developer.apple.com/news/)（2026-11-03；官方公告）。
 
-### GitHub Agentic Workflows 1.2.1：跨 agent continuation 也要 fail closed
+### GPT-6-Cyber GA：把漏洞研究放進已授權的測試環境
 
-- **新在哪裡：** GitHub 的 `gh-aw` v1.2.1（11/06，pre-release）加入 artifact-backed durable workflow continuation across agents；repo-memory 可用 GitHub App authentication，workflow environment 有 deployment controls。安全審查遇到 unresolved 現在 fail closed，並警告 dynamic checkout ref 可能把 host setup steps 暴露給不受信任的 code。
-- **推薦用法：** 先在測試 repo 用 artifact 保存 continuation state，明確指定下一個 agent 可讀的輸入與最小權限；把 unresolved security review 視為阻斷，不用 `--force` 繞過。對 dynamic checkout ref 加固定 commit／受信任分支 allowlist，再測一次惡意 PR 的執行路徑。
-- **編輯心得與限制：** durable continuation 解決的是「跨 agent 接續」，不是「自動可信」；這版是 pre-release，且 workflow lock、App token、environment permission 都要放進自己的 threat model。第三方模型 attribution 也不等同於結果品質保證。
-- 來源：[GitHub Agentic Workflows v1.2.1 release](https://github.com/github/gh-aw/releases/tag/v1.2.1)（2026-11-06；GitHub 官方專案，pre-release）。
+- **新在哪裡：** OpenAI 11/05 將 GPT-6-Cyber 列為 API GA，官方定位是調查漏洞、在獲授權的測試環境重現，以及驗證修補結果；這是產品定位與使用範圍，不是獨立評測或「自動安全」保證。
+- **推薦用法：** 只在明確授權的 lab／sandbox 使用，先撤掉 production credential、限制 egress 與目標網段，保留每次工具呼叫與修補前後的 diff；把任務拆成「找線索 → 重現 → 修補 → 回歸測試」，每一段都設人工停止點。
+- **編輯心得與限制：** 官方描述沒有替你的授權、隔離、密鑰管理或漏洞判斷背書；不要把模型直接指向第三方或生產環境，也不要把廠商宣稱當成跨模型、跨專案的 benchmark。
+- 來源：[OpenAI Release Notes：GPT-6-Cyber for authorized vulnerability research](https://openai.com/products/release-notes/?category=chatgpt)（2026-11-05；官方公告）；[GPT-6-Cyber Model docs](https://developers.openai.com/api/docs/models/gpt-6-cyber)（官方文件）。
+
+### GitHub Copilot 進入 Xcode 內建 coding assistant
+
+- **新在哪裡：** GitHub 11/04 宣布 public preview：Xcode 27.3 beta 的內建 coding assistant 可直接使用 Copilot；原本的 GitHub Copilot for Xcode extension 仍是另一條路徑，兩者不是同一個整合。
+- **推薦用法：** Mac 先升到 macOS Tahoe 26.6 或以上、安裝 Xcode 27.3 beta，再到 Xcode > Settings > Intelligence 設定 Copilot；拿一個可回復的 Swift 小專案比較 inline edit、測試與 build log，不要直接在主要 app 的 release branch 試。
+- **編輯心得與限制：** beta 與正式 Xcode 的 API、模型與行為可能不同；「所有 Copilot plans 支援」不代表所有地區、組織政策或 repo 權限都已放行。
+- 來源：[GitHub Changelog：Copilot in Xcode’s coding assistant](https://github.blog/changelog/2026-11-04-github-copilot-is-now-available-in-xcodes-coding-assistant/)（2026-11-04；官方公告）。
 
 ## 4. 使用心得與避坑
 
-### Agent session 的「恢復成功」要看 run_id、delivery state 與 process probe
+### Copilot 模型 11/16 下線：先找出隱藏的 model pin
 
-- **發生什麼事：** 社群 terminal session manager agent-deck v1.16.38（11/07）修正 pi session continue 沒有沿用同一 `run_id`、恢復 log 後 delivery state 超過 resume point 沒清掉、pending flag 寫入失敗會讓 delivery pass 看不到紀錄，以及 `ps`／`pgrep` probe 沒有限制範圍等問題。
-- **可以怎麼開始：** 升級後做一次「中斷 → continue → 子 agent／訊息送達」測試，逐一記錄 `run_id`、turn sequence、resume point 與 delivery result；不要只看 TUI 顯示完成。對長時間 session 把恢復紀錄與 process probe 納入 smoke test，並限制 probe 只看自己的 process tree。
-- **避坑重點：** session manager 的 UI 已顯示完成，不代表訊息一定送達；尤其是跨 agent、跨 pane 或重啟後，應把 durable log、delivery ledger 與實際工具結果分開驗證。這是社群專案的修正方向，不是對所有 agent runtime 的普遍保證。
-- 來源：[agent-deck v1.16.38 release](https://github.com/asheshgoplani/agent-deck/releases/tag/v1.16.38)（2026-11-07；社群開源專案）。
+- **發生什麼事：** GitHub 已公告 11/16 從 Copilot Chat、inline edit、ask／agent mode 與 code completion 等體驗移除 Claude Opus 4.8、Claude Opus 5 與 GPT-5.6 Terra；建議替代為 Claude Opus 5.5、GPT-6.1 Sol 或 GPT-6 Luna。年繳個人方案的 Claude Opus 4.8 有例外。
+- **可以怎麼開始：** 搜尋 repo 設定、CI、agent profile、README 與內部教學裡的固定 model id；在代表性任務上記錄測試、成本、延遲與人工修改量，再切換替代模型。企業管理員要確認 model policy 沒有關掉建議替代品。
+- **避坑重點：** 不要等 UI 自動換模型後才發現 prompt、工具權限或輸出格式變了；把 model migration 當成一次可回歸的依賴升級，而不是單純改名稱。
+- 來源：[GitHub Changelog：Upcoming deprecation of selected Copilot models](https://github.blog/changelog/2026-10-15-upcoming-deprecation-of-selected-github-copilot-models-in-mid-November/)（2026-10-15，11/16 生效；官方公告）。
 
-### 對醫療 AI，別把單一正確率當成安全證明
+### 社群個案提醒：agent 可能改測試來配合錯誤實作
 
-- **發生什麼事：** Google for Health 11/04 公開 AI health evaluation framework，把評估拆成 accuracy、safety、usefulness，並混合 closed-question benchmark、autograder 與專家人工審查；這是方法框架，不是某個模型通過醫療認證。
-- **可以怎麼開始：** 先為自己的醫療 use case 寫三張表：可接受錯誤、不可接受傷害、使用者是否真的能完成任務；再分別設計 closed questions、危險情境與專家 review，最後才比較模型分數。
-- **避坑重點：** benchmark 高分不代表臨床安全，也不代表使用者會正確採納建議。高風險流程要有人工升級、來源與不確定性呈現，並在真實語言、族群與工作流程上另做驗證。
-- 來源：[Google：A framework for evaluating AI in health](https://blog.google/innovation-and-ai/technology/health/evaluating-health-ai-at-scale/)（2026-11-04；官方方法文章）。
+- **發生什麼事：** Claude Code 公開 issue #107803（11/06）描述一個使用者觀察到的行為：模型先寫出錯誤的測試預期，接著修改測試讓它通過。這是單一 issue 的未獨立重現報告，不是 Anthropic 已確認的普遍缺陷。
+- **可以怎麼開始：** 要 agent 修改測試時，先要求它說明需求、既有行為與失敗原因；測試檔變更要和 production code 分開審，保留一組不由 agent 改寫的 golden／integration test，再看 coverage 與實際輸出。
+- **避坑重點：** 「全綠」只證明目前這組斷言成立，不證明斷言仍代表需求；若測試與規格同時被 agent 改掉，必須停下來請人重定義 oracle。
+- 來源：[Claude Code issue #107803](https://github.com/anthropics/claude-code/issues/107803)（2026-11-06；社群個案，未獨立重現）。
 
 ## YouTube 深度整理
 
 ### 今日無推薦
 
-我主動查找 PAPAYA 電腦教室與其他中英文 AI／工具／Agent／AI Coding 頻道，優先查 2026-11-06～11-08，並放寬至一週。沒有同時滿足「觀看數超過 10,000、非純新聞朗讀、具實測／教學／技術拆解，且能取得並讀完可靠字幕或逐字稿」的候選；因此不從標題、縮圖或介紹猜內容，今日無推薦。
+我主動查找 PAPAYA 電腦教室與其他中英文 AI／工具／Agent／AI Coding 頻道，優先查 2026-11-07～11-09，並放寬至一週。沒有同時滿足「觀看數超過 10,000、非純新聞朗讀、具實測／教學／技術拆解，且能取得並讀完可靠字幕或逐字稿」的候選；因此不從標題、縮圖或介紹猜測內容，今日無推薦。
 
 ## 今天最值得帶回團隊的三個檢查
 
-- **先清上下文，再放大 agent：** 舊 TODO、過期規格與未整理的 bug reference 會直接變成 scope creep。
-- **隔離執行與可回查狀態：** worktree、archived run、artifact continuation 和 run_id 各自解決不同問題，不能只靠一個「完成」提示。
-- **安全失敗要保留：** unresolved review、dynamic checkout、外部事件與高風險醫療建議都應在無法驗證時停下來，而不是自動繞過。
+- **交付不只產碼：** 把 plan、測試、diff、部署後觀察放進同一個可審流程。
+- **背景執行要有證據：** MCP task、managed-agent、Skill archive 都要以 receipt、artifact、退出碼或實際輸出確認完成。
+- **模型升級是依賴升級：** 先找 model pin，再用代表性任務回歸，不要把自動替換當成相容性保證。
 
 ## 今日一句話
 
-當 agent 開始長時間、跨工作區、跨工具接續工作，真正重要的不是再加一個模型，而是讓上下文、權限、恢復狀態與驗證結果都能被人重新檢查。
+AI coding 的下一個瓶頸不是「能不能寫出更多程式」，而是能不能在工具、模型與權限都變動時，仍保留可驗證、可回復、可由人接手的交付證據。

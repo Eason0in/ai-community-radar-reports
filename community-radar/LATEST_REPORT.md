@@ -1,8 +1,8 @@
-# AI Community Radar - 2026-11-10
+# AI Community Radar - 2026-11-11
 
-> Generated: 2026-11-10T04:32:58.032Z
+> Generated: 2026-11-11T02:39:03.498Z
 > Timezone: Asia/Taipei
-> Active cutoff: updated since 2026-11-08; archived GitHub repos excluded; max stale age 2 days.
+> Active cutoff: updated since 2026-11-09; archived GitHub repos excluded; max stale age 2 days.
 
 ## 今日摘要
 
@@ -17,9 +17,9 @@
 
 | # | Repo | Stars | Forks | Language | Updated |
 | --- | --- | ---: | ---: | --- | --- |
-| 1 | [affaan-m/ECC](https://github.com/affaan-m/ECC) | 300,310 | 44,346 | JavaScript | 2026-11-09T04:56:24Z |
-| 2 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 262,133 | 58,426 | Python | 2026-11-10T04:27:27Z |
-| 3 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 201,425 | 77,761 | C++ | 2026-11-10T04:31:37Z |
+| 1 | [affaan-m/ECC](https://github.com/affaan-m/ECC) | 300,845 | 44,396 | JavaScript | 2026-11-09T04:56:24Z |
+| 2 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 262,478 | 58,676 | Python | 2026-11-11T02:32:52Z |
+| 3 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 201,446 | 77,825 | C++ | 2026-11-11T02:27:30Z |
 
 ### 1. [affaan-m/ECC](https://github.com/affaan-m/ECC)
 
@@ -77,7 +77,7 @@ An Open Source Machine Learning Framework for Everyone.
 | 指標 | 值 |
 | --- | --- |
 | Registry sample | 800 servers |
-| Active baseline since | 2026-11-08 |
+| Active baseline since | 2026-11-09 |
 | GitHub stale cutoff | 2 days |
 
 ### 可能還沒上官方 MCP Registry 的候選
@@ -92,17 +92,7 @@ An Open Source Machine Learning Framework for Everyone.
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/TanStack/ai](https://github.com/TanStack/ai) |
 
-#### 2. [@supabase/mcp-utils](https://www.npmjs.com/package/@supabase/mcp-utils)
-
-| 欄位 | 內容 |
-| --- | --- |
-| 類型 | npm-package |
-| 說明 | MCP utilities |
-| 為什麼值得看 | npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。 |
-| 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
-| Repo | [https://github.com/supabase/mcp](https://github.com/supabase/mcp) |
-
-#### 3. [@kubb/mcp](https://www.npmjs.com/package/@kubb/mcp)
+#### 2. [@kubb/mcp](https://www.npmjs.com/package/@kubb/mcp)
 
 | 欄位 | 內容 |
 | --- | --- |
@@ -111,6 +101,16 @@ An Open Source Machine Learning Framework for Everyone.
 | 為什麼值得看 | npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。 |
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/kubb-labs/kubb](https://github.com/kubb-labs/kubb) |
+
+#### 3. [@supabase/mcp-utils](https://www.npmjs.com/package/@supabase/mcp-utils)
+
+| 欄位 | 內容 |
+| --- | --- |
+| 類型 | npm-package |
+| 說明 | MCP utilities |
+| 為什麼值得看 | npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。 |
+| 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
+| Repo | [https://github.com/supabase/mcp](https://github.com/supabase/mcp) |
 
 #### 4. [@copilotkit/mcp-apps-renderer](https://www.npmjs.com/package/@copilotkit/mcp-apps-renderer)
 
@@ -132,30 +132,30 @@ An Open Source Machine Learning Framework for Everyone.
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/payloadcms/payload](https://github.com/payloadcms/payload) |
 
-#### 6. [OpenVibers/OpenVibe.Actor](https://github.com/OpenVibers/OpenVibe.Actor)
+#### 6. [oliveiratc/Grid402](https://github.com/oliveiratc/Grid402)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Route a task to the best AI agent, check the answer with a second model, and see the cost and the why, at openvibe.actor. |
+| 說明 | Oráculo M2M de Telemetria e Status de Serviços Críticos Brasileiros (Protocolo HTTP x402 na Base) |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 7. [Jennycruzy/eighty](https://github.com/Jennycruzy/eighty)
+#### 7. [fuweineng/souse](https://github.com/fuweineng/souse)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Keep your Medicaid: Eighty does the paperwork for the federal work rule. Web, Telegram and Claude (MCP), built on Agent-Native. Live at tryeighty.space |
+| 說明 | Souse · 出租屋智能管理平台 — 项目介绍站 (souse.neng.page) |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 8. [manyoars/oars](https://github.com/manyoars/oars)
+#### 8. [vinayvobbili/taxtrace](https://github.com/vinayvobbili/taxtrace)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | A local record of your coding agent sessions: search and recall past work across harnesses. |
+| 說明 | Prepare a US federal + state return from your own documents, locally: every number traced to its source, nothing guessed |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 

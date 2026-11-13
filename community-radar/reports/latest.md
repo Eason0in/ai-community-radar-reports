@@ -1,8 +1,8 @@
-# AI Community Radar - 2026-11-12
+# AI Community Radar - 2026-11-13
 
-> Generated: 2026-11-12T03:42:07.306Z
+> Generated: 2026-11-13T03:19:22.159Z
 > Timezone: Asia/Taipei
-> Active cutoff: updated since 2026-11-10; archived GitHub repos excluded; max stale age 2 days.
+> Active cutoff: updated since 2026-11-11; archived GitHub repos excluded; max stale age 2 days.
 
 ## 今日摘要
 
@@ -17,9 +17,9 @@
 
 | # | Repo | Stars | Forks | Language | Updated |
 | --- | --- | ---: | ---: | --- | --- |
-| 1 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 262,769 | 59,084 | Python | 2026-11-12T03:26:51Z |
-| 2 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 201,568 | 77,910 | C++ | 2026-11-12T03:19:21Z |
-| 3 | [firecrawl/firecrawl](https://github.com/firecrawl/firecrawl) | 201,002 | 10,558 | TypeScript | 2026-11-12T03:35:23Z |
+| 1 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 262,997 | 59,202 | Python | 2026-11-13T03:18:13Z |
+| 2 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 201,585 | 77,948 | C++ | 2026-11-13T03:03:39Z |
+| 3 | [firecrawl/firecrawl](https://github.com/firecrawl/firecrawl) | 201,308 | 10,564 | TypeScript | 2026-11-13T02:47:28Z |
 
 ### 1. [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent)
 
@@ -77,7 +77,7 @@ Supercharge your AI agents with data from the web and beyond. Building the libra
 | 指標 | 值 |
 | --- | --- |
 | Registry sample | 800 servers |
-| Active baseline since | 2026-11-10 |
+| Active baseline since | 2026-11-11 |
 | GitHub stale cutoff | 2 days |
 
 ### 可能還沒上官方 MCP Registry 的候選
@@ -122,40 +122,40 @@ Supercharge your AI agents with data from the web and beyond. Building the libra
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/supabase/mcp](https://github.com/supabase/mcp) |
 
-#### 5. [@traceloop/instrumentation-mcp](https://www.npmjs.com/package/@traceloop/instrumentation-mcp)
+#### 5. [@copilotkit/mcp-apps-renderer](https://www.npmjs.com/package/@copilotkit/mcp-apps-renderer)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | npm-package |
-| 說明 | MCP (Model Context Protocol) Instrumentation |
+| 說明 | Framework-agnostic MCP Apps host for CopilotKit - the app host protocol (ext-apps AppBridge), sandbox proxy, and shared renderer consumed by the React, Vue, and Angular frontends |
 | 為什麼值得看 | npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。 |
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
-| Repo | [https://github.com/traceloop/openllmetry-js](https://github.com/traceloop/openllmetry-js) |
+| Repo | [https://github.com/CopilotKit/CopilotKit](https://github.com/CopilotKit/CopilotKit) |
 
-#### 6. [thegabopacheco-sudo/dsh-plugin-provider-usage](https://github.com/thegabopacheco-sudo/dsh-plugin-provider-usage)
+#### 6. [Wilkes-Liberty/drupal-mcp-connector](https://github.com/Wilkes-Liberty/drupal-mcp-connector)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Uso y rendimiento por proveedor/modelo en DeepSeek Harness: agrega tokens de entrada/salida/cache, cache hit rate, velocidad de decodificacion y TTFT por sesion y modelo. |
+| 說明 | Multi-site MCP server for Drupal over JSON:API and GraphQL, with governed writes and an SSH Drush bridge. Hosted HTTPS introspects every authenticated call at the issuer. init writes a client config. doctor checks reachability, auth, and version skew. |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 7. [DarrickBM/utm-watch](https://github.com/DarrickBM/utm-watch)
+#### 7. [None-wu/logisim-mcp](https://github.com/None-wu/logisim-mcp)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Per-VM resource and connection monitoring for UTM virtual machines on Apple silicon: menu bar app, terminal tool and a read-only MCP server for AI diagnosis |
+| 說明 | MCP server for Logisim-evolution 5.x - build, simulate, lint and verify digital-logic circuits (.circ) from any agent |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 8. [edtechniti/serve-mcp](https://github.com/edtechniti/serve-mcp)
+#### 8. [mav-rix/chat-memory](https://github.com/mav-rix/chat-memory)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | MCP server for the Serve Robotics delivery robot API |
+| 說明 | A small, local MCP server that gives AI chats persistent memory (SQLite + full-text search). |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 

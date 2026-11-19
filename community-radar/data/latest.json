@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
-  "date": "2026-11-18",
-  "generatedAt": "2026-11-18T04:05:38.495Z",
+  "date": "2026-11-19",
+  "generatedAt": "2026-11-19T04:02:44.465Z",
   "timeZone": "Asia/Taipei",
   "summary": "今日收錄 3 個 GitHub AI 專案與 5 個可嘗試方向。",
   "githubProjects": [
     {
       "name": "affaan-m/ECC",
       "url": "https://github.com/affaan-m/ECC",
-      "stars": 305659,
+      "stars": 306647,
       "language": "JavaScript",
       "activityAt": "2026-11-17T06:41:46Z",
       "reason": "The agent harness performance optimization system. Skills, instincts, memory, security, and research-first development for Claude Code, Codex, Opencode, Cursor and beyond.",
@@ -21,9 +21,9 @@
     {
       "name": "NousResearch/hermes-agent",
       "url": "https://github.com/NousResearch/hermes-agent",
-      "stars": 264261,
+      "stars": 264533,
       "language": "Python",
-      "activityAt": "2026-11-18T04:02:41Z",
+      "activityAt": "2026-11-19T03:44:28Z",
       "reason": "The agent that grows with you.",
       "what": "The agent that grows with you.",
       "problem": "降低建置 AI agent、工具調用、任務規劃或多步驟自動化的成本。",
@@ -34,9 +34,9 @@
     {
       "name": "tensorflow/tensorflow",
       "url": "https://github.com/tensorflow/tensorflow",
-      "stars": 201741,
+      "stars": 201591,
       "language": "C++",
-      "activityAt": "2026-11-18T04:04:54Z",
+      "activityAt": "2026-11-19T03:25:51Z",
       "reason": "An Open Source Machine Learning Framework for Everyone.",
       "what": "An Open Source Machine Learning Framework for Everyone.",
       "problem": "解決 AI 應用開發中重複整合、理解成本高或從 prototype 到可用工具落差大的問題。",

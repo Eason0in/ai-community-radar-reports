@@ -1,8 +1,8 @@
-# AI Community Radar - 2026-11-19
+# AI Community Radar - 2026-11-20
 
-> Generated: 2026-11-19T04:02:44.465Z
+> Generated: 2026-11-20T03:55:02.319Z
 > Timezone: Asia/Taipei
-> Active cutoff: updated since 2026-11-17; archived GitHub repos excluded; max stale age 2 days.
+> Active cutoff: updated since 2026-11-18; archived GitHub repos excluded; max stale age 2 days.
 
 ## 今日摘要
 
@@ -17,9 +17,9 @@
 
 | # | Repo | Stars | Forks | Language | Updated |
 | --- | --- | ---: | ---: | --- | --- |
-| 1 | [affaan-m/ECC](https://github.com/affaan-m/ECC) | 306,647 | 45,145 | JavaScript | 2026-11-17T06:41:46Z |
-| 2 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 264,533 | 59,726 | Python | 2026-11-19T03:44:28Z |
-| 3 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 201,591 | 77,956 | C++ | 2026-11-19T03:25:51Z |
+| 1 | [affaan-m/ECC](https://github.com/affaan-m/ECC) | 307,352 | 45,239 | JavaScript | 2026-11-20T01:13:45Z |
+| 2 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 264,785 | 59,810 | Python | 2026-11-20T03:52:25Z |
+| 3 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 201,656 | 77,969 | C++ | 2026-11-20T03:46:31Z |
 
 ### 1. [affaan-m/ECC](https://github.com/affaan-m/ECC)
 
@@ -77,7 +77,7 @@ An Open Source Machine Learning Framework for Everyone.
 | 指標 | 值 |
 | --- | --- |
 | Registry sample | 800 servers |
-| Active baseline since | 2026-11-17 |
+| Active baseline since | 2026-11-18 |
 | GitHub stale cutoff | 2 days |
 
 ### 可能還沒上官方 MCP Registry 的候選
@@ -102,17 +102,7 @@ An Open Source Machine Learning Framework for Everyone.
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/TanStack/ai](https://github.com/TanStack/ai) |
 
-#### 3. [@payloadcms/plugin-mcp](https://www.npmjs.com/package/@payloadcms/plugin-mcp)
-
-| 欄位 | 內容 |
-| --- | --- |
-| 類型 | npm-package |
-| 說明 | MCP (Model Context Protocol) capabilities with Payload |
-| 為什麼值得看 | npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。 |
-| 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
-| Repo | [https://github.com/payloadcms/payload](https://github.com/payloadcms/payload) |
-
-#### 4. [@kubb/mcp](https://www.npmjs.com/package/@kubb/mcp)
+#### 3. [@kubb/mcp](https://www.npmjs.com/package/@kubb/mcp)
 
 | 欄位 | 內容 |
 | --- | --- |
@@ -121,6 +111,16 @@ An Open Source Machine Learning Framework for Everyone.
 | 為什麼值得看 | npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。 |
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/kubb-labs/kubb](https://github.com/kubb-labs/kubb) |
+
+#### 4. [@payloadcms/plugin-mcp](https://www.npmjs.com/package/@payloadcms/plugin-mcp)
+
+| 欄位 | 內容 |
+| --- | --- |
+| 類型 | npm-package |
+| 說明 | MCP (Model Context Protocol) capabilities with Payload |
+| 為什麼值得看 | npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。 |
+| 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
+| Repo | [https://github.com/payloadcms/payload](https://github.com/payloadcms/payload) |
 
 #### 5. [@supabase/mcp-utils](https://www.npmjs.com/package/@supabase/mcp-utils)
 
@@ -132,30 +132,30 @@ An Open Source Machine Learning Framework for Everyone.
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/supabase/mcp](https://github.com/supabase/mcp) |
 
-#### 6. [LucioLiu/linko-remote](https://github.com/LucioLiu/linko-remote)
+#### 6. [BingoWon/apple-rag-mcp](https://github.com/BingoWon/apple-rag-mcp)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | LanPilot 邻控 \| macOS controller and MCP server for concurrent Windows remote desktop automation, screen verification and local batch jobs over LAN or WAN. |
+| 說明 | Apple developer knowledge for AI agents via MCP or CLI. Search docs and WWDC transcripts with Jev-ranked hybrid retrieval, browse SwiftUI and UIKit by topic, and read source pages. |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 7. [ASTRANL/astranl-mcp](https://github.com/ASTRANL/astranl-mcp)
+#### 7. [arc-labs-ai/brain-kit](https://github.com/arc-labs-ai/brain-kit)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | No-key MCP server for AI agents: source-linked Dutch real-world facts and coordination. Construction cost planning figures, permit fees and municipal build rules, KvK/VAT/sanctions counterparty checks, material and offer checks, tasks coordinated with KvK-registered executors, agreement certificates. 1% fee only on a paid, confirmed outcome. |
+| 說明 | One command to give the agents on your machine a memory they keep between sessions. Installs Brain's skills and plugins and connects every MCP client to the hosted Brain MCP server. |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 8. [codegiveness/mssql-mcp](https://github.com/codegiveness/mssql-mcp)
+#### 8. [fetchai/innovation-lab-examples](https://github.com/fetchai/innovation-lab-examples)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | MCP server (C#/.NET 11) for Microsoft SQL Server: list databases, inspect schemas, run read-only SQL with AST validation, query plans and health checks. npx, .NET tool or standalone binary; Restricted mode by default. |
+| 說明 | 80+ production-ready AI agent examples in Python — build autonomous agents, multi-agent systems and agentic AI with uAgents, ASI:One, MCP, A2A, LangChain, CrewAI, Gemini, Claude and OpenAI. |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 

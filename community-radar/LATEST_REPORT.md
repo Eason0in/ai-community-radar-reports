@@ -1,8 +1,8 @@
-# AI Community Radar - 2026-11-25
+# AI Community Radar - 2026-11-26
 
-> Generated: 2026-11-25T05:19:17.292Z
+> Generated: 2026-11-26T04:50:33.065Z
 > Timezone: Asia/Taipei
-> Active cutoff: updated since 2026-11-23; archived GitHub repos excluded; max stale age 2 days.
+> Active cutoff: updated since 2026-11-24; archived GitHub repos excluded; max stale age 2 days.
 
 ## 今日摘要
 
@@ -17,9 +17,9 @@
 
 | # | Repo | Stars | Forks | Language | Updated |
 | --- | --- | ---: | ---: | --- | --- |
-| 1 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 265,945 | 60,266 | Python | 2026-11-25T05:18:36Z |
-| 2 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 201,769 | 77,373 | C++ | 2026-11-25T05:15:18Z |
-| 3 | [firecrawl/firecrawl](https://github.com/firecrawl/firecrawl) | 209,125 | 10,926 | TypeScript | 2026-11-25T04:38:45Z |
+| 1 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 266,148 | 60,369 | Python | 2026-11-26T04:39:48Z |
+| 2 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 201,838 | 77,374 | C++ | 2026-11-26T04:04:42Z |
+| 3 | [firecrawl/firecrawl](https://github.com/firecrawl/firecrawl) | 210,212 | 10,999 | TypeScript | 2026-11-26T04:46:22Z |
 
 ### 1. [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent)
 
@@ -77,7 +77,7 @@ Knowledge infrastructure to make your agents smarter. Search, scrape and access 
 | 指標 | 值 |
 | --- | --- |
 | Registry sample | 800 servers |
-| Active baseline since | 2026-11-23 |
+| Active baseline since | 2026-11-24 |
 | GitHub stale cutoff | 2 days |
 
 ### 可能還沒上官方 MCP Registry 的候選
@@ -102,17 +102,7 @@ Knowledge infrastructure to make your agents smarter. Search, scrape and access 
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/CopilotKit/CopilotKit](https://github.com/CopilotKit/CopilotKit) |
 
-#### 3. [@supabase/mcp-utils](https://www.npmjs.com/package/@supabase/mcp-utils)
-
-| 欄位 | 內容 |
-| --- | --- |
-| 類型 | npm-package |
-| 說明 | MCP utilities |
-| 為什麼值得看 | npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。 |
-| 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
-| Repo | [https://github.com/supabase/mcp](https://github.com/supabase/mcp) |
-
-#### 4. [@kubb/mcp](https://www.npmjs.com/package/@kubb/mcp)
+#### 3. [@kubb/mcp](https://www.npmjs.com/package/@kubb/mcp)
 
 | 欄位 | 內容 |
 | --- | --- |
@@ -122,7 +112,7 @@ Knowledge infrastructure to make your agents smarter. Search, scrape and access 
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/kubb-labs/kubb](https://github.com/kubb-labs/kubb) |
 
-#### 5. [@payloadcms/plugin-mcp](https://www.npmjs.com/package/@payloadcms/plugin-mcp)
+#### 4. [@payloadcms/plugin-mcp](https://www.npmjs.com/package/@payloadcms/plugin-mcp)
 
 | 欄位 | 內容 |
 | --- | --- |
@@ -132,30 +122,40 @@ Knowledge infrastructure to make your agents smarter. Search, scrape and access 
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/payloadcms/payload](https://github.com/payloadcms/payload) |
 
-#### 6. [sargist/llm-agent-evals](https://github.com/sargist/llm-agent-evals)
+#### 5. [@supabase/mcp-utils](https://www.npmjs.com/package/@supabase/mcp-utils)
+
+| 欄位 | 內容 |
+| --- | --- |
+| 類型 | npm-package |
+| 說明 | MCP utilities |
+| 為什麼值得看 | npm 上已有人釋出 MCP server / tool 相關 package，但在本次官方 MCP Registry 取樣中沒有命中，可確認是否適合整理、補文件或提交 registry。 |
+| 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
+| Repo | [https://github.com/supabase/mcp](https://github.com/supabase/mcp) |
+
+#### 6. [naimkatiman/continuous-improvement](https://github.com/naimkatiman/continuous-improvement)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Evaluation and test harness for a tool-using (MCP) LLM agent: golden datasets, tool-call accuracy, safety and prompt-injection red teaming, RAG groundedness, LLM-as-judge with calibration, CI quality gates. |
+| 說明 | Claude Code that gets sharper every session: runtime discipline and instinct memory (the 7 Laws of AI Agent Discipline) |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 7. [maxmoneycash/hlp-cli](https://github.com/maxmoneycash/hlp-cli)
+#### 7. [2984613441-wq/dsh-connectors](https://github.com/2984613441-wq/dsh-connectors)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | hlp cli: the Hyperliquid terminal for vaults. Candlestick charts, vault screener and tearsheets, Pine and thesis backtests, paper AI arena, JSON CLI and MCP server. |
+| 說明 | Let an AI agent operate your installed desktop software: Obsidian, MATLAB, Office, GitHub, COMSOL, STM32, Keil, VS Code. PowerShell + Python, no MCP server. |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 8. [rozinsol/richbinder](https://github.com/rozinsol/richbinder)
+#### 8. [morluto/rea](https://github.com/morluto/rea)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Connect the documents you keep in RichBinder (Windows) to AI agents over MCP. Setup guide and configuration examples. |
+| 說明 | Reverse engineer anything with agents, from app behavior down to native binaries. |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 

@@ -1,8 +1,8 @@
-# AI Community Radar - 2026-11-26
+# AI Community Radar - 2026-11-27
 
-> Generated: 2026-11-26T04:50:33.065Z
+> Generated: 2026-11-27T04:53:11.820Z
 > Timezone: Asia/Taipei
-> Active cutoff: updated since 2026-11-24; archived GitHub repos excluded; max stale age 2 days.
+> Active cutoff: updated since 2026-11-25; archived GitHub repos excluded; max stale age 2 days.
 
 ## 今日摘要
 
@@ -17,9 +17,9 @@
 
 | # | Repo | Stars | Forks | Language | Updated |
 | --- | --- | ---: | ---: | --- | --- |
-| 1 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 266,148 | 60,369 | Python | 2026-11-26T04:39:48Z |
-| 2 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 201,838 | 77,374 | C++ | 2026-11-26T04:04:42Z |
-| 3 | [firecrawl/firecrawl](https://github.com/firecrawl/firecrawl) | 210,212 | 10,999 | TypeScript | 2026-11-26T04:46:22Z |
+| 1 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 266,449 | 60,453 | Python | 2026-11-27T04:49:08Z |
+| 2 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 201,867 | 77,377 | C++ | 2026-11-27T04:36:59Z |
+| 3 | [firecrawl/firecrawl](https://github.com/firecrawl/firecrawl) | 211,096 | 11,055 | TypeScript | 2026-11-27T00:15:09Z |
 
 ### 1. [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent)
 
@@ -77,7 +77,7 @@ Knowledge infrastructure to make your agents smarter. Search, scrape and access 
 | 指標 | 值 |
 | --- | --- |
 | Registry sample | 800 servers |
-| Active baseline since | 2026-11-24 |
+| Active baseline since | 2026-11-25 |
 | GitHub stale cutoff | 2 days |
 
 ### 可能還沒上官方 MCP Registry 的候選
@@ -132,30 +132,30 @@ Knowledge infrastructure to make your agents smarter. Search, scrape and access 
 | 下一步 | 確認 package 是否真的可用；若品質足夠，協助補 server.json、README install block、Glama/官方 registry 上架流程。 |
 | Repo | [https://github.com/supabase/mcp](https://github.com/supabase/mcp) |
 
-#### 6. [naimkatiman/continuous-improvement](https://github.com/naimkatiman/continuous-improvement)
+#### 6. [XzForz3-Dev/X64-Brain-Vault](https://github.com/XzForz3-Dev/X64-Brain-Vault)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Claude Code that gets sharper every session: runtime discipline and instinct memory (the 7 Laws of AI Agent Discipline) |
+| 說明 | Zero-Amnesia persistent memory, multi-agent rules switchboard, Secret Guard & native MCP server for Antigravity, Claude Code, Cursor & Codex. |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 7. [2984613441-wq/dsh-connectors](https://github.com/2984613441-wq/dsh-connectors)
+#### 7. [mjoneill/data-noodler](https://github.com/mjoneill/data-noodler)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Let an AI agent operate your installed desktop software: Obsidian, MATLAB, Office, GitHub, COMSOL, STM32, Keil, VS Code. PowerShell + Python, no MCP server. |
+| 說明 | Talk to your Google Analytics and Search Console data with Claude and ChatGPT. Skip the dashboards. |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
-#### 8. [morluto/rea](https://github.com/morluto/rea)
+#### 8. [MarcelRoozekrans/AI.Sentinel](https://github.com/MarcelRoozekrans/AI.Sentinel)
 
 | 欄位 | 內容 |
 | --- | --- |
 | 類型 | github-repo |
-| 說明 | Reverse engineer anything with agents, from app behavior down to native binaries. |
+| 說明 | Security monitoring middleware for IChatClient (Microsoft.Extensions.AI). 55 detectors for prompt injection, hallucination, PII leakage, and operational anomalies. Intervention engine, embedded dashboard, audit forwarders to Azure Sentinel + OpenTelemetry. Drop-in middleware for any LLM client. |
 | 為什麼值得看 | GitHub 上近 2 天仍有更新、且不是 archived 的 MCP 相關 repo，但在本次官方 MCP Registry 取樣中沒有命中。 |
 | 下一步 | 先跑通 server、檢查工具 schema 描述，再幫作者補 registry submission 或整理成可安裝 npm package。 |
 
